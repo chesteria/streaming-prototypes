@@ -1,0 +1,13 @@
+{
+  "continueWatching": [
+    { "showId": "show-015", "episodeId": "movie", "progress": 0.28, "title": "A Faster Horse" },
+    { "showId": "show-016", "episodeId": "movie", "progress": 0.61, "title": "Transatlantic Run" },
+    { "showId": "show-017", "episodeId": "s1e3", "progress": 0.45, "title": "World Famous Chef Recipes" },
+    { "showId": "show-001", "episodeId": "s2e1", "progress": 0.15, "title": "Garage Kings" },
+    { "showId": "show-003", "episodeId": "s1e2", "progress": 0.72, "title": "Iron Verdict" },
+    { "showId": "show-007", "episodeId": "s1e1", "progress": 0.10, "title": "Neon District" }
+  ],
+  "myStuff": ["show-001", "show-002", "show-010"],
+  "watchHistory": ["show-015-movie", "show-016-movie", "show-001-s1e1", "show-003-s1e1"],
+  "savedLocations": ["city-001", "city-002"]
+}

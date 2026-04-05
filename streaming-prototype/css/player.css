@@ -1,0 +1,407 @@
+/* ============================================================
+   PLAYER SCREEN STYLES
+   ============================================================ */
+
+.screen-player {
+  background: #000;
+  overflow: hidden;
+}
+
+/* ---- Simulated Video Background ---- */
+.player-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.player-bg-dim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  transition: background var(--t-focus) ease-out;
+}
+
+.player-bg-dim.overlay-visible {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+/* ---- Controls Overlay ---- */
+.player-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0 60px 40px;
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
+  transition: opacity 300ms ease-out, transform 300ms ease-out;
+  will-change: opacity, transform;
+}
+
+.player-controls.hidden {
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+}
+
+/* Content info above controls */
+.player-content-info {
+  margin-bottom: 12px;
+}
+
+.player-show-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 4px;
+}
+
+.player-episode-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  color: var(--color-text-secondary);
+}
+
+/* Progress Bar */
+.player-progress-area {
+  margin-bottom: 16px;
+}
+
+.player-time-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  margin-bottom: 8px;
+}
+
+.player-progress-bar {
+  position: relative;
+  height: 5px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 3px;
+  cursor: default;
+  transition: height var(--t-focus) ease-out,
+              box-shadow var(--t-focus) ease-out;
+}
+
+.player-progress-bar.focused {
+  height: 8px;
+  box-shadow: var(--focus-box-shadow);
+  border-radius: 4px;
+}
+
+.player-progress-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: var(--color-progress-scrub);
+  border-radius: 3px;
+  transition: width 1s linear;
+}
+
+.player-progress-handle {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  background: #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width var(--t-focus) ease-out, height var(--t-focus) ease-out;
+  box-shadow: 0 0 4px rgba(0,0,0,0.5);
+}
+
+.player-progress-bar.focused .player-progress-handle {
+  width: 18px;
+  height: 18px;
+}
+
+/* Thumbnail strip (visible during scrub) */
+.scrub-thumbnails {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+  pointer-events: none;
+}
+
+.scrub-thumbnails.visible {
+  opacity: 1;
+}
+
+.scrub-thumb {
+  width: 100px;
+  height: 56px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--color-card-bg);
+  transition: width var(--t-focus) ease-out, height var(--t-focus) ease-out;
+}
+
+.scrub-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scrub-thumb.center {
+  width: 140px;
+  height: 79px;
+  border-radius: 8px;
+  box-shadow: 0 0 0 2px #fff, 0 0 16px rgba(255,255,255,0.2);
+}
+
+/* Action Buttons Row */
+.player-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.player-btn-group {
+  display: flex;
+  gap: 12px;
+}
+
+.player-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 30px;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(8px);
+  color: var(--color-text-primary);
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  cursor: default;
+  transition: background var(--t-focus) ease-out,
+              color var(--t-focus) ease-out,
+              box-shadow var(--t-focus) ease-out,
+              transform var(--t-focus) ease-out;
+  will-change: transform;
+}
+
+.player-btn.focused {
+  background: var(--color-focus-btn-bg);
+  color: var(--color-focus-btn-text);
+  box-shadow: var(--focus-box-shadow);
+  transform: scale(1.04);
+}
+
+/* ---- More Episodes Rail ---- */
+.player-episodes-area {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transition: opacity 300ms ease-out, transform 300ms ease-out;
+  will-change: opacity, transform;
+}
+
+.player-episodes-area.hidden {
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+}
+
+.player-episodes-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  padding: 0 60px 12px;
+}
+
+.player-episode-rail {
+  padding: 0 60px 32px;
+  display: flex;
+  gap: var(--rail-gap);
+  overflow: hidden;
+}
+
+.player-ep-track {
+  display: flex;
+  gap: var(--rail-gap);
+  transition: transform var(--t-scroll) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+.player-ep-tile {
+  flex-shrink: 0;
+  width: 340px;
+  height: 192px;
+  border-radius: var(--tile-radius);
+  overflow: hidden;
+  position: relative;
+  background: var(--color-card-bg);
+  transition: box-shadow var(--t-focus) ease-out,
+              transform var(--t-focus) ease-out;
+  will-change: transform;
+  cursor: default;
+}
+
+.player-ep-tile.focused {
+  box-shadow: var(--focus-box-shadow);
+  transform: scale(1.04);
+  z-index: 10;
+}
+
+.player-ep-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.player-ep-tile-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%);
+}
+
+.player-ep-meta {
+  position: absolute;
+  bottom: 8px;
+  left: 10px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.player-ep-title {
+  position: absolute;
+  bottom: 24px;
+  left: 10px;
+  right: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---- Info Modal ---- */
+.player-modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 25, 35, 0.6);
+  opacity: 0;
+  transition: opacity 300ms ease-out;
+  pointer-events: none;
+}
+
+.player-modal-overlay.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.player-modal-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 440px;
+  height: 100%;
+  background: var(--color-card-bg);
+  padding: 48px 40px;
+  transform: translateX(100%);
+  transition: transform 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  overflow-y: auto;
+}
+
+.player-modal-panel.visible {
+  transform: translateX(0);
+}
+
+.modal-ep-thumb {
+  width: 100%;
+  height: 160px;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.modal-ep-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-show-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  margin-bottom: 4px;
+}
+
+.modal-ep-title {
+  font-size: 16px;
+  color: var(--color-text-secondary);
+  margin-bottom: 12px;
+}
+
+.modal-description {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-bottom: 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.modal-meta-row {
+  margin-bottom: 28px;
+}
+
+.modal-link-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 12px;
+  padding: 10px 0;
+  border-radius: 8px;
+  transition: box-shadow var(--t-focus) ease-out;
+  cursor: default;
+}
+
+.modal-link-btn.focused {
+  color: var(--color-text-primary);
+  text-decoration: underline;
+}
+
+.modal-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 30px;
+  background: var(--color-btn-default-bg);
+  color: var(--color-text-primary);
+  font-size: 15px;
+  font-weight: 600;
+  transition: background var(--t-focus) ease-out,
+              color var(--t-focus) ease-out,
+              box-shadow var(--t-focus) ease-out;
+  cursor: default;
+}
+
+.modal-add-btn.focused {
+  background: var(--color-focus-btn-bg);
+  color: var(--color-focus-btn-text);
+  box-shadow: var(--focus-box-shadow);
+}

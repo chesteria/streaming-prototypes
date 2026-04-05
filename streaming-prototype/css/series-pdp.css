@@ -1,0 +1,335 @@
+/* ============================================================
+   SERIES PDP (PRODUCT DETAIL PAGE) STYLES
+   ============================================================ */
+
+.screen-series-pdp {
+  background: var(--color-bg);
+  overflow: hidden;
+}
+
+.pdp-scroll {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: transform var(--t-scroll) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+/* ---- Hero Section ---- */
+.pdp-hero {
+  position: relative;
+  width: 100%;
+  height: 680px;
+  overflow: hidden;
+}
+
+.pdp-hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.pdp-hero-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(15, 25, 35, 1) 0%,
+    rgba(15, 25, 35, 0.85) 40%,
+    rgba(15, 25, 35, 0.2) 70%,
+    transparent 100%
+  );
+}
+
+.pdp-hero-gradient-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: linear-gradient(to top, var(--color-bg) 0%, transparent 100%);
+}
+
+.pdp-hero-content {
+  position: relative;
+  z-index: 1;
+  padding: 100px var(--content-pad-x) 60px;
+  max-width: 740px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.pdp-badge {
+  margin-bottom: 12px;
+}
+
+.pdp-title {
+  font-size: 52px;
+  font-weight: 900;
+  color: var(--color-text-primary);
+  line-height: 1.1;
+  margin-bottom: 14px;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+}
+
+.pdp-episode-subtitle {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-bottom: 10px;
+  font-style: italic;
+}
+
+.pdp-description {
+  font-size: 16px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-bottom: 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pdp-meta-row {
+  margin-bottom: 32px;
+}
+
+/* Returning user poster */
+.pdp-poster-art {
+  position: absolute;
+  top: 100px;
+  right: 200px;
+  width: 240px;
+  height: 360px;
+  border-radius: var(--tile-radius);
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(255,255,255,0.12), 0 8px 40px rgba(0,0,0,0.6);
+  z-index: 2;
+}
+
+.pdp-poster-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Action Buttons */
+.pdp-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pdp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border-radius: 40px;
+  font-size: 17px;
+  font-weight: 600;
+  background: var(--color-btn-default-bg);
+  color: var(--color-text-primary);
+  border: none;
+  align-self: flex-start;
+  min-width: 240px;
+  transition: background var(--t-focus) ease-out,
+              color var(--t-focus) ease-out,
+              box-shadow var(--t-focus) ease-out,
+              transform var(--t-focus) ease-out;
+  will-change: transform;
+  cursor: default;
+}
+
+.pdp-btn.primary {
+  background: var(--color-text-primary);
+  color: var(--color-bg);
+}
+
+.pdp-btn.focused {
+  background: var(--color-focus-btn-bg);
+  color: var(--color-focus-btn-text);
+  box-shadow: var(--focus-box-shadow);
+  transform: scale(1.02);
+}
+
+/* ---- Content Area (Below Hero) ---- */
+.pdp-content-area {
+  background: var(--color-bg);
+  padding: 40px 0;
+}
+
+/* Pinned title */
+.pdp-pinned-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  padding: 0 var(--content-pad-x) 24px;
+}
+
+/* Season Selector */
+.season-selector {
+  display: flex;
+  gap: 12px;
+  padding: 0 var(--content-pad-x) 20px;
+  overflow: hidden;
+}
+
+.season-pill {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+  transition: background var(--t-focus) ease-out,
+              color var(--t-focus) ease-out,
+              box-shadow var(--t-focus) ease-out;
+}
+
+.season-pill.active {
+  background: var(--color-text-primary);
+  color: var(--color-bg);
+  border-radius: 30px;
+  width: auto;
+  padding: 0 18px;
+  font-size: 14px;
+}
+
+.season-pill.focused {
+  box-shadow: var(--focus-box-shadow);
+}
+
+/* Episode item wrapper — holds tile + metadata as a column */
+.episode-item {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: var(--landscape-tile-w);
+}
+
+/* Episode / Extras tiles */
+.episode-tile {
+  flex-shrink: 0;
+  width: var(--landscape-tile-w);
+  height: var(--landscape-tile-h);
+  border-radius: var(--tile-radius);
+  overflow: hidden;
+  position: relative;
+  background: var(--color-card-bg);
+  transition: box-shadow var(--t-focus) ease-out,
+              transform var(--t-focus) ease-out;
+  will-change: transform;
+  cursor: default;
+}
+
+.episode-tile.focused {
+  box-shadow: var(--focus-box-shadow);
+  transform: scale(1.02);
+  z-index: 10;
+}
+
+.episode-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.episode-watched-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.9);
+  color: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.episode-tile-below {
+  margin-top: 8px;
+  width: var(--landscape-tile-w);
+  flex-shrink: 0;
+}
+
+.episode-meta {
+  font-size: 13px;
+  color: var(--color-text-tertiary);
+  margin-bottom: 3px;
+}
+
+.episode-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.episode-desc {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* More Info Card */
+.more-info-card {
+  margin: 0 var(--content-pad-x) 40px;
+  background: var(--color-card-bg);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 36px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.5fr;
+  gap: 32px;
+  transition: box-shadow var(--t-focus) ease-out;
+}
+
+.more-info-card.focused {
+  box-shadow: var(--focus-box-shadow);
+}
+
+.more-info-label {
+  font-size: 13px;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 4px;
+}
+
+.more-info-value {
+  font-size: 15px;
+  color: var(--color-text-primary);
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.more-info-desc {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}

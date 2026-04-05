@@ -1,0 +1,219 @@
+/* ============================================================
+   GLOBAL STYLES — Reset, typography, shared components
+   ============================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-family);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+  cursor: default;
+}
+
+/* ---- Screen Container ---- */
+#app {
+  position: relative;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+}
+
+.screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--t-focus) ease-out;
+  will-change: opacity;
+}
+
+.screen.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ---- Toast Notification ---- */
+#toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--color-text-primary);
+  padding: 14px 28px;
+  border-radius: 40px;
+  font-size: 18px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 300ms ease, transform 300ms ease;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+#toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ---- Shared Badge Styles ---- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  background: var(--color-badge-bg);
+  color: var(--color-text-primary);
+  backdrop-filter: blur(6px);
+}
+
+.badge-live {
+  background: var(--color-live-badge);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.badge-rating {
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  color: var(--color-text-primary);
+  font-size: 12px;
+  padding: 2px 8px;
+}
+
+/* ---- Shared Button Style ---- */
+.pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 40px;
+  border: none;
+  background: var(--color-btn-default-bg);
+  color: var(--color-btn-default-text);
+  font-family: var(--font-family);
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: default;
+  transition: background var(--t-focus) ease-out,
+              color var(--t-focus) ease-out,
+              box-shadow var(--t-focus) ease-out,
+              transform var(--t-focus) ease-out;
+  will-change: transform;
+}
+
+.pill-btn.focused {
+  background: var(--color-focus-btn-bg);
+  color: var(--color-focus-btn-text);
+  box-shadow: var(--focus-box-shadow);
+  transform: scale(1.02);
+}
+
+/* ---- Tile Focus Ring ---- */
+.tile-focus-ring {
+  box-shadow: var(--focus-box-shadow);
+  border-radius: var(--tile-radius);
+}
+
+/* ---- Progress Bar ---- */
+.progress-bar-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 0 0 var(--tile-radius) var(--tile-radius);
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--color-progress-watch);
+  border-radius: 0 0 var(--tile-radius) var(--tile-radius);
+  transition: width 300ms ease;
+}
+
+/* ---- Scrollable Rail Container ---- */
+.rail-scroll {
+  display: flex;
+  gap: var(--rail-gap);
+  transition: transform var(--t-scroll) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+/* ---- Section Title ---- */
+.rail-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 16px;
+  padding-left: var(--content-pad-x);
+}
+
+/* ---- Metadata Row ---- */
+.meta-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.meta-dot {
+  color: var(--color-text-tertiary);
+}
+
+/* ---- Gradient overlays ---- */
+.gradient-left {
+  background: linear-gradient(to right, var(--color-bg) 0%, transparent 100%);
+}
+
+.gradient-bottom {
+  background: linear-gradient(to top, var(--color-bg) 0%, transparent 100%);
+}
+
+/* ---- Utility ---- */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+}
+
+img {
+  display: block;
+  object-fit: cover;
+}
+
+/* ---- Loading state ---- */
+.img-placeholder {
+  background: var(--color-card-bg);
+  border-radius: var(--tile-radius);
+}

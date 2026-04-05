@@ -1,0 +1,64 @@
+/* ============================================================
+   CSS CUSTOM PROPERTIES — All design tokens in one place.
+   Edit these values to retheme the entire application.
+   ============================================================ */
+
+:root {
+  /* --- Colors --- */
+  --color-bg:              #0F1923;
+  --color-card-bg:         #1A2A3A;
+  --color-surface:         #2A3A4A;
+  --color-surface-80:      rgba(42, 58, 74, 0.8);
+  --color-overlay:         rgba(15, 25, 35, 0.85);
+
+  --color-focus-border:    rgba(255, 255, 255, 0.5);
+  --color-focus-glow:      rgba(255, 255, 255, 0.15);
+  --color-focus-btn-bg:    #FFFFFF;
+  --color-focus-btn-text:  #0F1923;
+
+  --color-text-primary:    #FFFFFF;
+  --color-text-secondary:  #8899AA;
+  --color-text-tertiary:   #667788;
+
+  --color-progress-watch:  #4CAF50;
+  --color-progress-scrub:  #4488CC;
+
+  --color-nav-pill-bg:     #FFFFFF;
+  --color-nav-pill-text:   #0F1923;
+  --color-nav-inactive:    #8899AA;
+
+  --color-badge-bg:        rgba(42, 58, 74, 0.85);
+  --color-live-badge:      #4CAF50;
+
+  --color-btn-default-bg:  #2A3A4A;
+  --color-btn-default-text: #FFFFFF;
+
+  /* --- Typography --- */
+  --font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+
+  /* --- Spacing --- */
+  --nav-height:            60px;
+  --content-pad-x:         60px;
+  --rail-gap:              16px;
+
+  /* --- Tile Sizes --- */
+  --hero-tile-width:       920px;
+  --hero-tile-height:      550px;
+  --portrait-tile-w:       180px;
+  --portrait-tile-h:       270px;
+  --landscape-tile-w:      440px;
+  --landscape-tile-h:      250px;
+  --channel-tile-w:        440px;
+  --channel-tile-h:        270px;
+  --tile-radius:           12px;
+
+  /* --- Animation Timing --- */
+  --t-focus:               200ms;
+  --t-scroll:              300ms;
+  --t-fade:                600ms;
+  --t-hero-cycle:          5000ms;
+
+  /* --- Shadows & Effects --- */
+  --focus-box-shadow:      0 0 0 2px var(--color-focus-border), 0 0 24px var(--color-focus-glow);
+  --card-shadow:           0 4px 24px rgba(0, 0, 0, 0.4);
+}

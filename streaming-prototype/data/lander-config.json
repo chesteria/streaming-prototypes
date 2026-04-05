@@ -1,0 +1,53 @@
+{
+  "rails": [
+    {
+      "type": "hero-carousel",
+      "dataSource": "featured",
+      "config": { "cycleInterval": 5000, "fadeDuration": 600 }
+    },
+    {
+      "type": "continue-watching",
+      "dataSource": "user-state.continueWatching",
+      "title": "Continue Watching"
+    },
+    {
+      "type": "local-cities",
+      "dataSource": "cities",
+      "title": "Your Local",
+      "config": { "cycleInterval": 5000 }
+    },
+    {
+      "type": "live-channels",
+      "dataSource": "channels",
+      "title": "Local Channels"
+    },
+    {
+      "type": "genre-pills",
+      "dataSource": "genres"
+    },
+    {
+      "type": "screamer",
+      "dataSource": "collection-001"
+    },
+    {
+      "type": "standard-rail",
+      "dataSource": "top-flix",
+      "title": "Top Flix",
+      "tileType": "portrait"
+    },
+    {
+      "type": "marketing-banner",
+      "content": {
+        "headline": "Never miss a beat.",
+        "subtext": "Save your spot, sync your devices, and keep your favorites front and center.",
+        "cta": "Browse Collection"
+      }
+    },
+    {
+      "type": "standard-rail",
+      "dataSource": "my-mix",
+      "title": "My Mix",
+      "tileType": "landscape"
+    }
+  ]
+}

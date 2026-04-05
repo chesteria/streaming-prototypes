@@ -1,0 +1,117 @@
+{
+  "id": "show-001",
+  "seasons": [
+    {
+      "number": 1,
+      "episodeCount": 12,
+      "episodes": [
+        {
+          "id": "s1e1",
+          "title": "The '69 Camaro Project",
+          "description": "The crew takes on a rusted-out '69 Camaro that hasn't run since 1987. Owner wants it back to full show condition in just three weeks.",
+          "thumbnail": "https://picsum.photos/seed/gk-s1e1/480/270",
+          "airDate": "Sep 16, 2014",
+          "duration": "42m",
+          "season": 1,
+          "episode": 1
+        },
+        {
+          "id": "s1e2",
+          "title": "The Bitchin' Coronet",
+          "description": "A Dodge Coronet with a mysterious past arrives at the shop. The team has to track down original parts across three states to make it right.",
+          "thumbnail": "https://picsum.photos/seed/gk-s1e2/480/270",
+          "airDate": "Sep 23, 2014",
+          "duration": "43m",
+          "season": 1,
+          "episode": 2
+        },
+        {
+          "id": "s1e3",
+          "title": "Twin Mustang Madness",
+          "description": "For the first time, two identical Mustangs come in simultaneously. The team splits into rival crews competing to finish first.",
+          "thumbnail": "https://picsum.photos/seed/gk-s1e3/480/270",
+          "airDate": "Oct 7, 2014",
+          "duration": "44m",
+          "season": 1,
+          "episode": 3
+        },
+        {
+          "id": "s1e4",
+          "title": "The Street Rod Showdown",
+          "description": "A 1932 Ford roadster gets a full hot rod treatment ahead of a major show in Las Vegas. The deadline is impossibly tight.",
+          "thumbnail": "https://picsum.photos/seed/gk-s1e4/480/270",
+          "airDate": "Oct 14, 2014",
+          "duration": "41m",
+          "season": 1,
+          "episode": 4
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "episodeCount": 10,
+      "episodes": [
+        {
+          "id": "s2e1",
+          "title": "Season 2 Premiere: The Hellcat",
+          "description": "A collector brings in a rare Dodge Hellcat with a damaged supercharger. The rebuild could be the biggest job the shop has ever tackled.",
+          "thumbnail": "https://picsum.photos/seed/gk-s2e1/480/270",
+          "airDate": "Mar 2, 2015",
+          "duration": "44m",
+          "season": 2,
+          "episode": 1
+        },
+        {
+          "id": "s2e2",
+          "title": "Chrome Dreams",
+          "description": "A vintage chrome shop teaches the team old-school plating techniques for an immaculate 1957 Chevy Bel Air restoration.",
+          "thumbnail": "https://picsum.photos/seed/gk-s2e2/480/270",
+          "airDate": "Mar 9, 2015",
+          "duration": "43m",
+          "season": 2,
+          "episode": 2
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "episodeCount": 12,
+      "episodes": [
+        {
+          "id": "s3e1",
+          "title": "Back to Basics",
+          "description": "The shop returns to its roots with a classic muscle car restoration that brings in the crew's families to see the finished product.",
+          "thumbnail": "https://picsum.photos/seed/gk-s3e1/480/270",
+          "airDate": "Jan 12, 2016",
+          "duration": "42m",
+          "season": 3,
+          "episode": 1
+        }
+      ]
+    }
+  ],
+  "extras": [
+    {
+      "id": "extra-001",
+      "title": "Behind the Wrench",
+      "description": "Go inside the fabrication process with uncut shop footage.",
+      "thumbnail": "https://picsum.photos/seed/gk-extra1/480/270",
+      "duration": "2m 34s"
+    },
+    {
+      "id": "extra-002",
+      "title": "The Crew",
+      "description": "Meet the mechanics, fabricators, and designers that make it all happen.",
+      "thumbnail": "https://picsum.photos/seed/gk-extra2/480/270",
+      "duration": "3m 18s"
+    },
+    {
+      "id": "extra-003",
+      "title": "Season 9 Trailer",
+      "description": "The biggest builds yet — a full preview of what's coming this season.",
+      "thumbnail": "https://picsum.photos/seed/gk-extra3/480/270",
+      "duration": "1m 45s"
+    }
+  ],
+  "similar": ["show-006", "show-015", "show-019", "show-008", "show-002"]
+}
