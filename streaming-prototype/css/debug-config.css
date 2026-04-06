@@ -1,0 +1,544 @@
+/* ============================================================
+   DEBUG CONFIG PAGE — Standalone editor at debug.html
+   ============================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #0F1923;
+  --bg-surface: #16222e;
+  --bg-raised: #1c2d3d;
+  --border: rgba(255, 255, 255, 0.08);
+  --text: rgba(255, 255, 255, 0.88);
+  --text-secondary: rgba(255, 255, 255, 0.45);
+  --text-muted: rgba(255, 255, 255, 0.25);
+  --accent: #4a9eff;
+  --accent-hover: #6db3ff;
+  --danger: #e05c5c;
+  --success: #5cb85c;
+  --radius: 8px;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ---- Layout ---- */
+#dc-layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ---- Sidebar ---- */
+#dc-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0 16px;
+}
+
+.dc-sidebar-logo {
+  padding: 0 20px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+
+.dc-sidebar-logo span {
+  color: var(--accent);
+}
+
+.dc-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  border-left: 3px solid transparent;
+  transition: all 120ms ease;
+  user-select: none;
+}
+
+.dc-nav-item:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.dc-nav-item.active {
+  color: var(--text);
+  background: rgba(74, 158, 255, 0.08);
+  border-left-color: var(--accent);
+}
+
+.dc-nav-icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.dc-sidebar-footer {
+  margin-top: auto;
+  padding: 16px 20px 0;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ---- Main Content ---- */
+#dc-main {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 32px 40px;
+}
+
+.dc-section {
+  display: none;
+}
+
+.dc-section.active {
+  display: block;
+}
+
+.dc-section-header {
+  margin-bottom: 28px;
+}
+
+.dc-section-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.dc-section-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* ---- Toolbar ---- */
+.dc-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+/* ---- Buttons ---- */
+.dc-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--bg-raised);
+  color: var(--text);
+  transition: all 120ms ease;
+  white-space: nowrap;
+  font-family: var(--font);
+}
+
+.dc-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dc-btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.dc-btn.primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.dc-btn.danger {
+  background: rgba(224, 92, 92, 0.12);
+  border-color: rgba(224, 92, 92, 0.3);
+  color: var(--danger);
+}
+
+.dc-btn.danger:hover {
+  background: rgba(224, 92, 92, 0.22);
+  border-color: rgba(224, 92, 92, 0.5);
+}
+
+.dc-btn.success {
+  background: rgba(92, 184, 92, 0.12);
+  border-color: rgba(92, 184, 92, 0.3);
+  color: var(--success);
+}
+
+/* ---- Search ---- */
+.dc-search {
+  flex: 1;
+  max-width: 320px;
+}
+
+.dc-search input {
+  width: 100%;
+  padding: 7px 12px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 13px;
+  font-family: var(--font);
+  outline: none;
+  transition: border-color 120ms ease;
+}
+
+.dc-search input:focus {
+  border-color: var(--accent);
+}
+
+.dc-search input::placeholder {
+  color: var(--text-muted);
+}
+
+/* ---- Rail List ---- */
+#rail-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rail-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: default;
+  transition: border-color 120ms ease, background 120ms ease;
+  user-select: none;
+}
+
+.rail-item:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.rail-item.drag-over {
+  border-color: var(--accent);
+  background: rgba(74, 158, 255, 0.06);
+}
+
+.rail-item.dragging {
+  opacity: 0.4;
+}
+
+.rail-drag-handle {
+  font-size: 16px;
+  color: var(--text-muted);
+  cursor: grab;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.rail-drag-handle:active {
+  cursor: grabbing;
+}
+
+.rail-type-badge {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(74, 158, 255, 0.12);
+  border: 1px solid rgba(74, 158, 255, 0.25);
+  color: var(--accent);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.rail-title-edit {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  min-width: 0;
+  cursor: text;
+  border-radius: 4px;
+  padding: 2px 6px;
+  margin: 0 -6px;
+  transition: background 120ms ease;
+}
+
+.rail-title-edit:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.rail-title-edit[contenteditable="true"] {
+  outline: 1px solid var(--accent);
+  background: rgba(74, 158, 255, 0.08);
+}
+
+.rail-toggle {
+  width: 32px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9px;
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: background 200ms ease;
+}
+
+.rail-toggle.on {
+  background: rgba(92, 184, 92, 0.65);
+  border-color: rgba(92, 184, 92, 0.35);
+}
+
+.rail-toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  transition: transform 180ms ease;
+}
+
+.rail-toggle.on .rail-toggle-thumb {
+  transform: translateX(14px);
+  background: #fff;
+}
+
+.rail-delete-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 14px;
+  transition: all 120ms ease;
+  flex-shrink: 0;
+}
+
+.rail-delete-btn:hover {
+  color: var(--danger);
+  background: rgba(224, 92, 92, 0.1);
+}
+
+/* ---- Catalog Table ---- */
+.dc-table-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+#catalog-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+#catalog-table thead {
+  background: var(--bg-raised);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+#catalog-table th {
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+#catalog-table td {
+  padding: 8px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  vertical-align: middle;
+}
+
+#catalog-table tr:last-child td {
+  border-bottom: none;
+}
+
+#catalog-table tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+#catalog-table td[contenteditable="true"] {
+  outline: 1px solid var(--accent);
+  background: rgba(74, 158, 255, 0.06);
+  border-radius: 3px;
+  cursor: text;
+}
+
+.catalog-thumb {
+  width: 48px;
+  height: 28px;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block;
+}
+
+.catalog-title-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.catalog-delete-btn {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 12px;
+  transition: all 120ms ease;
+}
+
+.catalog-delete-btn:hover {
+  color: var(--danger);
+  background: rgba(224, 92, 92, 0.1);
+}
+
+.badge-pill {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  margin: 1px;
+}
+
+/* ---- Export / Import ---- */
+.dc-export-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 8px;
+}
+
+.dc-export-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.dc-export-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.dc-export-card-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.dc-keys-preview {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  background: var(--bg-raised);
+  border-radius: 5px;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  max-height: 100px;
+  overflow-y: auto;
+  line-height: 1.7;
+}
+
+/* ---- Empty State ---- */
+.dc-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+}
+
+.dc-empty-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+.dc-empty-text {
+  font-size: 14px;
+}
+
+/* ---- Toast-like status messages ---- */
+.dc-status {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  background: rgba(92, 184, 92, 0.15);
+  border: 1px solid rgba(92, 184, 92, 0.3);
+  color: var(--success);
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.dc-status.visible {
+  opacity: 1;
+}
+
+/* ---- Scrollbar ---- */
+#dc-main::-webkit-scrollbar {
+  width: 6px;
+}
+
+#dc-main::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#dc-main::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}

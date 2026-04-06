@@ -15,10 +15,20 @@ const DataStore = (function() {
   }
 
   async function init() {
+    const stored = localStorage.getItem('debug_landerConfig');
+    const landerPromise = stored
+      ? Promise.resolve(JSON.parse(stored))
+      : loadJSON('data/lander-config.json');
+
+    const storedCatalog = localStorage.getItem('debug_catalog');
+    const catalogPromise = storedCatalog
+      ? Promise.resolve(JSON.parse(storedCatalog))
+      : loadJSON('data/catalog.json');
+
     [catalog, geoState, landerConfig] = await Promise.all([
-      loadJSON('data/catalog.json'),
+      catalogPromise,
       loadJSON('data/geo-state.json'),
-      loadJSON('data/lander-config.json'),
+      landerPromise,
     ]);
   }
 

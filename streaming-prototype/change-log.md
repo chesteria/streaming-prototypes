@@ -1,5 +1,44 @@
 # Change Log — PRD v1.4 Alignment
-**Branch:** `align-v1.4prd`
+**Branch:** `initial-debug-panel`
+
+---
+
+## Phase 1.5 — Debug Panel & Configuration Dashboard (2026-04-06)
+Source: PRD §12, `initial-debug-panel` branch
+
+### NEW: data/debug-defaults.json
+- Canonical defaults for all 19 debug config keys (timing, visual, feature toggles, auth state)
+
+### NEW: js/debug-panel.js
+- **`DebugConfig`** global: localStorage-backed config store with `get(key, fallback)`, `set(key, value)`, `reset()`, `applyAll()`. `set()` applies CSS variable changes immediately and dispatches `debugconfig:change` custom event. CSS var targets: `--tile-radius`, `--rail-gap`, `--color-bg`, `--t-focus`, `--t-scroll`, `--t-fade`, `--color-focus-glow`, `--focus-box-shadow`. `applyAll()` fires on DOMContentLoaded to restore any stored overrides.
+- **`DebugPanel`** global: toggle with backtick `` ` `` key (capture-phase listener, fires before FocusEngine). Panel is built lazily on first open from `PANEL_SPEC` data array. Opens/closes with CSS `translateX` animation. Calls `FocusEngine.disable()` on open, `enable()` on close. D-pad navigable: UP/DOWN moves between controls, LEFT/RIGHT adjusts sliders and cycles selects, Enter/OK toggles switches and fires button actions. Each control row shows its CSS variable or JS constant name. Sections: A Timing, B Visual, C Feature Toggles, D Auth State (stub), E App State Controls (Reload, Screenshot Mode, Reset All).
+
+### NEW: css/debug-panel.css
+- Fixed 400px right-side panel with slide-in transition. `.dp-focused` row highlight. Slider, toggle, select, color swatch, button, radio component styles. `body.debug-focus-outlines` rule highlighting all focused elements. `#debug-grid-overlay` CSS grid lines at 60px intervals. `body.screenshot-mode` hides all debug chrome.
+
+### NEW: debug.html + js/debug-config.js + css/debug-config.css
+- **Lander Rail Editor**: reads `debug_landerConfig` from localStorage (falls back to `data/lander-config.json`). Drag-and-drop reordering (HTML5 drag API), per-rail enable/disable toggle, inline title editing, delete. Save → `localStorage.setItem('debug_landerConfig', ...)`. Preview App button opens `index.html` in new tab.
+- **Catalog Editor**: reads `debug_catalog` from localStorage (falls back to `data/catalog.json`). Searchable table of all shows. Double-click any cell to edit inline (`contenteditable`). Add show (random picsum placeholder artwork). Delete row. Save → `localStorage.setItem('debug_catalog', ...)`.
+- **Export/Import**: Export collects all `debug_` localStorage keys into a timestamped JSON file download. Import reads an uploaded JSON and writes all keys to localStorage.
+
+### MODIFIED: js/data-store.js
+- `init()` now checks `debug_landerConfig` and `debug_catalog` in localStorage before fetching JSON files — app reads overrides set by debug.html without reload
+
+### MODIFIED: js/screens/lander.js
+- `startAutoAdvance()`: respects `heroAutoAdvance` toggle; reads `heroCycleInterval` from DebugConfig at each restart
+- `startLivingTile()`: respects `livingTiles` toggle; reads `cityCycleInterval` and `crossfadeDuration` from DebugConfig
+- Hero rail return object: exposes `updateTimers()` method so `debugconfig:change` handler can restart the carousel timer live
+- `LanderScreen.init()`: registers `debugconfig:change` listener for `heroCycleInterval` / `heroAutoAdvance` → calls `heroRail.updateTimers()`
+- `LanderScreen.destroy()`: removes that listener
+
+### MODIFIED: js/screens/player.js
+- `_resetHideTimer()`: reads `controlsAutoHide` from DebugConfig
+- `_attachProgressUpdates()`: reads `simulatedPlayback` toggle and `playbackSpeed` from DebugConfig each tick
+
+### MODIFIED: index.html
+- Added `debug-panel.css` link (before variables.css so panel can override)
+- Added `debug-panel.js` script after `data-store.js`, before screen scripts (ensures `DebugConfig` is available when lander.js/player.js execute)
+- Added `#debug-grid-overlay` div
 
 ---
 

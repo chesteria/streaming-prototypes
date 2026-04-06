@@ -223,10 +223,13 @@ const PlayerScreen = {
   },
 
   _attachProgressUpdates() {
-    if (!SIMULATE_PLAYBACK) return;
+    if (!DebugConfig.get('simulatedPlayback', SIMULATE_PLAYBACK)) return;
     clearInterval(this._playTimer);
     this._playTimer = setInterval(() => {
-      this._elapsed = Math.min(this._elapsed + PLAYBACK_SPEED, this._duration);
+      this._elapsed = Math.min(
+        this._elapsed + DebugConfig.get('playbackSpeed', PLAYBACK_SPEED),
+        this._duration
+      );
       this._scrubPos = this._elapsed / this._duration;
       this._updateProgressUI();
       if (this._elapsed >= this._duration) clearInterval(this._playTimer);
@@ -289,7 +292,7 @@ const PlayerScreen = {
       if (!this._modalVisible && this._activeZone !== 'progress' && this._activeZone !== 'episodes') {
         this._hideControls();
       }
-    }, CONTROLS_AUTO_HIDE_MS);
+    }, DebugConfig.get('controlsAutoHide', CONTROLS_AUTO_HIDE_MS));
   },
 
   _focusBtn(group, idx) {

@@ -68,6 +68,16 @@ const LanderScreen = {
       this._scrollEl.style.transform = `translateY(${this._scrollY}px)`;
       this._scrollEl.style.transition = 'none';
     }
+
+    // Listen for debug config changes
+    this._debugConfigHandler = (e) => {
+      const { key } = e.detail;
+      if (key === 'heroCycleInterval' || key === 'heroAutoAdvance') {
+        const heroRail = this._railModules[0];
+        if (heroRail && heroRail.updateTimers) heroRail.updateTimers();
+      }
+    };
+    document.addEventListener('debugconfig:change', this._debugConfigHandler);
   },
 
   onFocus() {
@@ -100,6 +110,9 @@ const LanderScreen = {
   destroy() {
     this._stopCityTimers();
     clearInterval(this._heroTimer);
+    if (this._debugConfigHandler) {
+      document.removeEventListener('debugconfig:change', this._debugConfigHandler);
+    }
   },
 
   _handleKey(action) {
@@ -313,12 +326,13 @@ function buildHeroCarousel(config, container) {
 
   function startAutoAdvance() {
     clearInterval(autoTimer);
+    if (!DebugConfig.get('heroAutoAdvance', true)) return;
     autoTimer = setInterval(() => {
       if (!isActive) return;
       const prev = focusedIdx;
       focusedIdx = (focusedIdx + 1) % items.length;
       focusTile(focusedIdx, prev);
-    }, HERO_CYCLE_INTERVAL_MS);
+    }, DebugConfig.get('heroCycleInterval', HERO_CYCLE_INTERVAL_MS));
   }
 
   return {
@@ -333,6 +347,7 @@ function buildHeroCarousel(config, container) {
       clearInterval(autoTimer);
       getTile(focusedIdx).classList.remove('focused');
     },
+    updateTimers() { if (isActive) startAutoAdvance(); },
     handleKey(action) {
       if (action === 'UP') return 'UP';
       if (action === 'DOWN') return 'DOWN';
@@ -428,6 +443,7 @@ function buildHeroTile(item, isFocused) {
 }
 
 function startLivingTile(tileEl, images) {
+  if (!DebugConfig.get('livingTiles', true)) return;
   if (images.length < 2) return;
   let imgIdx = 0;
   const primaryImg = tileEl.querySelector('.hero-img');
@@ -441,8 +457,8 @@ function startLivingTile(tileEl, images) {
     setTimeout(() => {
       primaryImg.src = images[imgIdx];
       secondaryImg.classList.remove('visible');
-    }, FADE_DURATION_MS);
-  }, CITY_CYCLE_INTERVAL_MS);
+    }, DebugConfig.get('crossfadeDuration', FADE_DURATION_MS));
+  }, DebugConfig.get('cityCycleInterval', CITY_CYCLE_INTERVAL_MS));
 
   // Store timer on element so it can be cleared
   tileEl._livingTimer = timer;

@@ -1,0 +1,413 @@
+/* ============================================================
+   DEBUG PANEL — Developer overlay (z-index 10000)
+   ============================================================ */
+
+/* ---- Panel Shell ---- */
+#debug-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 100%;
+  z-index: 10000;
+  background: rgba(8, 14, 20, 0.97);
+  backdrop-filter: blur(12px);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  transform: translateX(100%);
+  transition: transform 280ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  display: flex;
+  flex-direction: column;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.88);
+  box-shadow: -4px 0 32px rgba(0, 0, 0, 0.6);
+}
+
+#debug-panel.open {
+  transform: translateX(0);
+}
+
+/* ---- Header ---- */
+.dp-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 16px 20px 12px;
+  background: rgba(8, 14, 20, 0.98);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.dp-header-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 2px;
+}
+
+.dp-header-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.dp-header-hint {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+}
+
+.dp-header-hint kbd {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-family: inherit;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0 2px;
+}
+
+/* ---- Body (scrollable) ---- */
+.dp-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px 0 24px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.dp-body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.dp-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dp-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+}
+
+/* ---- Section Headers ---- */
+.dp-section {
+  padding: 20px 20px 4px;
+}
+
+.dp-section-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 6px;
+}
+
+/* ---- Control Rows ---- */
+.dp-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  min-height: 52px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  gap: 12px;
+  transition: background 120ms ease;
+  cursor: default;
+}
+
+.dp-row.dp-focused {
+  background: rgba(255, 255, 255, 0.06);
+  border-left: 2px solid rgba(255, 255, 255, 0.4);
+  padding-left: 18px;
+}
+
+.dp-row-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.dp-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.88);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dp-ref {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.28);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dp-row-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ---- Slider ---- */
+.dp-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.dp-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+}
+
+.dp-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+}
+
+.dp-row.dp-focused .dp-slider::-webkit-slider-thumb {
+  background: #fff;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
+}
+
+.dp-value {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+  min-width: 52px;
+  text-align: right;
+}
+
+.dp-row.dp-focused .dp-value {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ---- Toggle ---- */
+.dp-toggle {
+  width: 36px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  position: relative;
+  cursor: pointer;
+  transition: background 200ms ease;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dp-toggle.dp-on {
+  background: rgba(100, 200, 120, 0.7);
+  border-color: rgba(100, 200, 120, 0.4);
+}
+
+.dp-toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  transition: transform 200ms ease, background 200ms ease;
+}
+
+.dp-toggle.dp-on .dp-toggle-thumb {
+  transform: translateX(16px);
+  background: #fff;
+}
+
+/* ---- Buttons ---- */
+.dp-btn {
+  padding: 5px 12px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.8);
+  transition: background 150ms ease, border-color 150ms ease;
+  white-space: nowrap;
+}
+
+.dp-row.dp-focused .dp-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #fff;
+}
+
+.dp-btn.dp-btn-danger {
+  background: rgba(200, 60, 60, 0.15);
+  border-color: rgba(200, 60, 60, 0.4);
+  color: rgba(255, 100, 100, 0.9);
+}
+
+.dp-row.dp-focused .dp-btn.dp-btn-danger {
+  background: rgba(200, 60, 60, 0.3);
+  border-color: rgba(200, 60, 60, 0.7);
+  color: #ff8080;
+}
+
+/* ---- Radio Group ---- */
+.dp-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dp-radio-opt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 3px 0;
+  cursor: pointer;
+}
+
+.dp-radio-opt::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  flex-shrink: 0;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+
+.dp-radio-opt.dp-radio-selected {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.dp-radio-opt.dp-radio-selected::before {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* ---- Select Group ---- */
+.dp-select-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.dp-select-opt {
+  padding: 3px 9px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.dp-select-opt.dp-select-selected {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ---- Color Swatch ---- */
+.dp-color-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  display: inline-block;
+  transition: border-color 150ms ease;
+  flex-shrink: 0;
+}
+
+.dp-row.dp-focused .dp-color-swatch {
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+}
+
+.dp-color-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.dp-color-value {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ---- Debug Modes ---- */
+
+/* Focus outlines mode */
+body.debug-focus-outlines *:focus,
+body.debug-focus-outlines [class*="focused"] {
+  outline: 2px solid rgba(255, 80, 80, 0.9) !important;
+  outline-offset: 1px !important;
+}
+
+/* Grid overlay mode */
+#debug-grid-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9997;
+  display: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+body.debug-grid-overlay #debug-grid-overlay {
+  display: block;
+}
+
+/* Screenshot mode: hide all debug chrome */
+body.screenshot-mode #debug-panel,
+body.screenshot-mode #build-stamp,
+body.screenshot-mode #toast,
+body.screenshot-mode #debug-grid-overlay {
+  display: none !important;
+}
+
+/* ---- Panel visible indicator in build stamp ---- */
+body:has(#debug-panel.open) #build-stamp {
+  opacity: 0;
+  pointer-events: none;
+}

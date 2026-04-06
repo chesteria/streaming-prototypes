@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UTA Debug Config</title>
+  <link rel="stylesheet" href="css/debug-config.css" />
+</head>
+<body>
+
+<div id="dc-layout">
+
+  <!-- Sidebar -->
+  <nav id="dc-sidebar">
+    <div class="dc-sidebar-logo">UTA &nbsp;<span>Debug</span></div>
+
+    <div class="dc-nav-item active" data-section="rails">
+      <span class="dc-nav-icon">&#x1F5C2;</span>
+      Rail Editor
+    </div>
+    <div class="dc-nav-item" data-section="catalog">
+      <span class="dc-nav-icon">&#x1F4FA;</span>
+      Catalog
+    </div>
+    <div class="dc-nav-item" data-section="export">
+      <span class="dc-nav-icon">&#x1F4E6;</span>
+      Export / Import
+    </div>
+
+    <div class="dc-sidebar-footer">
+      Changes saved to localStorage.<br />
+      Open <a href="index.html" target="_blank" style="color:var(--accent);">index.html</a> to preview.
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main id="dc-main">
+
+    <!-- ---- Section A: Rail Editor ---- -->
+    <section id="section-rails" class="dc-section active">
+      <div class="dc-section-header">
+        <div class="dc-section-title">Lander Rail Editor</div>
+        <div class="dc-section-desc">
+          Reorder, rename, enable/disable, or remove rails. Changes persist in localStorage.
+        </div>
+      </div>
+
+      <div class="dc-toolbar">
+        <button class="dc-btn primary" id="btn-save-rails">&#x1F4BE; Save Changes</button>
+        <button class="dc-btn" id="btn-preview-app">&#x1F517; Preview App</button>
+        <button class="dc-btn danger" id="btn-reset-rails">Reset to Defaults</button>
+        <span class="dc-status" id="rail-save-status"></span>
+      </div>
+
+      <ul id="rail-list">
+        <!-- Rendered by debug-config.js -->
+      </ul>
+    </section>
+
+    <!-- ---- Section B: Catalog Editor ---- -->
+    <section id="section-catalog" class="dc-section">
+      <div class="dc-section-header">
+        <div class="dc-section-title">Content Catalog</div>
+        <div class="dc-section-desc">
+          Browse and edit shows. Double-click any cell to edit inline.
+        </div>
+      </div>
+
+      <div class="dc-toolbar">
+        <button class="dc-btn primary" id="btn-save-catalog">&#x1F4BE; Save Catalog</button>
+        <button class="dc-btn success" id="btn-add-show">+ Add Show</button>
+        <div class="dc-search">
+          <input type="text" id="catalog-search" placeholder="Search by title, genre, year…" />
+        </div>
+        <span class="dc-status" id="catalog-save-status"></span>
+      </div>
+
+      <div class="dc-table-wrapper">
+        <table id="catalog-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Rating</th>
+              <th>Year</th>
+              <th>Genres</th>
+              <th>Badges</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="catalog-tbody">
+            <!-- Rendered by debug-config.js -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ---- Section C: Export / Import ---- -->
+    <section id="section-export" class="dc-section">
+      <div class="dc-section-header">
+        <div class="dc-section-title">Export / Import</div>
+        <div class="dc-section-desc">
+          Export all <code>debug_</code> localStorage keys as JSON, or import a previously exported file.
+        </div>
+      </div>
+
+      <div class="dc-export-grid">
+
+        <div class="dc-export-card">
+          <div class="dc-export-card-title">&#x1F4E4; Export Config</div>
+          <div class="dc-export-card-desc">
+            Downloads all <code>debug_</code> localStorage keys as a timestamped JSON file
+            you can share or restore later.
+          </div>
+          <div class="dc-keys-preview" id="export-keys-preview">Loading…</div>
+          <button class="dc-btn primary" id="btn-export">Download JSON</button>
+          <span class="dc-status" id="export-status" style="margin-left:10px;"></span>
+        </div>
+
+        <div class="dc-export-card">
+          <div class="dc-export-card-title">&#x1F4E5; Import Config</div>
+          <div class="dc-export-card-desc">
+            Select a previously exported JSON file. All keys will be written to localStorage
+            and the page will reload automatically.
+          </div>
+          <button class="dc-btn" id="btn-import">Choose File…</button>
+          <input type="file" id="import-file-input" accept=".json" style="display:none;" />
+          <span class="dc-status" id="import-status" style="margin-left:10px;"></span>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="js/debug-config.js"></script>
+</body>
+</html>

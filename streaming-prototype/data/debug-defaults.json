@@ -1,0 +1,21 @@
+{
+  "heroCycleInterval": 5000,
+  "cityCycleInterval": 5000,
+  "crossfadeDuration": 600,
+  "controlsAutoHide": 5000,
+  "focusTransitionSpeed": 200,
+  "scrollAnimationSpeed": 300,
+  "playbackSpeed": 1,
+  "focusGlowOpacity": 0.15,
+  "focusGlowSpread": 24,
+  "focusBorderWidth": 2,
+  "tileCornerRadius": 12,
+  "tileGap": 16,
+  "backgroundColor": "#0F1923",
+  "livingTiles": true,
+  "heroAutoAdvance": true,
+  "simulatedPlayback": true,
+  "showFocusOutlines": false,
+  "showGridOverlay": false,
+  "authState": "anonymous"
+}
