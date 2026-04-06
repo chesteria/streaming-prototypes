@@ -11,7 +11,7 @@
   --color-surface-80:      rgba(42, 58, 74, 0.8);
   --color-overlay:         rgba(15, 25, 35, 0.85);
 
-  --color-focus-border:    rgba(255, 255, 255, 0.5);
+  --color-focus-border:    rgba(255, 255, 255, 0.4);
   --color-focus-glow:      rgba(255, 255, 255, 0.15);
   --color-focus-btn-bg:    #FFFFFF;
   --color-focus-btn-text:  #0F1923;
@@ -42,8 +42,8 @@
   --rail-gap:              16px;
 
   /* --- Tile Sizes --- */
-  --hero-tile-width:       920px;
-  --hero-tile-height:      550px;
+  --hero-tile-width:       828px;
+  --hero-tile-height:      493px;
   --portrait-tile-w:       180px;
   --portrait-tile-h:       270px;
   --landscape-tile-w:      440px;

@@ -33,7 +33,6 @@ const PlayerScreen = {
   _controlsVisible: true,
   _modalVisible: false,
   _captionsOn: false,
-  _inMyStuff: false,
   _episodes: [],
 
   async init(container, params) {
@@ -54,7 +53,6 @@ const PlayerScreen = {
     // Load show data
     const showId = params.showId;
     this._show = DataStore.getShow(showId);
-    this._inMyStuff = this._show ? DataStore.isInMyStuff(showId) : false;
 
     // Load episode data
     const seriesData = await DataStore.getSeriesData(showId);
@@ -164,7 +162,7 @@ const PlayerScreen = {
 
       <!-- More Episodes Rail -->
       ${episodeTilesHTML.length ? `
-      <div class="player-episodes-area hidden" id="episodes-area">
+      <div class="player-episodes-area" id="episodes-area">
         <div class="player-episodes-title">More Episodes</div>
         <div class="player-episode-rail">
           <div class="player-ep-track" id="ep-track">
@@ -220,10 +218,7 @@ const PlayerScreen = {
         <span class="meta-dot">·</span>
         <span>${show.type}</span>
       </div>
-      <div class="modal-link-btn" id="modal-goto-series">→ Go to Series Page</div>
-      <div class="modal-add-btn" id="modal-add-btn">
-        ${this._inMyStuff ? '✓ Added to My Stuff' : '+ Add to My Stuff'}
-      </div>
+      <button class="pill-btn modal-series-btn focused" id="modal-goto-series">→ Go to Series Page</button>
     `;
   },
 
@@ -271,7 +266,10 @@ const PlayerScreen = {
     const epArea = this._container.querySelector('#episodes-area');
     if (ctrl) ctrl.classList.remove('hidden');
     if (dim) dim.classList.add('overlay-visible');
-    if (epArea) epArea.classList.remove('hidden');
+    if (epArea) {
+      epArea.classList.remove('expanded');
+      epArea.classList.add('peek');
+    }
     this._resetHideTimer();
   },
 
@@ -280,14 +278,15 @@ const PlayerScreen = {
     const ctrl = this._container.querySelector('#player-controls');
     const epArea = this._container.querySelector('#episodes-area');
     if (ctrl) ctrl.classList.add('hidden');
-    if (epArea) epArea.classList.add('hidden');
+    // Fully collapse episodes when controls are dismissed
+    if (epArea) epArea.classList.remove('peek', 'expanded');
     clearTimeout(this._hideTimer);
   },
 
   _resetHideTimer() {
     clearTimeout(this._hideTimer);
     this._hideTimer = setTimeout(() => {
-      if (!this._modalVisible && this._activeZone !== 'progress') {
+      if (!this._modalVisible && this._activeZone !== 'progress' && this._activeZone !== 'episodes') {
         this._hideControls();
       }
     }, CONTROLS_AUTO_HIDE_MS);
@@ -404,9 +403,14 @@ const PlayerScreen = {
         return;
       }
       if (action === 'DOWN') {
-        // Go to episodes
+        // Expand episodes rail: hide controls, slide rail up to ~30% from bottom
         const epArea = this._container.querySelector('#episodes-area');
         if (epArea && this._episodes.length) {
+          const ctrl = this._container.querySelector('#player-controls');
+          if (ctrl) ctrl.classList.add('hidden');
+          clearTimeout(this._hideTimer);
+          epArea.classList.remove('peek');
+          epArea.classList.add('expanded');
           const allBtns = this._container.querySelectorAll('.player-btn');
           allBtns.forEach(b => b.classList.remove('focused'));
           this._activeZone = 'episodes';
@@ -448,10 +452,20 @@ const PlayerScreen = {
 
     if (this._activeZone === 'episodes') {
       if (action === 'UP') {
+        // Collapse episodes back to peek, restore controls
         const tiles = this._container.querySelectorAll('.player-ep-tile');
         tiles.forEach(t => t.classList.remove('focused'));
+        const epArea = this._container.querySelector('#episodes-area');
+        if (epArea) {
+          epArea.classList.remove('expanded');
+          epArea.classList.add('peek');
+        }
+        const ctrl = this._container.querySelector('#player-controls');
+        if (ctrl) ctrl.classList.remove('hidden');
+        this._controlsVisible = true;
         this._activeZone = 'buttons';
         this._focusBtn(this._btnGroup, this._btnIdx);
+        this._resetHideTimer();
         return;
       }
       if (action === 'DOWN') return; // Bottom of screen
@@ -569,13 +583,8 @@ const PlayerScreen = {
     this._focusBtn('right', 0); // Return focus to More Info button
   },
 
-  _modalZone: 'link', // 'link' | 'add-btn'
-
   _updateModalFocus() {
-    const link = this._container.querySelector('#modal-goto-series');
-    const addBtn = this._container.querySelector('#modal-add-btn');
-    if (link) link.classList.toggle('focused', this._modalZone === 'link');
-    if (addBtn) addBtn.classList.toggle('focused', this._modalZone === 'add-btn');
+    // Single focusable item — always focused when modal is open
   },
 
   _handleModalKey(action) {
@@ -583,30 +592,9 @@ const PlayerScreen = {
       this._closeModal();
       return;
     }
-    if (action === 'UP') {
-      if (this._modalZone === 'add-btn') {
-        this._modalZone = 'link';
-        this._updateModalFocus();
-      }
-      return;
-    }
-    if (action === 'DOWN') {
-      if (this._modalZone === 'link') {
-        this._modalZone = 'add-btn';
-        this._updateModalFocus();
-      }
-      return;
-    }
     if (action === 'OK') {
-      if (this._modalZone === 'link') {
-        this._closeModal();
-        App.navigate('series-pdp', { showId: this._show?.id });
-      } else if (this._modalZone === 'add-btn') {
-        this._inMyStuff = DataStore.toggleMyStuff(this._show?.id);
-        const addBtn = this._container.querySelector('#modal-add-btn');
-        if (addBtn) addBtn.textContent = this._inMyStuff ? '✓ Added to My Stuff' : '+ Add to My Stuff';
-        showToast(this._inMyStuff ? 'Added to My Stuff' : 'Removed from My Stuff');
-      }
+      this._closeModal();
+      App.navigate('series-pdp', { showId: this._show?.id });
     }
   },
 };

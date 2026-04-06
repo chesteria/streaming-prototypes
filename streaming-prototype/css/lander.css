@@ -19,30 +19,33 @@
 
 /* ============================================================
    HERO CAROUSEL RAIL
+   Hero tiles run edge-to-edge. The right peeking tile is
+   visible at the right edge. No horizontal padding on the track.
    ============================================================ */
 
 .hero-carousel {
   position: relative;
   width: 100%;
-  height: 620px;
+  height: 720px;
   overflow: hidden;
-  padding-top: var(--nav-height);
+  padding-top: calc(var(--nav-height) + 135px);
 }
 
 .hero-track {
   display: flex;
-  transition: transform var(--t-scroll) cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  will-change: transform;
   align-items: center;
   height: 100%;
-  padding: 16px var(--content-pad-x);
-  gap: 20px;
+  gap: 16px;
+  padding: 12px 0;
+  padding-left: var(--content-pad-x);
+  transition: transform var(--t-scroll) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
 }
 
 .hero-tile {
   flex-shrink: 0;
-  width: 920px;
-  height: 550px;
+  width: 828px;
+  height: 493px;
   border-radius: var(--tile-radius);
   overflow: hidden;
   position: relative;
@@ -52,21 +55,8 @@
   will-change: transform;
 }
 
-.hero-tile-side {
-  flex-shrink: 0;
-  width: 360px;
-  height: 480px;
-  border-radius: var(--tile-radius);
-  overflow: hidden;
-  position: relative;
-  opacity: 0.6;
-  transition: opacity var(--t-focus) ease-out;
-  will-change: opacity;
-}
-
 .hero-tile.focused {
   box-shadow: var(--focus-box-shadow);
-  transform: scale(1.005);
 }
 
 /* Hero tile images */
@@ -100,7 +90,7 @@
   background: linear-gradient(
     to top,
     rgba(15, 25, 35, 0.95) 0%,
-    rgba(15, 25, 35, 0.4) 50%,
+    rgba(15, 25, 35, 0.35) 45%,
     transparent 100%
   );
 }
@@ -111,7 +101,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 24px;
+  padding: 28px 28px 24px;
 }
 
 .hero-tile-badge {
@@ -141,7 +131,7 @@
   font-size: 36px;
   font-weight: 800;
   color: var(--color-text-primary);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .hero-city-temp {
@@ -159,48 +149,35 @@
 
 .hero-city-tags {
   display: flex;
-  gap: 8px;
-  font-size: 13px;
+  gap: 0;
+  font-size: 14px;
   color: var(--color-text-secondary);
 }
 
 .hero-city-tags span::before {
-  content: '· ';
+  content: ' · ';
   color: var(--color-text-tertiary);
 }
+
 .hero-city-tags span:first-child::before {
   content: '';
 }
 
-/* Side tile: show just title peeking */
-.hero-tile-side .hero-tile-title {
-  font-size: 24px;
-}
-
-/* Hero "press for more" hint */
-.hero-press-hint {
-  position: absolute;
-  bottom: 10px;
-  right: 14px;
-  font-size: 12px;
-  color: var(--color-text-secondary);
-  background: rgba(15,25,35,0.7);
-  padding: 4px 10px;
-  border-radius: 12px;
-  backdrop-filter: blur(4px);
-}
-
 /* ============================================================
    STANDARD RAIL WRAPPER
+   All content rails share the same left edge via padding-left
+   on .rail-inner, which matches the nav's padding-left.
    ============================================================ */
 
 .rail-section {
-  padding: 0 0 40px 0;
+  padding: 0 0 36px 0;
 }
 
 .rail-overflow {
   overflow: hidden;
   position: relative;
+  padding: 20px 0;
+  margin: -20px 0;
 }
 
 .rail-inner {
@@ -208,104 +185,8 @@
 }
 
 /* ============================================================
-   CONTINUE WATCHING RAIL
-   ============================================================ */
-
-.continue-watching-rail .rail-scroll {
-  padding-left: var(--content-pad-x);
-}
-
-.cw-tile {
-  flex-shrink: 0;
-  width: var(--portrait-tile-w);
-  height: var(--portrait-tile-h);
-  border-radius: var(--tile-radius);
-  overflow: hidden;
-  position: relative;
-  transition: box-shadow var(--t-focus) ease-out,
-              transform var(--t-focus) ease-out;
-  will-change: transform;
-  background: var(--color-card-bg);
-}
-
-.cw-tile.focused {
-  box-shadow: var(--focus-box-shadow);
-  transform: scale(1.04);
-  z-index: 10;
-}
-
-.cw-tile img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* Location pills below CW rail */
-.cw-locations {
-  display: flex;
-  gap: 12px;
-  padding: 16px 0 0 var(--content-pad-x);
-  align-items: center;
-}
-
-.location-pill {
-  padding: 8px 18px;
-  border-radius: 30px;
-  background: var(--color-surface);
-  color: var(--color-text-secondary);
-  font-size: 14px;
-  font-weight: 500;
-  transition: box-shadow var(--t-focus) ease-out;
-  flex-shrink: 0;
-}
-
-.location-pill.focused {
-  box-shadow: var(--focus-box-shadow);
-  color: var(--color-text-primary);
-}
-
-.location-pill-add {
-  color: var(--color-text-tertiary);
-}
-
-/* Live schedule tiles */
-.cw-schedule {
-  display: flex;
-  gap: 12px;
-  padding: 12px 0 0 var(--content-pad-x);
-  align-items: stretch;
-}
-
-.schedule-tile {
-  width: 200px;
-  height: 80px;
-  border-radius: 8px;
-  overflow: hidden;
-  position: relative;
-  background: var(--color-card-bg);
-  flex-shrink: 0;
-}
-
-.schedule-tile img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.5;
-}
-
-.schedule-badge {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-}
-
-/* ============================================================
    LOCAL CHANNELS RAIL
    ============================================================ */
-
-.live-channels-rail .rail-scroll {
-  padding-left: var(--content-pad-x);
-}
 
 .channel-tile {
   flex-shrink: 0;
@@ -372,16 +253,17 @@
   line-height: 1.2;
 }
 
+/* Channel metadata row — lives in a second .rail-scroll below the tiles */
 .channel-tile-below {
-  margin-top: 8px;
-  width: var(--channel-tile-w);
   flex-shrink: 0;
+  width: var(--channel-tile-w);
 }
 
 .channel-meta-line {
   font-size: 13px;
   color: var(--color-text-tertiary);
   margin-bottom: 2px;
+  margin-top: 8px;
 }
 
 .channel-program-title {
@@ -395,12 +277,16 @@
    ============================================================ */
 
 .genre-pills-section {
-  padding: 0 0 40px 0;
+  padding: 0 0 36px 0;
+}
+
+.genre-pills-overflow {
+  overflow: hidden;
 }
 
 .genre-pills-scroll {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   padding-left: var(--content-pad-x);
   transition: transform var(--t-scroll) cubic-bezier(0.25, 0.46, 0.45, 0.94);
   will-change: transform;
@@ -408,11 +294,11 @@
 
 .genre-pill {
   flex-shrink: 0;
-  padding: 10px 22px;
+  padding: 9px 20px;
   border-radius: 30px;
   background: var(--color-surface);
   color: var(--color-text-primary);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   transition: background var(--t-focus) ease-out,
               color var(--t-focus) ease-out,
@@ -428,17 +314,17 @@
 
 /* ============================================================
    COLLECTION SCREAMER
+   Tiles live INSIDE the banner on the right side.
    ============================================================ */
 
 .screamer-section {
-  padding: 0 var(--content-pad-x) 40px;
+  padding: 0 0 36px 0;
 }
 
 .screamer-banner {
   position: relative;
   width: 100%;
-  height: 340px;
-  border-radius: 16px;
+  height: 380px;
   overflow: hidden;
   background: var(--color-card-bg);
   transition: box-shadow var(--t-focus) ease-out;
@@ -455,45 +341,53 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.5;
+  opacity: 0.45;
 }
 
+/* Left-to-right gradient: opaque on left (text readable), fades to transparent */
 .screamer-gradient {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, rgba(15,25,35,0.95) 35%, rgba(15,25,35,0.3) 100%);
+  background: linear-gradient(
+    to right,
+    rgba(15,25,35,1) 0%,
+    rgba(15,25,35,0.92) 30%,
+    rgba(15,25,35,0.55) 50%,
+    rgba(15,25,35,0) 70%
+  );
 }
 
+/* Left content — text + CTA */
 .screamer-content {
   position: relative;
-  z-index: 1;
-  padding: 48px;
+  z-index: 2;
+  padding: 48px 0 48px var(--content-pad-x);
   display: flex;
   flex-direction: column;
   justify-content: center;
   height: 100%;
-  max-width: 600px;
+  max-width: 560px;
 }
 
 .screamer-label {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--color-text-secondary);
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .screamer-title {
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 800;
   color: var(--color-text-primary);
   line-height: 1.2;
-  margin-bottom: 12px;
+  margin-bottom: 20px;
 }
 
 .screamer-desc {
-  font-size: 16px;
+  font-size: 15px;
   color: var(--color-text-secondary);
   margin-bottom: 24px;
   line-height: 1.5;
@@ -503,12 +397,14 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 24px;
+  padding: 11px 22px;
   border-radius: 30px;
   background: var(--color-surface);
   color: var(--color-text-primary);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
+  border: none;
+  cursor: default;
   transition: background var(--t-focus) ease-out,
               color var(--t-focus) ease-out,
               box-shadow var(--t-focus) ease-out;
@@ -521,18 +417,41 @@
   box-shadow: var(--focus-box-shadow);
 }
 
-/* Screamer embedded tile rail */
-.screamer-tiles {
-  padding: 16px 0 0 0;
+/* Right tiles area — overlaid on right portion of banner */
+.screamer-tiles-area {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  /* Start where gradient begins to fade, creating a natural blend */
+  left: 42%;
+  right: 0;
+  overflow: hidden;
+  z-index: 1;
+  /* Fade-in from the left so tiles emerge from the gradient */
+  mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.6) 12%, black 30%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.6) 12%, black 30%);
+}
+
+.screamer-tiles-track {
+  display: flex;
+  gap: 14px;
+  height: 100%;
+  align-items: center;
+  padding: 0 32px;
+  transition: transform var(--t-scroll) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+/* Portrait tiles inside the screamer inherit standard focus treatment */
+.screamer-tiles-track .portrait-tile {
+  /* Slightly reduced height to fit inside banner with breathing room */
+  height: 300px;
+  width: 200px;
 }
 
 /* ============================================================
    PORTRAIT CONTENT RAIL (Top Flix, etc.)
    ============================================================ */
-
-.portrait-rail .rail-scroll {
-  padding-left: var(--content-pad-x);
-}
 
 .portrait-tile {
   flex-shrink: 0;
@@ -570,23 +489,34 @@
   justify-content: center;
 }
 
+.landscape-tile-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+}
+
 /* ============================================================
    MARKETING / UPSELL BANNER
    ============================================================ */
 
 .marketing-banner-section {
-  padding: 0 var(--content-pad-x) 40px;
+  padding: 0 var(--content-pad-x) 36px;
 }
 
 .marketing-banner {
   position: relative;
   width: 100%;
-  height: 300px;
+  height: 280px;
   border-radius: 16px;
   overflow: hidden;
   background: linear-gradient(135deg, #0d3340 0%, #0a2535 50%, #0f1923 100%);
   display: flex;
   align-items: center;
+  transition: box-shadow var(--t-focus) ease-out;
+}
+
+.marketing-banner.has-focus {
+  box-shadow: var(--focus-box-shadow);
 }
 
 .marketing-bg-posters {
@@ -594,7 +524,7 @@
   right: 0;
   top: 0;
   bottom: 0;
-  width: 70%;
+  width: 65%;
   display: flex;
   gap: 8px;
   align-items: center;
@@ -614,7 +544,6 @@
   height: 80px;
   object-fit: cover;
   border-radius: 6px;
-  opacity: 0.7;
 }
 
 .marketing-gradient {
@@ -626,22 +555,40 @@
 .marketing-content {
   position: relative;
   z-index: 1;
-  padding: 48px;
+  padding: 0 48px;
   max-width: 600px;
 }
 
 .marketing-headline {
-  font-size: 36px;
+  font-size: 34px;
   font-weight: 800;
   color: var(--color-text-primary);
   margin-bottom: 10px;
 }
 
 .marketing-subtext {
-  font-size: 16px;
+  font-size: 15px;
   color: var(--color-text-secondary);
   margin-bottom: 28px;
   line-height: 1.5;
+  max-width: 480px;
+}
+
+.marketing-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 22px;
+  border-radius: 30px;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: default;
+  transition: background var(--t-focus) ease-out,
+              color var(--t-focus) ease-out,
+              box-shadow var(--t-focus) ease-out;
 }
 
 .marketing-cta.focused {
@@ -653,10 +600,6 @@
 /* ============================================================
    LANDSCAPE CONTENT RAIL (My Mix, etc.)
    ============================================================ */
-
-.landscape-rail .rail-scroll {
-  padding-left: var(--content-pad-x);
-}
 
 .landscape-tile {
   flex-shrink: 0;
@@ -684,12 +627,6 @@
   object-fit: cover;
 }
 
-.landscape-tile-badge {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-}
-
 .landscape-tile-below {
   margin-top: 6px;
   width: 280px;
@@ -697,7 +634,7 @@
 }
 
 .landscape-tile-title {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--color-text-primary);
   white-space: nowrap;

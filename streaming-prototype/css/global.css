@@ -212,6 +212,19 @@ img {
   object-fit: cover;
 }
 
+/* ---- Version / Build Stamp ---- */
+#build-stamp {
+  position: fixed;
+  bottom: 18px;
+  right: 32px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.25);
+  letter-spacing: 0.5px;
+  pointer-events: none;
+  z-index: 9998;
+}
+
 /* ---- Loading state ---- */
 .img-placeholder {
   background: var(--color-card-bg);

@@ -1,5 +1,8 @@
 /* ============================================================
    SERIES PDP SCREEN — Series detail page
+   Phase 1: Anonymous / first-visit state only.
+   Auth-gated features (Add to My Stuff, Resume, Watch History)
+   are deferred to the Authentication phase.
    ============================================================ */
 
 const SeriesPDPScreen = {
@@ -9,12 +12,9 @@ const SeriesPDPScreen = {
   _scrollEl: null,
   _show: null,
   _seriesData: null,
-  _isReturning: false,
-  _cwItem: null,
 
   // Focus zones: 'buttons' | 'seasons' | 'episodes' | 'extras' | 'similar' | 'more-info'
   _activeZone: 'buttons',
-  _btnIdx: 0,
   _seasonIdx: 0,
   _episodeIdx: 0,
   _extrasIdx: 0,
@@ -26,9 +26,10 @@ const SeriesPDPScreen = {
     this._container.className = 'screen screen-series-pdp';
     this._scrollY = 0;
     this._activeZone = 'buttons';
-    this._btnIdx = 0;
     this._seasonIdx = 0;
     this._episodeIdx = 0;
+    this._extrasIdx = 0;
+    this._similarIdx = 0;
 
     const showId = params.showId;
     this._show = DataStore.getShow(showId);
@@ -37,24 +38,13 @@ const SeriesPDPScreen = {
       return;
     }
 
-    this._isReturning = DataStore.hasWatchHistory(showId);
-    this._cwItem = DataStore.getContinueWatchingItem(showId);
     this._seriesData = await DataStore.getSeriesData(showId);
-
     this._render();
   },
 
   _render() {
     const show = this._show;
-    const isReturning = this._isReturning;
-    const cwItem = this._cwItem;
-    const inMyStuff = DataStore.isInMyStuff(show.id);
-
-    // Build action buttons list
-    const buttons = this._buildButtonList(isReturning, inMyStuff, cwItem);
-    this._buttons = buttons;
-
-    const heroHTML = this._buildHeroHTML(show, isReturning, cwItem, buttons);
+    const heroHTML = this._buildHeroHTML(show);
     const contentHTML = this._buildContentHTML(show);
 
     this._container.innerHTML = `
@@ -67,57 +57,17 @@ const SeriesPDPScreen = {
     `;
 
     this._scrollEl = this._container.querySelector('#pdp-scroll');
-    this._attachEvents();
   },
 
-  _buildButtonList(isReturning, inMyStuff, cwItem) {
-    if (!isReturning) {
-      return [
-        { id: 'my-stuff', label: `+ Add To My Stuff` },
-        { id: 'play', label: '▶ Play S1:E1', primary: true },
-      ];
-    } else {
-      const episodeLabel = cwItem ? `▶ Resume ${cwItem.episodeId.toUpperCase().replace('S','S').replace('E',':E')}` : '▶ Resume';
-      return [
-        { id: 'remove-history', label: '✕ Remove From Watch History' },
-        { id: 'my-stuff', label: inMyStuff ? '✓ Added To My Stuff' : '+ Add To My Stuff' },
-        { id: 'restart', label: '↻ Restart Episode' },
-        { id: 'resume', label: episodeLabel, primary: true },
-      ];
-    }
-  },
-
-  _buildHeroHTML(show, isReturning, cwItem, buttons) {
-    const posterHTML = isReturning ? `
-      <div class="pdp-poster-art">
-        <img src="${show.posterImage}" alt="${show.title}" />
-      </div>
-    ` : '';
-
-    const episodeSubtitle = isReturning && this._seriesData ? (() => {
-      // Find current episode title
-      for (const season of (this._seriesData.seasons || [])) {
-        for (const ep of season.episodes) {
-          if (ep.id === (cwItem?.episodeId)) return ep.title;
-        }
-      }
-      return '';
-    })() : '';
-
-    const buttonsHTML = buttons.map((btn, i) => `
-      <button class="pdp-btn${btn.primary ? ' primary' : ''}" data-btn-id="${btn.id}" data-btn-idx="${i}">${btn.label}</button>
-    `).join('');
-
+  _buildHeroHTML(show) {
     return `
       <div class="pdp-hero">
         <img class="pdp-hero-bg" src="${show.heroImage}" alt="${show.title}" />
         <div class="pdp-hero-gradient"></div>
         <div class="pdp-hero-gradient-bottom"></div>
-        ${posterHTML}
         <div class="pdp-hero-content">
           ${show.badges && show.badges.length ? `<div class="pdp-badge"><span class="badge">${show.badges[0]}</span></div>` : ''}
           <div class="pdp-title">${show.title}</div>
-          ${episodeSubtitle ? `<div class="pdp-episode-subtitle">"${episodeSubtitle}"</div>` : ''}
           <div class="pdp-description">${show.description}</div>
           <div class="pdp-meta-row meta-row">
             <span class="badge badge-rating">${show.rating}</span>
@@ -131,7 +81,7 @@ const SeriesPDPScreen = {
             <span>${show.type}</span>
           </div>
           <div class="pdp-actions" id="pdp-actions">
-            ${buttonsHTML}
+            <button class="pdp-btn primary" data-btn-id="play">▶ Play S1:E1</button>
           </div>
         </div>
       </div>
@@ -148,7 +98,9 @@ const SeriesPDPScreen = {
     // Season pills
     const seasonPills = sd.seasons.map((s, i) => `
       <div class="season-pill${i === 0 ? ' active' : ''}" data-season-idx="${i}">
-        ${i === 0 ? `Season 1&nbsp;<span style="font-weight:400;font-size:12px;">${s.episodeCount}ep</span>` : `S${s.number}`}
+        ${i === 0
+          ? `Season 1&nbsp;<span style="font-weight:400;font-size:12px;">${s.episodeCount}ep</span>`
+          : `S${s.number}`}
       </div>
     `).join('');
 
@@ -229,25 +181,18 @@ const SeriesPDPScreen = {
 
   _buildEpisodeTiles(season) {
     if (!season) return '';
-    return season.episodes.map((ep, i) => {
-      const isWatched = DataStore.hasWatchHistory
-        ? DataStore.hasWatchHistory(`${this._show.id}-${ep.id}`)
-        : false;
-      return `
-        <div class="episode-item" data-ep-idx="${i}">
-          <div class="episode-tile" data-ep-id="${ep.id}">
-            <img src="${ep.thumbnail}" alt="${ep.title}" loading="lazy" />
-            <div class="progress-bar-container" style="height:3px;"><div class="progress-bar-fill" style="width:0%;"></div></div>
-            ${isWatched ? '<div class="episode-watched-badge">✓</div>' : ''}
-          </div>
-          <div class="episode-tile-below">
-            <div class="episode-meta">S${ep.season}:E${ep.episode} · ${ep.airDate} · ${ep.duration}</div>
-            <div class="episode-title">${ep.title}</div>
-            <div class="episode-desc">${ep.description}</div>
-          </div>
+    return season.episodes.map((ep, i) => `
+      <div class="episode-item" data-ep-idx="${i}">
+        <div class="episode-tile" data-ep-id="${ep.id}">
+          <img src="${ep.thumbnail}" alt="${ep.title}" loading="lazy" />
         </div>
-      `;
-    }).join('');
+        <div class="episode-tile-below">
+          <div class="episode-meta">S${ep.season}:E${ep.episode} · ${ep.airDate} · ${ep.duration}</div>
+          <div class="episode-title">${ep.title}</div>
+          <div class="episode-desc">${ep.description}</div>
+        </div>
+      </div>
+    `).join('');
   },
 
   _buildExtraTiles(extras) {
@@ -273,10 +218,6 @@ const SeriesPDPScreen = {
     `).join('');
   },
 
-  _attachEvents() {
-    // No additional events needed; all handled by focus engine
-  },
-
   onFocus() {
     FocusEngine.setHandler((action) => this._handleKey(action));
     this._activateZone(this._activeZone);
@@ -293,7 +234,8 @@ const SeriesPDPScreen = {
     this._deactivateAllZones();
 
     if (zone === 'buttons') {
-      this._focusBtn(this._btnIdx);
+      const btn = this._container.querySelector('.pdp-btn');
+      if (btn) btn.classList.add('focused');
     } else if (zone === 'seasons') {
       this._focusSeason(this._seasonIdx);
     } else if (zone === 'episodes') {
@@ -309,23 +251,12 @@ const SeriesPDPScreen = {
   },
 
   _deactivateAllZones() {
-    const btns = this._container.querySelectorAll('.pdp-btn');
-    btns.forEach(b => b.classList.remove('focused'));
-    const seasons = this._container.querySelectorAll('.season-pill');
-    seasons.forEach(s => s.classList.remove('focused'));
-    const epTiles = this._container.querySelectorAll('.episode-tile');
-    epTiles.forEach(t => t.classList.remove('focused'));
-    const simTiles = this._container.querySelectorAll('#similar-track .portrait-tile');
-    simTiles.forEach(t => t.classList.remove('focused'));
+    this._container.querySelectorAll('.pdp-btn').forEach(b => b.classList.remove('focused'));
+    this._container.querySelectorAll('.season-pill').forEach(s => s.classList.remove('focused'));
+    this._container.querySelectorAll('.episode-tile').forEach(t => t.classList.remove('focused'));
+    this._container.querySelectorAll('#similar-track .portrait-tile').forEach(t => t.classList.remove('focused'));
     const card = this._container.querySelector('#more-info-card');
     if (card) card.classList.remove('focused');
-  },
-
-  _focusBtn(idx) {
-    const btns = Array.from(this._container.querySelectorAll('.pdp-btn'));
-    btns.forEach(b => b.classList.remove('focused'));
-    if (btns[idx]) btns[idx].classList.add('focused');
-    this._btnIdx = idx;
   },
 
   _focusSeason(idx) {
@@ -333,6 +264,25 @@ const SeriesPDPScreen = {
     pills.forEach(p => p.classList.remove('focused'));
     if (pills[idx]) pills[idx].classList.add('focused');
     this._seasonIdx = idx;
+  },
+
+  _selectSeason(idx) {
+    const sd = this._seriesData;
+    if (!sd) return;
+    const pills = Array.from(this._container.querySelectorAll('.season-pill'));
+    pills.forEach((pill, i) => {
+      const season = sd.seasons[i];
+      const isActive = i === idx;
+      pill.classList.toggle('active', isActive);
+      if (isActive) {
+        pill.innerHTML = `Season ${season.number}&nbsp;<span style="font-weight:400;font-size:12px;">${season.episodeCount}ep</span>`;
+      } else {
+        pill.innerHTML = `S${season.number}`;
+      }
+    });
+    // Re-focus the selected pill to preserve highlight
+    this._focusSeason(idx);
+    showToast(`Season ${idx + 1}`);
   },
 
   _focusEpisode(idx) {
@@ -348,7 +298,7 @@ const SeriesPDPScreen = {
     tiles.forEach(t => t.classList.remove('focused'));
     if (tiles[idx]) tiles[idx].classList.add('focused');
     this._extrasIdx = idx;
-    this._scrollRail('extras-track', idx, 456, 16);
+    this._scrollRail('extras-track', idx, 440, 16);
   },
 
   _focusSimilar(idx) {
@@ -362,7 +312,7 @@ const SeriesPDPScreen = {
   _scrollRail(trackId, idx, itemW, gap) {
     const track = this._container.querySelector(`#${trackId}`);
     if (!track) return;
-    let translateX = -(idx * (itemW + gap) - 60);
+    let translateX = -(idx * (itemW + gap));
     if (translateX > 0) translateX = 0;
     track.style.transform = `translateX(${translateX}px)`;
   },
@@ -384,29 +334,22 @@ const SeriesPDPScreen = {
     }
 
     if (zone === 'buttons') {
-      const btns = Array.from(this._container.querySelectorAll('.pdp-btn'));
-      if (action === 'UP') {
-        if (this._btnIdx > 0) {
-          this._focusBtn(this._btnIdx - 1);
-        }
-        // At top — stay here (first button)
-        return;
-      }
+      // Only one button (Play S1:E1) — DOWN goes straight to seasons
+      if (action === 'UP') return; // Already at top
       if (action === 'DOWN') {
-        if (this._btnIdx < btns.length - 1) {
-          this._focusBtn(this._btnIdx + 1);
-        } else {
-          // Move to seasons zone
-          if (this._seriesData) {
-            this._activateZone('seasons');
-            this._scrollToSection('season-selector');
-          }
+        if (this._seriesData) {
+          this._activateZone('seasons');
+          this._scrollToSection('season-selector');
         }
         return;
       }
       if (action === 'OK') {
-        const btnId = btns[this._btnIdx]?.dataset?.btnId;
-        this._handleButtonAction(btnId);
+        const firstEp = this._seriesData?.seasons[0]?.episodes[0];
+        App.navigate('player', {
+          showId: this._show.id,
+          episodeId: firstEp?.id || 'movie',
+          episodeData: firstEp,
+        });
         return;
       }
     }
@@ -433,11 +376,7 @@ const SeriesPDPScreen = {
         return;
       }
       if (action === 'OK') {
-        // Switch season — update active pill
-        pills.forEach((p, i) => {
-          p.classList.toggle('active', i === this._seasonIdx);
-        });
-        showToast(`Switched to Season ${this._seasonIdx + 1}`);
+        this._selectSeason(this._seasonIdx);
         return;
       }
     }
@@ -450,19 +389,15 @@ const SeriesPDPScreen = {
         return;
       }
       if (action === 'DOWN') {
-        const hasExtras = !!this._container.querySelector('#extras-track');
-        if (hasExtras) {
+        if (this._container.querySelector('#extras-track')) {
           this._activateZone('extras');
           this._scrollToSection('extras-rail-section');
+        } else if (this._container.querySelector('#similar-track')) {
+          this._activateZone('similar');
+          this._scrollToSection('similar-rail-section');
         } else {
-          const hasSimilar = !!this._container.querySelector('#similar-track');
-          if (hasSimilar) {
-            this._activateZone('similar');
-            this._scrollToSection('similar-rail-section');
-          } else {
-            this._activateZone('more-info');
-            this._scrollToSection('more-info-card');
-          }
+          this._activateZone('more-info');
+          this._scrollToSection('more-info-card');
         }
         return;
       }
@@ -475,11 +410,8 @@ const SeriesPDPScreen = {
         return;
       }
       if (action === 'OK') {
-        const season = this._seriesData?.seasons[this._seasonIdx];
-        const ep = season?.episodes[this._episodeIdx];
-        if (ep) {
-          App.navigate('player', { showId: this._show.id, episodeId: ep.id, episodeData: ep });
-        }
+        const ep = this._seriesData?.seasons[this._seasonIdx]?.episodes[this._episodeIdx];
+        if (ep) App.navigate('player', { showId: this._show.id, episodeId: ep.id, episodeData: ep });
         return;
       }
     }
@@ -492,8 +424,7 @@ const SeriesPDPScreen = {
         return;
       }
       if (action === 'DOWN') {
-        const hasSimilar = !!this._container.querySelector('#similar-track');
-        if (hasSimilar) {
+        if (this._container.querySelector('#similar-track')) {
           this._activateZone('similar');
           this._scrollToSection('similar-rail-section');
         } else {
@@ -520,8 +451,13 @@ const SeriesPDPScreen = {
     if (zone === 'similar') {
       const tiles = Array.from(this._container.querySelectorAll('#similar-track .portrait-tile'));
       if (action === 'UP') {
-        this._activateZone('extras');
-        this._scrollToSection('extras-rail-section');
+        if (this._container.querySelector('#extras-track')) {
+          this._activateZone('extras');
+          this._scrollToSection('extras-rail-section');
+        } else {
+          this._activateZone('episodes');
+          this._scrollToSection('episodes-rail-section');
+        }
         return;
       }
       if (action === 'DOWN') {
@@ -546,60 +482,19 @@ const SeriesPDPScreen = {
 
     if (zone === 'more-info') {
       if (action === 'UP') {
-        const hasSimilar = !!this._container.querySelector('#similar-track');
-        if (hasSimilar) {
+        if (this._container.querySelector('#similar-track')) {
           this._activateZone('similar');
           this._scrollToSection('similar-rail-section');
-        } else {
+        } else if (this._container.querySelector('#extras-track')) {
           this._activateZone('extras');
           this._scrollToSection('extras-rail-section');
+        } else {
+          this._activateZone('episodes');
+          this._scrollToSection('episodes-rail-section');
         }
         return;
       }
-      // At bottom, no further DOWN
-    }
-  },
-
-  _handleButtonAction(btnId) {
-    const show = this._show;
-    if (btnId === 'play') {
-      const firstEp = this._seriesData?.seasons[0]?.episodes[0];
-      App.navigate('player', {
-        showId: show.id,
-        episodeId: firstEp?.id || 'movie',
-        episodeData: firstEp,
-      });
-    } else if (btnId === 'resume') {
-      const cwItem = this._cwItem;
-      App.navigate('player', {
-        showId: show.id,
-        episodeId: cwItem?.episodeId || 'movie',
-        progress: cwItem?.progress || 0,
-      });
-    } else if (btnId === 'my-stuff') {
-      const isNowAdded = DataStore.toggleMyStuff(show.id);
-      // Re-render buttons
-      this._isReturning = DataStore.hasWatchHistory(show.id);
-      const buttons = this._buildButtonList(this._isReturning, isNowAdded, this._cwItem);
-      this._buttons = buttons;
-      const actionsEl = this._container.querySelector('#pdp-actions');
-      if (actionsEl) {
-        actionsEl.innerHTML = buttons.map((btn, i) => `
-          <button class="pdp-btn${btn.primary ? ' primary' : ''}" data-btn-id="${btn.id}" data-btn-idx="${i}">${btn.label}</button>
-        `).join('');
-        this._focusBtn(this._btnIdx);
-      }
-      showToast(isNowAdded ? `Added to My Stuff` : `Removed from My Stuff`);
-    } else if (btnId === 'remove-history') {
-      DataStore.removeFromHistory(show.id);
-      this._isReturning = false;
-      this._cwItem = null;
-      this._render();
-      FocusEngine.setHandler((action) => this._handleKey(action));
-      this._activateZone('buttons');
-      showToast('Removed from watch history');
-    } else if (btnId === 'restart') {
-      App.navigate('player', { showId: show.id, episodeId: 's1e1', progress: 0 });
+      // At bottom — no further DOWN
     }
   },
 };

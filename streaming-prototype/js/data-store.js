@@ -4,7 +4,7 @@
 
 const DataStore = (function() {
   let catalog = null;
-  let userState = null;
+  let geoState = null;
   let landerConfig = null;
   const seriesCache = {};
 
@@ -15,9 +15,9 @@ const DataStore = (function() {
   }
 
   async function init() {
-    [catalog, userState, landerConfig] = await Promise.all([
+    [catalog, geoState, landerConfig] = await Promise.all([
       loadJSON('data/catalog.json'),
-      loadJSON('data/user-state.json'),
+      loadJSON('data/geo-state.json'),
       loadJSON('data/lander-config.json'),
     ]);
   }
@@ -38,6 +38,14 @@ const DataStore = (function() {
     return catalog.cities.find(c => c.id === id) || null;
   }
 
+  function getGeoState() {
+    return geoState;
+  }
+
+  function getDetectedCity() {
+    return geoState ? getCity(geoState.detectedCity) : null;
+  }
+
   function getFeaturedItems() {
     return catalog.featured.map(id => {
       const show = catalog.shows.find(s => s.id === id);
@@ -50,11 +58,9 @@ const DataStore = (function() {
     }).filter(Boolean);
   }
 
+  // DEFERRED — Continue Watching requires Authentication (Phase 1 stub)
   function getContinueWatching() {
-    return userState.continueWatching.map(item => ({
-      ...item,
-      show: getShow(item.showId)
-    })).filter(i => i.show);
+    return [];
   }
 
   function getAllShows() {
@@ -74,44 +80,15 @@ const DataStore = (function() {
   }
 
   function getTopFlix() {
-    // A curated mix of shows for the Top Flix rail
     const ids = ['show-003', 'show-007', 'show-004', 'show-013', 'show-002',
                  'show-020', 'show-008', 'show-018', 'show-001', 'show-006'];
     return ids.map(id => getShow(id)).filter(Boolean);
   }
 
   function getMyMix() {
-    // Based on user history + similar titles
     const ids = ['show-005', 'show-017', 'show-014', 'show-019', 'show-009',
                  'show-010', 'show-011', 'show-012', 'show-015', 'show-016'];
     return ids.map(id => getShow(id)).filter(Boolean);
-  }
-
-  function isInMyStuff(showId) {
-    return userState.myStuff.includes(showId);
-  }
-
-  function toggleMyStuff(showId) {
-    const idx = userState.myStuff.indexOf(showId);
-    if (idx >= 0) {
-      userState.myStuff.splice(idx, 1);
-    } else {
-      userState.myStuff.push(showId);
-    }
-    return isInMyStuff(showId);
-  }
-
-  function hasWatchHistory(showId) {
-    return userState.watchHistory.some(h => h.startsWith(showId));
-  }
-
-  function getContinueWatchingItem(showId) {
-    return userState.continueWatching.find(i => i.showId === showId) || null;
-  }
-
-  function removeFromHistory(showId) {
-    userState.watchHistory = userState.watchHistory.filter(h => !h.startsWith(showId));
-    userState.continueWatching = userState.continueWatching.filter(i => i.showId !== showId);
   }
 
   async function getSeriesData(showId) {
@@ -135,6 +112,8 @@ const DataStore = (function() {
     getChannel,
     getCollection,
     getCity,
+    getGeoState,
+    getDetectedCity,
     getFeaturedItems,
     getContinueWatching,
     getAllShows,
@@ -143,11 +122,6 @@ const DataStore = (function() {
     getGenres,
     getTopFlix,
     getMyMix,
-    isInMyStuff,
-    toggleMyStuff,
-    hasWatchHistory,
-    getContinueWatchingItem,
-    removeFromHistory,
     getSeriesData,
     getLanderConfig,
   };

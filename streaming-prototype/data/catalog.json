@@ -483,6 +483,7 @@
       "name": "Atlanta, GA",
       "temperature": "72°",
       "weatherIcon": "sun",
+      "weatherBlurb": "Mostly sunny",
       "tags": ["News", "Weather", "Community"],
       "images": [
         "https://picsum.photos/seed/atlanta1/920/500",
@@ -495,6 +496,7 @@
       "name": "St. Louis, MO",
       "temperature": "58°",
       "weatherIcon": "cloud",
+      "weatherBlurb": "Mainly cloudy",
       "tags": ["News", "Sports", "Community"],
       "images": [
         "https://picsum.photos/seed/stlouis1/920/500",
@@ -507,6 +509,7 @@
       "name": "Chicago, IL",
       "temperature": "45°",
       "weatherIcon": "wind",
+      "weatherBlurb": "Breezy and cold",
       "tags": ["News", "Weather", "Business"],
       "images": [
         "https://picsum.photos/seed/chicago1/920/500",
@@ -519,6 +522,7 @@
       "name": "Austin, TX",
       "temperature": "85°",
       "weatherIcon": "sun",
+      "weatherBlurb": "Clear skies",
       "tags": ["Music", "Food", "Community"],
       "images": [
         "https://picsum.photos/seed/austin1/920/500",
@@ -531,6 +535,7 @@
       "name": "Seattle, WA",
       "temperature": "52°",
       "weatherIcon": "rain",
+      "weatherBlurb": "Light rain showers",
       "tags": ["News", "Tech", "Community"],
       "images": [
         "https://picsum.photos/seed/seattle1/920/500",

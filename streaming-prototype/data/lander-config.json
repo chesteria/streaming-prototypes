@@ -6,24 +6,16 @@
       "config": { "cycleInterval": 5000, "fadeDuration": 600 }
     },
     {
-      "type": "continue-watching",
-      "dataSource": "user-state.continueWatching",
-      "title": "Continue Watching"
-    },
-    {
       "type": "local-cities",
       "dataSource": "cities",
-      "title": "Your Local",
+      "title": "Locations Near Me",
       "config": { "cycleInterval": 5000 }
     },
     {
       "type": "live-channels",
       "dataSource": "channels",
-      "title": "Local Channels"
-    },
-    {
-      "type": "genre-pills",
-      "dataSource": "genres"
+      "title": "Local Channels",
+      "filter": { "city": "geo-detected" }
     },
     {
       "type": "screamer",
@@ -36,11 +28,15 @@
       "tileType": "portrait"
     },
     {
+      "type": "genre-pills",
+      "dataSource": "genres"
+    },
+    {
       "type": "marketing-banner",
       "content": {
         "headline": "Never miss a beat.",
         "subtext": "Save your spot, sync your devices, and keep your favorites front and center.",
-        "cta": "Browse Collection"
+        "cta": "Start Now"
       }
     },
     {
