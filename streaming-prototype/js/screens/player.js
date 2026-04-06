@@ -7,6 +7,9 @@ const CONTROLS_AUTO_HIDE_MS  = 5000;
 const SIMULATE_PLAYBACK      = true;
 const PLAYBACK_SPEED         = 1;         // 1 = realtime, 10 = 10x speed
 
+// === VIDEO ===
+const VIDEO_STREAM_URL = 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+
 const PlayerScreen = {
   id: 'player',
 
@@ -34,6 +37,7 @@ const PlayerScreen = {
   _modalVisible: false,
   _captionsOn: false,
   _episodes: [],
+  _video: null,
 
   async init(container, params) {
     this._container = container;
@@ -118,7 +122,7 @@ const PlayerScreen = {
     `).join('');
 
     this._container.innerHTML = `
-      <img class="player-bg" src="${bgImg}" alt="${showTitle}" />
+      <video class="player-bg" id="player-video" src="${VIDEO_STREAM_URL}" preload="auto" playsinline></video>
       <div class="player-bg-dim overlay-visible" id="player-dim"></div>
 
       <!-- Scrub thumbnails -->
@@ -223,6 +227,33 @@ const PlayerScreen = {
   },
 
   _attachProgressUpdates() {
+    const video = this._container?.querySelector('#player-video');
+    if (video) {
+      this._video = video;
+
+      video.addEventListener('loadedmetadata', () => {
+        this._duration = video.duration;
+        this._updateProgressUI();
+      });
+
+      video.addEventListener('timeupdate', () => {
+        if (!video.duration) return;
+        this._elapsed = video.currentTime;
+        this._scrubPos = video.currentTime / video.duration;
+        this._updateProgressUI();
+      });
+
+      video.addEventListener('ended', () => {
+        this._showControls();
+      });
+
+      video.play().catch(() => {
+        // Autoplay blocked — will start on first keypress
+      });
+      return;
+    }
+
+    // Fallback: simulated playback when no video element
     if (!DebugConfig.get('simulatedPlayback', SIMULATE_PLAYBACK)) return;
     clearInterval(this._playTimer);
     this._playTimer = setInterval(() => {
@@ -250,16 +281,24 @@ const PlayerScreen = {
   onFocus() {
     FocusEngine.setHandler((action) => this._handleKey(action));
     this._showControls();
+    if (this._video?.paused) this._video.play().catch(() => {});
   },
 
   onBlur() {
     clearInterval(this._playTimer);
     clearTimeout(this._hideTimer);
+    if (this._video) this._video.pause();
   },
 
   destroy() {
     clearInterval(this._playTimer);
     clearTimeout(this._hideTimer);
+    if (this._video) {
+      this._video.pause();
+      this._video.removeAttribute('src');
+      this._video.load();
+      this._video = null;
+    }
   },
 
   _showControls() {
@@ -356,6 +395,7 @@ const PlayerScreen = {
       }
       this._showControls();
       this._activateZoneDefault();
+      if (this._video?.paused) this._video.play().catch(() => {});
       return;
     }
 
@@ -377,6 +417,7 @@ const PlayerScreen = {
       if (action === 'LEFT') {
         this._scrubPos = Math.max(0, this._scrubPos - 0.02);
         this._elapsed = this._scrubPos * this._duration;
+        if (this._video) this._video.currentTime = this._elapsed;
         this._updateProgressUI();
         this._updateScrubThumbs();
         return;
@@ -384,11 +425,17 @@ const PlayerScreen = {
       if (action === 'RIGHT') {
         this._scrubPos = Math.min(1, this._scrubPos + 0.02);
         this._elapsed = this._scrubPos * this._duration;
+        if (this._video) this._video.currentTime = this._elapsed;
         this._updateProgressUI();
         this._updateScrubThumbs();
         return;
       }
       if (action === 'OK') {
+        if (this._video) {
+          if (this._video.paused) { this._video.play().catch(() => {}); showToast('▶ Playing'); }
+          else { this._video.pause(); showToast('⏸ Paused'); }
+          return;
+        }
         this._blurProgressBar();
         this._activeZone = 'buttons';
         this._focusBtn('left', this._btnIdx);
@@ -506,8 +553,13 @@ const PlayerScreen = {
       this._elapsed = 0;
       this._scrubPos = 0;
       this._updateProgressUI();
-      clearInterval(this._playTimer);
-      this._attachProgressUpdates();
+      if (this._video) {
+        this._video.currentTime = 0;
+        this._video.play().catch(() => {});
+      } else {
+        clearInterval(this._playTimer);
+        this._attachProgressUpdates();
+      }
       showToast('Restarting from beginning…');
     } else if (btnKey === 'next-episode') {
       const curIdx = this._episodes.findIndex(e => e.id === this._episodeData?.id);
@@ -529,8 +581,13 @@ const PlayerScreen = {
     this._elapsed = 0;
     this._scrubPos = 0;
     this._duration = this._parseDuration(ep.duration || '42m');
-    clearInterval(this._playTimer);
-    this._attachProgressUpdates();
+    if (this._video) {
+      this._video.currentTime = 0;
+      this._video.play().catch(() => {});
+    } else {
+      clearInterval(this._playTimer);
+      this._attachProgressUpdates();
+    }
 
     // Update content info
     const show = this._show;

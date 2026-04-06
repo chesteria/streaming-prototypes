@@ -7,13 +7,15 @@
   overflow: hidden;
 }
 
-/* ---- Simulated Video Background ---- */
+/* ---- Video Background ---- */
 .player-bg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;   /* prevents inline spacing on <video> */
+  background: #000; /* black letterbox for non-16:9 content */
 }
 
 .player-bg-dim {
