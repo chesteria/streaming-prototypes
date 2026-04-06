@@ -38,6 +38,7 @@ const PlayerScreen = {
   _captionsOn: false,
   _episodes: [],
   _video: null,
+  _debugConfigHandler: null,
 
   async init(container, params) {
     this._container = container;
@@ -79,6 +80,13 @@ const PlayerScreen = {
     if (this._episodeData) {
       this._duration = this._parseDuration(this._episodeData.duration || '42m');
     }
+
+    this._debugConfigHandler = (e) => {
+      if (e.detail.key === 'playbackSpeed' && this._video) {
+        this._video.playbackRate = e.detail.value;
+      }
+    };
+    document.addEventListener('debugconfig:change', this._debugConfigHandler);
 
     this._render();
   },
@@ -247,6 +255,8 @@ const PlayerScreen = {
         this._showControls();
       });
 
+      video.playbackRate = DebugConfig.get('playbackSpeed', PLAYBACK_SPEED);
+
       video.play().catch(() => {
         // Autoplay blocked — will start on first keypress
       });
@@ -293,6 +303,10 @@ const PlayerScreen = {
   destroy() {
     clearInterval(this._playTimer);
     clearTimeout(this._hideTimer);
+    if (this._debugConfigHandler) {
+      document.removeEventListener('debugconfig:change', this._debugConfigHandler);
+      this._debugConfigHandler = null;
+    }
     if (this._video) {
       this._video.pause();
       this._video.removeAttribute('src');
