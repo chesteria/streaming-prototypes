@@ -26,9 +26,9 @@
 .hero-carousel {
   position: relative;
   width: 100%;
-  height: 680px;
+  height: 720px;
   overflow: hidden;
-  padding-top: calc(var(--nav-height) + 60px);
+  padding-top: calc(var(--nav-height) + 135px);
 }
 
 .hero-track {
@@ -44,8 +44,8 @@
 
 .hero-tile {
   flex-shrink: 0;
-  width: 920px;
-  height: 548px;
+  width: 828px;
+  height: 493px;
   border-radius: var(--tile-radius);
   overflow: hidden;
   position: relative;

@@ -3,6 +3,22 @@
 
 ---
 
+## v1.4 r2 — Feedback Round 2 (2026-04-06)
+Source: direct session feedback
+
+### css/lander.css
+- **Hero tile size**: Reduced hero tile by 10% — width 920px → 828px, height 548px → 493px
+- **Hero rail shift**: Increased hero carousel `padding-top` from `calc(var(--nav-height) + 60px)` to `calc(var(--nav-height) + 135px)` (+75px downward shift); carousel container height increased 680px → 720px to preserve tile fit
+
+### css/variables.css
+- Synced `--hero-tile-width` 920px → 828px and `--hero-tile-height` 550px → 493px to match lander.css
+
+### js/screens/lander.js
+- Updated `HERO_TILE_WIDTH` 920 → 828 and `HERO_TILE_HEIGHT` 550 → 493 to match new tile dimensions
+- Fixed `gap` constant in `scrollHeroToIndex` from 20 → 16 to match CSS `gap: 16px` on `.hero-track` (scroll position accuracy for idx > 0)
+
+---
+
 ## v1.4 r1 — Feedback Round 1 (2026-04-06)
 Source: `Feedback/v1.4r1/v1.4PRD-Feedback-r1.md`
 

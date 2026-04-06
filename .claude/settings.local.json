@@ -16,7 +16,8 @@
       "Read(//usr/local/bin/**)",
       "Read(//opt/homebrew/**)",
       "Read(//Users/michechris/.nvm/versions/**)",
-      "Read(//Users/michechris/.volta/bin/**)"
+      "Read(//Users/michechris/.volta/bin/**)",
+      "Bash(git:*)"
     ]
   }
 }

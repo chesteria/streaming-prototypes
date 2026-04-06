@@ -10,8 +10,8 @@ const FOCUS_TRANSITION_MS      = 200;
 const SCROLL_TRANSITION_MS     = 300;
 
 // === SIZES (configurable) ===
-const HERO_TILE_WIDTH          = 920;
-const HERO_TILE_HEIGHT         = 550;
+const HERO_TILE_WIDTH          = 828;
+const HERO_TILE_HEIGHT         = 493;
 const HERO_SIDE_WIDTH          = 360;
 const PORTRAIT_TILE_W          = 180;
 const PORTRAIT_TILE_H          = 270;
@@ -302,7 +302,7 @@ function buildHeroCarousel(config, container) {
     // Center focused tile: pad-left + idx * (tileW + gap)
     const padLeft = 60;
     const tileW = HERO_TILE_WIDTH;
-    const gap = 20;
+    const gap = 16;
     const offset = padLeft + idx * (tileW + gap);
     // Center it: (1920 - tileW) / 2 = 500
     const centerOffset = (1920 - tileW) / 2;
