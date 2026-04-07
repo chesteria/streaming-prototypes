@@ -140,6 +140,24 @@ const FeedbackSystem = (() => {
 
   function _acceptParticipantId(onComplete, keyHandler) {
     Analytics.setParticipantId(_participantCode);
+
+    // H1 (option B): Backfill any events from this session that were stored
+    // before the participant ID was known (participantId: 'unknown').
+    try {
+      const currentSessionId = Analytics.sessionId;
+      const stored = Analytics.getEvents();
+      let patched = false;
+      stored.forEach(evt => {
+        if (evt.sessionId === currentSessionId && evt.participantId === 'unknown') {
+          evt.participantId = _participantCode;
+          patched = true;
+        }
+      });
+      if (patched) {
+        localStorage.setItem('analytics_events', JSON.stringify(stored));
+      }
+    } catch (e) { /* fail silently */ }
+
     document.removeEventListener('keydown', keyHandler, { capture: true });
 
     _participantEl.style.opacity = '0';
@@ -242,7 +260,7 @@ const FeedbackSystem = (() => {
 
     return {
       screen: screen?.dataset?.screen || 'unknown',
-      focusedElement: focused?.className || 'none',
+      focusedElement: focused?.className?.split(' ')[0] || 'none',
       scrollPosition: screen?.scrollTop || 0,
       timestamp: new Date().toISOString(),
       // participantId intentionally omitted: it is already in the top-level
@@ -295,7 +313,6 @@ const FeedbackSystem = (() => {
     }
 
     _overlayEl.innerHTML = _buildOverlayHTML();
-    _overlayEl.style.display = 'flex';
     _focusZone = 'reactions';
     _reactionIdx = 0;
     _tagIdx = 0;
@@ -321,11 +338,6 @@ const FeedbackSystem = (() => {
 
     if (_overlayEl) {
       _overlayEl.classList.remove('visible');
-      setTimeout(() => {
-        if (_overlayEl) {
-          _overlayEl.style.display = 'none';
-        }
-      }, 300);
     }
 
     if (typeof FocusEngine !== 'undefined' && FocusEngine.enable) FocusEngine.enable();
@@ -504,21 +516,33 @@ const FeedbackSystem = (() => {
       document.body.appendChild(_qrOverlayEl);
     }
 
-    const events = typeof Analytics !== 'undefined' ? Analytics.getEvents() : [];
-    // Limit to last 10 events if data would be too large for a QR code
-    const eventsToEncode = events.length > 10 ? events.slice(-10) : events;
-    const jsonStr = JSON.stringify(eventsToEncode);
+    // H2 (option 1): Encode a compact session summary — not raw events.
+    // Raw events were 3000–6000+ chars and produced unreadable QR codes.
+    const allEvents = typeof Analytics !== 'undefined' ? Analytics.getEvents() : [];
+    const summary = typeof Analytics !== 'undefined' ? Analytics.getSessionSummary() : {};
+    const sessionSummary = {
+      sid: (Analytics.sessionId || '').slice(0, 8),
+      pid: Analytics.getParticipantId() || 'unknown',
+      ts: new Date().toISOString(),
+      totalEvents: allEvents.length,
+      device: Analytics.getDeviceType(),
+      screensVisited: summary.screensVisited || [],
+      deepestScreen: summary.deepestScreen || 'lander',
+      totalSelections: summary.totalSelections || 0,
+      totalFocusChanges: summary.totalFocusChanges || 0,
+      durationMs: summary.durationMs || 0,
+    };
+    const jsonStr = JSON.stringify(sessionSummary);
     const dataUri = 'data:text/plain;charset=utf-8,' + encodeURIComponent(jsonStr);
 
     _qrOverlayEl.innerHTML = `
       <div class="qr-title">Scan to export session data</div>
-      <div class="qr-subtitle">Encoding last ${eventsToEncode.length} of ${events.length} events</div>
+      <div class="qr-subtitle">${allEvents.length} events · ${summary.screensVisited?.length || 0} screens visited</div>
       <div id="qr-code-container"></div>
-      <div class="qr-event-count">Participant: ${Analytics.getParticipantId() || 'unknown'} · Session: ${(Analytics.sessionId || '').slice(0, 8)}</div>
+      <div class="qr-event-count">Participant: ${sessionSummary.pid} · Session: ${sessionSummary.sid}</div>
       <button class="qr-close-btn focused" id="qr-close-btn">Close</button>
     `;
 
-    _qrOverlayEl.style.display = 'flex';
     _qrOpen = true;
 
     requestAnimationFrame(() => {
@@ -570,7 +594,6 @@ const FeedbackSystem = (() => {
       _qrOverlayEl.classList.remove('visible');
       setTimeout(() => {
         if (_qrOverlayEl) {
-          _qrOverlayEl.style.display = 'none';
           // Clear QR canvas for next use
           const container = _qrOverlayEl.querySelector('#qr-code-container');
           if (container) container.innerHTML = '';

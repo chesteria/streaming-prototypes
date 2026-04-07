@@ -127,24 +127,27 @@
 }
 
 /* ---- Feedback Overlay ---- */
+/* L2: Use opacity + pointer-events instead of display:none → flex,
+   which prevents the transition from firing (display changes are instant). */
 #feedback-overlay {
   position: fixed;
   inset: 0;
   z-index: 9995;
   background: rgba(8, 14, 22, 0.88);
   backdrop-filter: blur(24px);
-  display: none;
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0;
   opacity: 0;
+  pointer-events: none;
   transition: opacity 300ms ease;
 }
 
 #feedback-overlay.visible {
-  display: flex;
   opacity: 1;
+  pointer-events: auto;
 }
 
 .feedback-header {
@@ -328,18 +331,19 @@
   z-index: 10002;
   background: rgba(8, 14, 22, 0.92);
   backdrop-filter: blur(24px);
-  display: none;
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 32px;
   opacity: 0;
+  pointer-events: none;
   transition: opacity 300ms ease;
 }
 
 #qr-overlay.visible {
-  display: flex;
   opacity: 1;
+  pointer-events: auto;
 }
 
 .qr-title {

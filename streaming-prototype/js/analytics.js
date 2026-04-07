@@ -27,6 +27,10 @@ const Analytics = (() => {
   let _screensVisited      = [];
   let _deepestScreen       = 'lander';
 
+  // Inactivity timer (H3)
+  let _inactivityTimer     = null;
+  const INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
+
   // ---- UUID generation ----
   function _uuid() {
     if (typeof crypto !== 'undefined' && crypto.randomUUID) {
@@ -74,6 +78,14 @@ const Analytics = (() => {
     } catch (e) {
       return { landerVersion: 'default', debugOverrides: {} };
     }
+  }
+
+  // ---- Inactivity timer (H3) ----
+  function _resetInactivityTimer() {
+    clearTimeout(_inactivityTimer);
+    _inactivityTimer = setTimeout(() => {
+      track('session_end', { ...getSessionSummary(), trigger: 'inactivity' });
+    }, INACTIVITY_TIMEOUT_MS);
   }
 
   function _simpleHash(str) {
@@ -150,6 +162,7 @@ const Analytics = (() => {
       };
 
       _store(event);
+      _resetInactivityTimer();
 
       if (ANALYTICS_TRANSPORT === 'firebase' || ANALYTICS_TRANSPORT === 'both') {
         _pendingBatch.push(event);
@@ -174,17 +187,20 @@ const Analytics = (() => {
     try {
       const raw = localStorage.getItem('analytics_events');
       const events = raw ? JSON.parse(raw) : [];
-      events.push(event);
 
-      // Rolling buffer: trim if over 5MB
-      const serialized = JSON.stringify(events);
-      if (serialized.length > ANALYTICS_MAX_STORAGE_BYTES) {
-        // Remove oldest 10% of events
+      // M4: Check size BEFORE pushing — trim if adding this event would exceed the cap
+      const withNew = JSON.stringify([...events, event]);
+      if (withNew.length > ANALYTICS_MAX_STORAGE_BYTES) {
+        // Remove oldest 10% of events to make room
         const trim = Math.max(1, Math.floor(events.length * 0.1));
         events.splice(0, trim);
       }
 
+      events.push(event);
       localStorage.setItem('analytics_events', JSON.stringify(events));
+
+      // M5: Prune old sessions on every store, not just at init
+      _pruneOldSessions();
     } catch (e) {
       console.warn('[Analytics] localStorage store failed:', e);
     }
@@ -245,6 +261,7 @@ const Analytics = (() => {
   function init() {
     _initSession();
     _startBatchTimer();
+    _resetInactivityTimer();
 
     // Flush on page unload
     window.addEventListener('beforeunload', () => {

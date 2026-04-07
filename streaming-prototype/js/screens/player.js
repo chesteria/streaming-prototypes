@@ -497,7 +497,8 @@ const PlayerScreen = {
     }
 
     if (action === 'BACK') {
-      // Track playback_complete (exit) and session_end
+      // H4: Fire playback_complete and navigate back immediately.
+      // Previously this only hid controls, requiring a second BACK to actually exit.
       try {
         if (typeof Analytics !== 'undefined') {
           Analytics.track('playback_complete', {
@@ -510,7 +511,7 @@ const PlayerScreen = {
           });
         }
       } catch (e) { /* fail silently */ }
-      this._hideControls();
+      App.back();
       return;
     }
 
@@ -521,8 +522,15 @@ const PlayerScreen = {
         this._focusBtn('left', this._btnIdx);
         return;
       }
-      if (action === 'UP') return; // Nothing above progress bar
+      if (action === 'UP') {
+        try { if (typeof Analytics !== 'undefined') Analytics.track('dead_end', { screen: 'player', zone: 'progress', direction: 'up', note: 'nothing above progress bar' }); } catch (e) {}
+        return;
+      }
       if (action === 'LEFT') {
+        if (this._scrubPos <= 0) {
+          try { if (typeof Analytics !== 'undefined') Analytics.track('dead_end', { screen: 'player', zone: 'progress', direction: 'left', note: 'at start of content' }); } catch (e) {}
+          return;
+        }
         const fromPos = this._elapsed;
         this._scrubPos = Math.max(0, this._scrubPos - 0.02);
         this._elapsed = this._scrubPos * this._duration;
@@ -537,6 +545,10 @@ const PlayerScreen = {
         return;
       }
       if (action === 'RIGHT') {
+        if (this._scrubPos >= 1) {
+          try { if (typeof Analytics !== 'undefined') Analytics.track('dead_end', { screen: 'player', zone: 'progress', direction: 'right', note: 'at end of content' }); } catch (e) {}
+          return;
+        }
         const fromPos = this._elapsed;
         this._scrubPos = Math.min(1, this._scrubPos + 0.02);
         this._elapsed = this._scrubPos * this._duration;
@@ -638,15 +650,20 @@ const PlayerScreen = {
         this._resetHideTimer();
         return;
       }
-      if (action === 'DOWN') return; // Bottom of screen
+      if (action === 'DOWN') {
+        try { if (typeof Analytics !== 'undefined') Analytics.track('dead_end', { screen: 'player', zone: 'episodes', direction: 'down', note: 'at bottom of screen' }); } catch (e) {}
+        return;
+      }
       if (action === 'LEFT') {
         if (this._epIdx > 0) this._focusEpTile(this._epIdx - 1);
+        else { try { if (typeof Analytics !== 'undefined') Analytics.track('dead_end', { screen: 'player', zone: 'episodes', direction: 'left', note: 'at first episode' }); } catch (e) {} }
         return;
       }
       if (action === 'RIGHT') {
         if (this._epIdx < this._episodes.length - 1 && this._epIdx < 7) {
           this._focusEpTile(this._epIdx + 1);
-        }
+        } else {
+          try { if (typeof Analytics !== 'undefined') Analytics.track('dead_end', { screen: 'player', zone: 'episodes', direction: 'right', note: 'at last episode' }); } catch (e) {} }
         return;
       }
       if (action === 'OK') {

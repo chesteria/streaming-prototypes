@@ -419,7 +419,14 @@ const SeriesPDPScreen = {
 
     if (zone === 'buttons') {
       // Only one button (Play S1:E1) — DOWN goes straight to seasons
-      if (action === 'UP') return; // Already at top
+      if (action === 'UP') {
+        try {
+          if (typeof Analytics !== 'undefined') {
+            Analytics.track('dead_end', { screen: 'series-pdp', zone: 'buttons', direction: 'up', note: 'already at top' });
+          }
+        } catch (e) { /* fail silently */ }
+        return;
+      }
       if (action === 'DOWN') {
         if (this._seriesData) {
           this._activateZone('seasons');
@@ -497,10 +504,12 @@ const SeriesPDPScreen = {
       }
       if (action === 'LEFT') {
         if (this._episodeIdx > 0) this._focusEpisode(this._episodeIdx - 1);
+        else { try { if (typeof Analytics !== 'undefined') Analytics.track('dead_end', { screen: 'series-pdp', zone: 'episodes', direction: 'left', note: 'at first episode' }); } catch (e) {} }
         return;
       }
       if (action === 'RIGHT') {
         if (this._episodeIdx < tiles.length - 1) this._focusEpisode(this._episodeIdx + 1);
+        else { try { if (typeof Analytics !== 'undefined') Analytics.track('dead_end', { screen: 'series-pdp', zone: 'episodes', direction: 'right', note: 'at last episode' }); } catch (e) {} }
         return;
       }
       if (action === 'OK') {
@@ -544,10 +553,12 @@ const SeriesPDPScreen = {
       }
       if (action === 'LEFT') {
         if (this._extrasIdx > 0) this._focusExtra(this._extrasIdx - 1);
+        else { try { if (typeof Analytics !== 'undefined') Analytics.track('dead_end', { screen: 'series-pdp', zone: 'extras', direction: 'left', note: 'at first extra' }); } catch (e) {} }
         return;
       }
       if (action === 'RIGHT') {
         if (this._extrasIdx < tiles.length - 1) this._focusExtra(this._extrasIdx + 1);
+        else { try { if (typeof Analytics !== 'undefined') Analytics.track('dead_end', { screen: 'series-pdp', zone: 'extras', direction: 'right', note: 'at last extra' }); } catch (e) {} }
         return;
       }
       if (action === 'OK') {
@@ -591,10 +602,12 @@ const SeriesPDPScreen = {
       }
       if (action === 'LEFT') {
         if (this._similarIdx > 0) this._focusSimilar(this._similarIdx - 1);
+        else { try { if (typeof Analytics !== 'undefined') Analytics.track('dead_end', { screen: 'series-pdp', zone: 'similar', direction: 'left', note: 'at first title' }); } catch (e) {} }
         return;
       }
       if (action === 'RIGHT') {
         if (this._similarIdx < tiles.length - 1) this._focusSimilar(this._similarIdx + 1);
+        else { try { if (typeof Analytics !== 'undefined') Analytics.track('dead_end', { screen: 'series-pdp', zone: 'similar', direction: 'right', note: 'at last title' }); } catch (e) {} }
         return;
       }
       if (action === 'OK') {
@@ -632,7 +645,14 @@ const SeriesPDPScreen = {
         }
         return;
       }
-      // At bottom — no further DOWN
+      if (action === 'DOWN') {
+        try {
+          if (typeof Analytics !== 'undefined') {
+            Analytics.track('dead_end', { screen: 'series-pdp', zone: 'more-info', direction: 'down', note: 'at bottom of page' });
+          }
+        } catch (e) { /* fail silently */ }
+        return;
+      }
     }
   },
 };

@@ -3,6 +3,42 @@
 
 ---
 
+## Phase 2 — Insight Engine: Bug Hunt Fixes (2026-04-07)
+Source: `docs/phase2-bug-hunt-report.md` — HIGH, MEDIUM, LOW issues
+Branch: `insights-engine-v1`
+
+### js/analytics.js
+- **H3 — Missing inactivity session_end**: Added 5-minute inactivity timer (`_inactivityTimer`). `_resetInactivityTimer()` is called on every `track()` call and on `init()`. Fires `session_end` with `trigger: 'inactivity'` after 5 minutes of no tracked events.
+- **M4 — `_store()` checks size after pushing**: Now computes `JSON.stringify([...events, event]).length` before pushing. Trims oldest 10% first if the addition would exceed the 5MB cap.
+- **M5 — `_pruneOldSessions()` only called at init**: Now called at the end of every `_store()` call to enforce the 50-session cap on each write.
+
+### js/feedback.js
+- **H1 (option B) — `session_start` has `participantId: 'unknown'`**: In `_acceptParticipantId()`, after `Analytics.setParticipantId()`, scans all stored events for the current `sessionId` with `participantId: 'unknown'` and patches them, then re-saves to localStorage.
+- **H2 (option 1) — QR codes too large to scan**: `showQRExport()` now encodes a compact session summary object (sessionId prefix, participantId, timestamp, totalEvents, screensVisited, deepestScreen, totalSelections, totalFocusChanges, durationMs, deviceType) instead of raw event JSON. Stays well under QR capacity limits.
+- **H5 — `focusedElement` stores full CSS class string**: Changed `focused?.className || 'none'` to `focused?.className?.split(' ')[0] || 'none'` in `_captureCurrentState()`. Now stores only the first (primary) class token.
+- **L2 — Feedback overlay animation doesn't fire**: `#feedback-overlay` and `#qr-overlay` CSS changed from `display:none` (hidden) / `display:flex` (visible) to always `display:flex` with `opacity:0; pointer-events:none` (hidden) / `opacity:1; pointer-events:auto` (visible). JS-side `style.display` assignments removed. Transitions now fire correctly.
+
+### js/screens/lander.js
+- **H6 — `scroll_depth` missing `railsVisible` array**: Added `railsVisible` computation using `getBoundingClientRect()` to find which rail elements are currently intersecting the viewport at the time of scroll. Added to `scroll_depth` payload.
+- **M1 — `itemTitle` always empty in `tile_select`**: Added `focusedItemTitle` field to `heroAnalyticsState` and `stdAnalyticsState`. Updated on `onEnter()` and on every LEFT/RIGHT focus move. `tile_select` payload now reads `s.focusedItemTitle`.
+- **M2 — `dwellTimeMs` edge cases**: Wrapped all dwell calculations in `Math.max(0, ...)`. Also fires `focus_change` event in `startAutoAdvance()` with `method: 'auto-advance'`.
+
+### js/screens/series-pdp.js
+- **M6 — `dead_end` events missing on series-pdp**: Added `dead_end` tracking for: UP from `buttons` zone (top of page), DOWN from `more-info` zone (bottom of page), LEFT at first item and RIGHT at last item in `episodes`, `extras`, and `similar` rails.
+
+### js/screens/player.js
+- **H4 — Player BACK doesn't always reach `session_end`**: BACK with controls visible now calls `App.back()` directly (previously only hid controls, requiring a second BACK to actually exit). `playback_complete` still fires before navigation.
+- **M6 — `dead_end` events missing on player**: Added `dead_end` tracking for: UP from `progress` zone, DOWN from `episodes` zone (bottom of screen), LEFT at scrub position 0, RIGHT at scrub position 1, LEFT at first episode tile, RIGHT at last episode tile.
+
+### js/reporting.js
+- **M3 — Chart.js CDN failure — no visible fallback**: When `typeof Chart === 'undefined'`, replaces the canvas container's innerHTML with a human-readable error message instead of silently leaving the chart area blank.
+- **M7 — Auto-refresh only compares event count**: Now also compares the latest event's `timestamp`. Detects new events even when count hasn't changed (e.g., same-session updates replacing older events).
+
+### reporting.html
+- **L3 — `#import-overlay` renders briefly before JS hides it**: Added `style="display:none"` inline to prevent flash-of-overlay on page load.
+
+---
+
 ## Phase 2 — Insight Engine: Analytics, Feedback & Reporting (2026-04-07)
 Source: `docs/streaming-prototype-phase2-prd.md`
 Branch: `prd-v1.5-update`

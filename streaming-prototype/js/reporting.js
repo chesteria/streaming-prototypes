@@ -462,6 +462,12 @@
 
     if (typeof Chart === 'undefined') {
       console.warn('[Reporting] Chart.js not loaded');
+      // M3: Show visible fallback instead of silently leaving the container empty
+      const canvasEl = document.getElementById(canvasId);
+      if (canvasEl) {
+        const parent = canvasEl.parentElement;
+        if (parent) parent.innerHTML = '<div style="padding:32px;text-align:center;color:var(--text-dim);font-size:14px;">Chart unavailable — Chart.js could not be loaded.<br>Check your network connection or open the dashboard online.</div>';
+      }
       return;
     }
 
@@ -648,10 +654,13 @@
     const events = _loadFromLocalStorage();
     _loadEvents(events);
 
-    // Auto-refresh every 30s if viewing live data
+    // M7: Auto-refresh every 30s — compare by latest timestamp, not just count,
+    // so new events in the same session (same count) also trigger a refresh.
     setInterval(() => {
       const fresh = _loadFromLocalStorage();
-      if (fresh.length !== _events.length) {
+      const freshLatest = fresh.length ? fresh[fresh.length - 1].timestamp : '';
+      const curLatest = _events.length ? _events[_events.length - 1].timestamp : '';
+      if (fresh.length !== _events.length || freshLatest !== curLatest) {
         _loadEvents(fresh);
       }
     }, 30000);

@@ -223,11 +223,21 @@ const LanderScreen = {
           try {
             if (typeof Analytics !== 'undefined') {
               const newRail = this._railModules[railIdx + 1];
+              // H6: compute which rail elements are currently in the viewport
+              const viewportH = window.innerHeight || 1080;
+              const railsVisible = this._railModules
+                .filter(r => {
+                  if (!r.element) return false;
+                  const rect = r.element.getBoundingClientRect();
+                  return rect.bottom > 0 && rect.top < viewportH;
+                })
+                .map(r => r._analyticsState?.railId || 'unknown');
               Analytics.track('scroll_depth', {
                 screen: 'lander',
                 maxDepthRail: newRail?._analyticsState?.railId || `rail-${railIdx + 1}`,
                 maxDepthIndex: railIdx + 1,
                 totalRails: this._railModules.length,
+                railsVisible,
               });
             }
           } catch (e) { /* fail silently */ }
@@ -245,7 +255,7 @@ const LanderScreen = {
                 railIndex: railIdx,
                 tileIndex: s.currentTileIdx || 0,
                 itemId: result.params?.showId || result.params?.channelId || '',
-                itemTitle: '',
+                itemTitle: s.focusedItemTitle || '',
                 timeOnScreenMs: Date.now() - (this._screenEnterTime || Date.now()),
                 tilesViewedInRail: s.maxTileReached + 1,
               });
@@ -432,7 +442,23 @@ function buildHeroCarousel(config, container) {
     autoTimer = setInterval(() => {
       if (!isActive) return;
       const prev = focusedIdx;
+      const prevDwell = Math.max(0, Date.now() - (heroAnalyticsState.enterTime || Date.now()));
       focusedIdx = (focusedIdx + 1) % items.length;
+      heroAnalyticsState.currentTileIdx = focusedIdx;
+      heroAnalyticsState.enterTime = Date.now();
+      heroAnalyticsState.focusedItemTitle = items[focusedIdx]?.title || items[focusedIdx]?.name || '';
+      if (focusedIdx > heroAnalyticsState.maxTileReached) heroAnalyticsState.maxTileReached = focusedIdx;
+      // M2: fire focus_change on auto-advance
+      try {
+        if (typeof Analytics !== 'undefined') {
+          Analytics.track('focus_change', {
+            from: { screen: 'lander', zone: 'hero-carousel', index: prev, itemId: items[prev]?.id || '' },
+            to: { screen: 'lander', zone: 'hero-carousel', index: focusedIdx, itemId: items[focusedIdx]?.id || '' },
+            method: 'auto-advance',
+            dwellTimeMs: prevDwell,
+          });
+        }
+      } catch (e) { /* fail silently */ }
       focusTile(focusedIdx, prev);
     }, DebugConfig.get('heroCycleInterval', HERO_CYCLE_INTERVAL_MS));
   }
@@ -444,6 +470,7 @@ function buildHeroCarousel(config, container) {
     maxTileReached: 0,
     totalTiles: items.length,
     selectedTile: null,
+    focusedItemTitle: items[focusedIdx]?.title || items[focusedIdx]?.name || '',
   };
 
   return {
@@ -455,6 +482,7 @@ function buildHeroCarousel(config, container) {
       heroAnalyticsState.currentTileIdx = focusedIdx;
       heroAnalyticsState.maxTileReached = focusedIdx;
       heroAnalyticsState.selectedTile = null;
+      heroAnalyticsState.focusedItemTitle = items[focusedIdx]?.title || items[focusedIdx]?.name || '';
       focusTile(focusedIdx);
       startAutoAdvance();
     },
@@ -470,7 +498,7 @@ function buildHeroCarousel(config, container) {
       if (action === 'LEFT') {
         if (focusedIdx > 0) {
           const prevIdx2 = focusedIdx;
-          const prevDwell = Date.now() - (heroAnalyticsState.enterTime || Date.now());
+          const prevDwell = Math.max(0, Date.now() - (heroAnalyticsState.enterTime || Date.now()));
           try {
             if (typeof Analytics !== 'undefined') {
               Analytics.track('focus_change', {
@@ -484,6 +512,7 @@ function buildHeroCarousel(config, container) {
           focusedIdx--;
           heroAnalyticsState.currentTileIdx = focusedIdx;
           heroAnalyticsState.enterTime = Date.now();
+          heroAnalyticsState.focusedItemTitle = items[focusedIdx]?.title || items[focusedIdx]?.name || '';
           focusTile(focusedIdx, prevIdx2);
           startAutoAdvance();
         } else {
@@ -498,7 +527,7 @@ function buildHeroCarousel(config, container) {
       if (action === 'RIGHT') {
         if (focusedIdx < items.length - 1) {
           const prevIdx2 = focusedIdx;
-          const prevDwell = Date.now() - (heroAnalyticsState.enterTime || Date.now());
+          const prevDwell = Math.max(0, Date.now() - (heroAnalyticsState.enterTime || Date.now()));
           try {
             if (typeof Analytics !== 'undefined') {
               Analytics.track('focus_change', {
@@ -512,6 +541,7 @@ function buildHeroCarousel(config, container) {
           focusedIdx++;
           heroAnalyticsState.currentTileIdx = focusedIdx;
           heroAnalyticsState.enterTime = Date.now();
+          heroAnalyticsState.focusedItemTitle = items[focusedIdx]?.title || items[focusedIdx]?.name || '';
           if (focusedIdx > heroAnalyticsState.maxTileReached) heroAnalyticsState.maxTileReached = focusedIdx;
           focusTile(focusedIdx, prevIdx2);
           startAutoAdvance();
@@ -1119,6 +1149,7 @@ function buildStandardRail(config, container) {
     maxTileReached: 0,
     totalTiles: tiles.length,
     selectedTile: null,
+    focusedItemTitle: shows[0]?.title || '',
   };
 
   function focusTile(idx) {
@@ -1135,6 +1166,7 @@ function buildStandardRail(config, container) {
       stdAnalyticsState.currentTileIdx = focusedIdx;
       stdAnalyticsState.maxTileReached = focusedIdx;
       stdAnalyticsState.selectedTile = null;
+      stdAnalyticsState.focusedItemTitle = shows[focusedIdx]?.title || '';
       focusTile(focusedIdx);
     },
     onLeave() { tiles.forEach(t => t.classList.remove('focused')); },
@@ -1143,7 +1175,7 @@ function buildStandardRail(config, container) {
       if (action === 'DOWN') return 'DOWN';
       if (action === 'LEFT') {
         if (focusedIdx > 0) {
-          const prevDwell = Date.now() - (stdAnalyticsState.enterTime || Date.now());
+          const prevDwell = Math.max(0, Date.now() - (stdAnalyticsState.enterTime || Date.now()));
           try {
             if (typeof Analytics !== 'undefined') {
               Analytics.track('focus_change', {
@@ -1156,6 +1188,7 @@ function buildStandardRail(config, container) {
           focusedIdx--;
           stdAnalyticsState.currentTileIdx = focusedIdx;
           stdAnalyticsState.enterTime = Date.now();
+          stdAnalyticsState.focusedItemTitle = shows[focusedIdx]?.title || '';
           focusTile(focusedIdx);
         } else {
           try {
@@ -1168,7 +1201,7 @@ function buildStandardRail(config, container) {
       }
       if (action === 'RIGHT') {
         if (focusedIdx < tiles.length - 1) {
-          const prevDwell = Date.now() - (stdAnalyticsState.enterTime || Date.now());
+          const prevDwell = Math.max(0, Date.now() - (stdAnalyticsState.enterTime || Date.now()));
           try {
             if (typeof Analytics !== 'undefined') {
               Analytics.track('focus_change', {
@@ -1181,6 +1214,7 @@ function buildStandardRail(config, container) {
           focusedIdx++;
           stdAnalyticsState.currentTileIdx = focusedIdx;
           stdAnalyticsState.enterTime = Date.now();
+          stdAnalyticsState.focusedItemTitle = shows[focusedIdx]?.title || '';
           if (focusedIdx > stdAnalyticsState.maxTileReached) stdAnalyticsState.maxTileReached = focusedIdx;
           focusTile(focusedIdx);
         } else {
