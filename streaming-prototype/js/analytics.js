@@ -288,6 +288,7 @@ const Analytics = (() => {
     getParticipantId,
     setParticipantId,
     generateNewParticipantId,
+    getDeviceType: _detectDeviceType,
     isFirstVisit,
     getEvents,
     clearEvents,

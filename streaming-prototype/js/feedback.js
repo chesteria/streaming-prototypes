@@ -636,7 +636,7 @@ const FeedbackSystem = (() => {
           // After accepting, fire session_start now that we have a participant ID
           try {
             Analytics.track('session_start', {
-              deviceType: navigator.userAgent,
+              deviceType: Analytics.getDeviceType(),
               screenResolution: `${window.screen.width}x${window.screen.height}`,
               returningParticipant: false,
               previousSessionCount: 0,

@@ -56,7 +56,7 @@ const LanderScreen = {
         if (typeof Analytics !== 'undefined') {
           const prevCount = parseInt(localStorage.getItem('analytics_sessionCount') || '1');
           Analytics.track('session_start', {
-            deviceType: navigator.userAgent,
+            deviceType: Analytics.getDeviceType(),
             screenResolution: `${window.screen.width}x${window.screen.height}`,
             configVersion: 'lander-default',
             returningParticipant: prevCount > 1,
