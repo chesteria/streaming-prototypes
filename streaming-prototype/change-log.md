@@ -3,6 +3,24 @@
 
 ---
 
+## Bug Hunt — HIGH Fixes (2026-04-07)
+Source: `Feedback/bug-hunt-report.md` — auto-fix session for CRITICAL/HIGH issues
+
+### js/app.js
+- **H1 — `destroy()` never called on BACK**: Added `if (replace) activeScreen.destroy?.()` after `activeScreen.onBlur()` in `navigate()`. Prevents HLS instance accumulation, listener leaks, and un-torn-down video elements when pressing BACK from Player.
+
+### js/screens/lander.js
+- **H2 — Focus/scroll lost on BACK**: `init()` previously read from `params.restoreRailIdx`/`params.scrollY` (history stores original params — always empty). Now reads `container._savedRailIdx` / `container._savedScroll` saved by `onBlur()`, clears them after reading. Scroll restored with `transition:none` then re-enabled on next frame.
+
+### js/screens/series-pdp.js
+- **H3 — Season selector pills update but episode tiles don't**: Added `_applySeasonState(idx)` helper that updates all pill labels AND rebuilds `#episodes-track` innerHTML for the selected season. `_selectSeason()` now calls it; episode index and track scroll reset to 0 on season change.
+- **H5 — PDP zone/scroll/season lost on BACK from Player**: `onBlur()` now saves `_savedZone`, `_savedSeasonIdx`, `_savedEpisodeIdx`, `_savedExtrasIdx`, `_savedSimilarIdx`, `_savedScrollY` onto container element. `init()` reads and clears these before re-initializing. After `_render()`, scroll is restored (no-transition) and non-zero season state is re-applied via `_applySeasonState()`.
+
+### js/debug-panel.js
+- **H4 — Triple-LEFT combo fires from anywhere**: Added `.nav-tab.nav-focused` guard in the triple-LEFT handler — combo only counts when the nav bar is focused. Presses LEFT from tiles, pills, or any non-nav zone reset the counter and exit early. Panel now only opens from nav zone per PRD §12.1.
+
+---
+
 ## Debug Panel — Control Wiring Fixes (2026-04-06)
 Source: audit of all panel controls against runtime behavior
 
