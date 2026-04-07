@@ -3,6 +3,28 @@
 
 ---
 
+## Playback Fix — HLS.js + Vizio Compatibility (2026-04-06)
+Source: `playback.md` issue analysis
+
+### index.html
+- Added HLS.js `1.x` via jsDelivr CDN (`hls.min.js`) before screen scripts — required for `.m3u8` playback on all Chromium-based browsers (Vizio SmartCast, Chrome, Firefox); Safari/WebKit uses its own native HLS path
+
+### js/screens/player.js
+- **`_render()`**: Removed hardcoded `src` attribute from `<video>` — source is now attached programmatically by HLS.js or the native path in `_attachProgressUpdates()`
+- **`_attachProgressUpdates()`**: Replaced direct `video.src` assignment with two-path HLS init:
+  - `Hls.isSupported()` → creates `Hls` instance, calls `loadSource` + `attachMedia`, plays on `MANIFEST_PARSED`
+  - `video.canPlayType('application/vnd.apple.mpegurl')` → native HLS fallback (Safari / WebKit TVs)
+- **`loadedmetadata` handler**: Moved `video.playbackRate` assignment here (was set before stream load — some Chromium builds reset it on load)
+- **`_switchEpisode()`**: Removed lines that assigned episode thumbnail URL to `video.src` — `.player-bg` is the `<video>` element; setting an image URL as its source would break the active stream
+- **`destroy()`**: Added `this._hls.destroy()` call before video teardown to release HLS.js resources
+- **`_handleKey()`**: Added `PLAYPAUSE` action handler — toggles `video.play()`/`video.pause()` with toast, fires regardless of active zone
+- Added `_hls: null` to state object
+
+### js/utils/keycodes.js
+- Added `PLAYPAUSE` key array: `['MediaPlayPause', 'XF86PlayPause', 'MediaPlay', 'MediaPause']` — maps Vizio and standard media remote play/pause keys to the new `PLAYPAUSE` action
+
+---
+
 ## Phase 1.5 — Debug Panel & Configuration Dashboard (2026-04-06)
 Source: PRD §12, `initial-debug-panel` branch
 

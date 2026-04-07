@@ -38,6 +38,7 @@ const PlayerScreen = {
   _captionsOn: false,
   _episodes: [],
   _video: null,
+  _hls: null,
   _debugConfigHandler: null,
 
   async init(container, params) {
@@ -130,7 +131,7 @@ const PlayerScreen = {
     `).join('');
 
     this._container.innerHTML = `
-      <video class="player-bg" id="player-video" src="${VIDEO_STREAM_URL}" preload="auto" playsinline></video>
+      <video class="player-bg" id="player-video" preload="auto" playsinline></video>
       <div class="player-bg-dim overlay-visible" id="player-dim"></div>
 
       <!-- Scrub thumbnails -->
@@ -241,6 +242,7 @@ const PlayerScreen = {
 
       video.addEventListener('loadedmetadata', () => {
         this._duration = video.duration;
+        video.playbackRate = DebugConfig.get('playbackSpeed', PLAYBACK_SPEED);
         this._updateProgressUI();
       });
 
@@ -255,11 +257,20 @@ const PlayerScreen = {
         this._showControls();
       });
 
-      video.playbackRate = DebugConfig.get('playbackSpeed', PLAYBACK_SPEED);
-
-      video.play().catch(() => {
-        // Autoplay blocked — will start on first keypress
-      });
+      // Attach stream via HLS.js on Chromium (Vizio, Chrome, Firefox);
+      // fall back to native src assignment on Safari / WebKit.
+      if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+        this._hls = new Hls();
+        this._hls.loadSource(VIDEO_STREAM_URL);
+        this._hls.attachMedia(video);
+        this._hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          video.play().catch(() => {});
+        });
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        // Native HLS — Safari / WebKit smart TVs
+        video.src = VIDEO_STREAM_URL;
+        video.play().catch(() => {});
+      }
       return;
     }
 
@@ -306,6 +317,10 @@ const PlayerScreen = {
     if (this._debugConfigHandler) {
       document.removeEventListener('debugconfig:change', this._debugConfigHandler);
       this._debugConfigHandler = null;
+    }
+    if (this._hls) {
+      this._hls.destroy();
+      this._hls = null;
     }
     if (this._video) {
       this._video.pause();
@@ -414,6 +429,14 @@ const PlayerScreen = {
     }
 
     this._resetHideTimer();
+
+    if (action === 'PLAYPAUSE') {
+      if (this._video) {
+        if (this._video.paused) { this._video.play().catch(() => {}); showToast('▶ Playing'); }
+        else { this._video.pause(); showToast('⏸ Paused'); }
+      }
+      return;
+    }
 
     if (action === 'BACK') {
       this._hideControls();
@@ -615,10 +638,6 @@ const PlayerScreen = {
       <span class="meta-dot">·</span>
       <span>${ep.title}</span>
     `;
-
-    // Update bg
-    const bg = this._container.querySelector('.player-bg');
-    if (bg && ep.thumbnail) bg.src = ep.thumbnail;
 
     this._updateProgressUI();
     this._showControls();

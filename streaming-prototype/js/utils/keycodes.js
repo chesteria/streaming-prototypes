@@ -8,7 +8,8 @@ const KEYS = {
   LEFT:  ['ArrowLeft',  'Left'],
   RIGHT: ['ArrowRight', 'Right'],
   OK:    ['Enter', 'Return', ' '],
-  BACK:  ['Backspace', 'Escape', 'XF86Back'],
+  BACK:      ['Backspace', 'Escape', 'XF86Back'],
+  PLAYPAUSE: ['MediaPlayPause', 'XF86PlayPause', 'MediaPlay', 'MediaPause'],
 };
 
 function getKeyAction(event) {
