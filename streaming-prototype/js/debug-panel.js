@@ -492,6 +492,11 @@ const DebugPanel = (() => {
   let _leftTimer = null;
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') {
+      // Only count toward the combo when nav bar has focus
+      if (!document.querySelector('.nav-tab.nav-focused')) {
+        _leftCount = 0;
+        return;
+      }
       _leftCount++;
       clearTimeout(_leftTimer);
       if (_leftCount >= 3) {
