@@ -2,7 +2,7 @@ I'm going to bed. I want you to do a thorough bug hunt and fix session
 overnight. Scope: Phase 1, Phase 1.5, and the Big Buck Bunny stream 
 integration. Do NOT touch Phase 2 or Phase 3 — they aren't built yet.
 
-Reference /Users/chris/Documents/Claude/Projects/UTA/uta/streaming-prototype/prd as the source of truth.
+Reference /Users/chris/Documents/Claude/Projects/UTA/uta/streaming-prototype/prd as the source of truth. You have made fixes and changes to the PRD as well, they are documented here: /Users/chris/Documents/Claude/Projects/UTA/uta/streaming-prototype/change-log.md
 
 WORKFLOW:
 
@@ -47,10 +47,7 @@ Save docs/bug-hunt-session-log.md with:
 - A "things to verify in the morning" checklist for me
 
 SAFETY RULES:
-- Before any fix, commit the current state to git with message 
-  "pre-bug-hunt snapshot" so I can roll back if needed
-- Make a separate commit after each CRITICAL fix and each HIGH fix 
-  with a clear message describing what was fixed
+
 - If you encounter something destructive or risky (deleting files, 
   major refactors, anything affecting more than 3 files), STOP and 
   add it to the session log under "needs my approval" instead of 
