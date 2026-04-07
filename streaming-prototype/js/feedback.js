@@ -634,15 +634,10 @@ const FeedbackSystem = (() => {
     if (typeof Analytics !== 'undefined' && Analytics.isFirstVisit()) {
       setTimeout(() => {
         showParticipantPrompt(() => {
-          // After accepting, fire session_start now that we have a participant ID
-          try {
-            Analytics.track('session_start', {
-              deviceType: Analytics.getDeviceType(),
-              screenResolution: `${window.screen.width}x${window.screen.height}`,
-              returningParticipant: false,
-              previousSessionCount: 0,
-            });
-          } catch (e) { /* fail silently */ }
+          // session_start is fired by lander.js — do NOT fire it here.
+          // Firing it here caused a duplicate session_start on first visit.
+          // The lander.js instrumentation handles session_start correctly
+          // for both first-visit and returning participants.
         });
       }, 800);
     }
