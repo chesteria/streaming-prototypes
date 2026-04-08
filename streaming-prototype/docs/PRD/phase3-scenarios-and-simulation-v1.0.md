@@ -13,9 +13,9 @@ This is one of three phase PRDs for the Streaming TV Prototype Platform:
 
 | Phase | File | Status |
 |-------|------|--------|
-| **Phase 1 + 1.5** | `docs/streaming-prototype-phase1-prd.md` | ✅ Built |
-| **Phase 2** | `docs/streaming-prototype-phase2-prd.md` | ⏳ Not started |
-| **Phase 3 (this doc)** | `docs/streaming-prototype-phase3-prd.md` | ⏳ Not started |
+| **Phase 1 + 1.5** | `docs/PRD/phase1-core-app-v1.5.md` | ✅ Built |
+| **Phase 2** | `docs/PRD/phase2-insight-engine-v1.0.md` | ⏳ Not started |
+| **Phase 3 (this doc)** | `docs/PRD/phase3-scenarios-and-simulation-v1.0.md` | ⏳ Not started |
 
 Phase 3 transforms the debug panel from a collection of individual controls into a storytelling tool — one tap configures the entire app to demonstrate a specific narrative, user journey, or device condition.
 
@@ -253,7 +253,7 @@ streaming-prototype/
 
 ```
 Add the Scenario Presets and Device Simulation system to the streaming
-prototype. Read Phase 3 of the PRD at docs/streaming-prototype-phase3-prd.md
+prototype. Read Phase 3 of the PRD at docs/PRD/phase3-scenarios-and-simulation-v1.0.md
 for full specifications.
 
 Build in this order:

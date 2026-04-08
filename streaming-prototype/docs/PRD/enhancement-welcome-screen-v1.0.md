@@ -281,10 +281,10 @@ streaming-prototype/
 ## Build Prompt for Claude Code
 
 ```
-Read this PRD at docs/welcome-screen-prd.md and build the welcome
+Read this PRD at docs/PRD/enhancement-welcome-screen-v1.0.md and build the welcome
 screen feature.
 
-Reference the master PRD at docs/streaming-prototype-phase1-prd.md
+Reference the master PRD at docs/PRD/phase1-core-app-v1.5.md
 and the component map at docs/component-map.md to understand the
 existing architecture.
 
@@ -310,7 +310,7 @@ When done, summarize:
 
 ```
 Bug hunt the welcome screen feature you just built against
-docs/welcome-screen-prd.md. Focus on:
+docs/PRD/enhancement-welcome-screen-v1.0.md. Focus on:
 
 1. Does the welcome screen appear correctly on first launch?
 2. Does the localStorage flag prevent it from showing again?

@@ -300,10 +300,10 @@ not user data. It identifies the build, not the user.
 ## Build Prompt for Claude Code
 
 ```
-Read this PRD at docs/versioning-system-prd.md and build the
+Read this PRD at docs/PRD/foundation-versioning-v1.0.md and build the
 versioning and build number system.
 
-Reference the master PRD at docs/streaming-prototype-phase1-prd.md
+Reference the master PRD at docs/PRD/phase1-core-app-v1.5.md
 to understand the existing app architecture.
 
 Before building:
@@ -336,7 +336,7 @@ When done, summarize:
 
 ```
 Bug hunt the versioning system you just built against
-docs/versioning-system-prd.md. Focus on:
+docs/PRD/foundation-versioning-v1.0.md. Focus on:
 
 1. Does data/version.json read correctly from all the places that
    reference it (welcome screen, debug panel, console log, meta tags)?

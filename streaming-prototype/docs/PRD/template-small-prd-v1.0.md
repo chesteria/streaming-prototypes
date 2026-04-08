@@ -108,7 +108,7 @@ const TIMING_VALUE_MS = 500;
 ```
 Read this PRD at docs/[filename].md and build the feature as specified.
 
-Reference the master PRD at docs/streaming-prototype-phase1-prd.md
+Reference the master PRD at docs/PRD/phase1-core-app-v1.5.md
 and the component map at docs/component-map.md to understand the
 existing architecture and use shared components where appropriate.
 

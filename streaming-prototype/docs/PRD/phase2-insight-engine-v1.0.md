@@ -13,9 +13,9 @@ This is one of three phase PRDs for the Streaming TV Prototype Platform:
 
 | Phase | File | Status |
 |-------|------|--------|
-| **Phase 1 + 1.5** | `docs/streaming-prototype-phase1-prd.md` | ✅ Built |
-| **Phase 2 (this doc)** | `docs/streaming-prototype-phase2-prd.md` | ⏳ Not started |
-| **Phase 3** | `docs/streaming-prototype-phase3-prd.md` | ⏳ Not started |
+| **Phase 1 + 1.5** | `docs/PRD/phase1-core-app-v1.5.md` | ✅ Built |
+| **Phase 2 (this doc)** | `docs/PRD/phase2-insight-engine-v1.0.md` | ⏳ Not started |
+| **Phase 3** | `docs/PRD/phase3-scenarios-and-simulation-v1.0.md` | ⏳ Not started |
 
 Phase 2 transforms the prototype from a static demo into a remote usability testing platform. Colleagues sideload the app onto their TV devices, use it naturally, and behavioral data plus direct feedback flows back to you — no moderation required.
 
@@ -450,7 +450,7 @@ This ensures the analytics layer grows with the app rather than being retrofitte
 
 ```
 Add the analytics and feedback system to the streaming prototype.
-Read the Phase 2 PRD at docs/streaming-prototype-phase2-prd.md
+Read the Phase 2 PRD at docs/PRD/phase2-insight-engine-v1.0.md
 for full specifications.
 
 Build in this order:

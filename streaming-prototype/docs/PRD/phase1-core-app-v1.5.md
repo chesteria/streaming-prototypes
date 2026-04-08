@@ -14,9 +14,9 @@ This is one of three phase PRDs for the Streaming TV Prototype Platform:
 
 | Phase | File | Status |
 |-------|------|--------|
-| **Phase 1 + 1.5 (this doc)** | `docs/streaming-prototype-phase1-prd.md` | ✅ Built |
-| **Phase 2 — Insight Engine** | `docs/streaming-prototype-phase2-prd.md` | ⏳ Not started |
-| **Phase 3 — Scenario Presets & Device Simulation** | `docs/streaming-prototype-phase3-prd.md` | ⏳ Not started |
+| **Phase 1 + 1.5 (this doc)** | `docs/PRD/phase1-core-app-v1.5.md` | ✅ Built |
+| **Phase 2 — Insight Engine** | `docs/PRD/phase2-insight-engine-v1.0.md` | ⏳ Not started |
+| **Phase 3 — Scenario Presets & Device Simulation** | `docs/PRD/phase3-scenarios-and-simulation-v1.0.md` | ⏳ Not started |
 
 ---
 
@@ -89,11 +89,19 @@ streaming-prototype/
 │   └── user-state.json     # DEFERRED — added with Authentication phase
 └── docs/
     ├── change-log.md
-    ├── streaming-prototype-phase1-prd.md  (this file)
-    ├── streaming-prototype-phase2-prd.md
-    ├── streaming-prototype-phase3-prd.md
-    └── archive/
-        └── streaming-prototype-prd-v1.4-original.md
+    ├── directory-map.md
+    ├── PRD/
+    │   ├── phase1-core-app-v1.5.md  (this file)
+    │   ├── phase2-insight-engine-v1.0.md
+    │   ├── phase3-scenarios-and-simulation-v1.0.md
+    │   ├── enhancement-welcome-screen-v1.0.md
+    │   ├── foundation-versioning-v1.0.md
+    │   ├── template-small-prd-v1.0.md
+    │   └── archive/
+    │       └── streaming-prototype-prd-v1.4-original.md
+    └── Feedback/
+        ├── bug-hunts/
+        └── (per-round subfolders: v1.4r1, v1.4r3, v1.4r4, v1.5-insights, …)
 ```
 
 > **Note:** There is no `js/components/` folder. All component logic (rails, tiles, navigation zones) is built inline within each screen file. This approach was chosen for simplicity and zero-dependency compatibility with TV WebViews.
@@ -559,8 +567,8 @@ Focus stops at the edges of all lists/rails. It does not wrap around.
 - Mobile responsiveness (TV-only, 1920×1080)
 - Accessibility beyond keyboard/d-pad navigation
 - Loading skeletons or error states
-- Phase 2 (Analytics/Insight Engine) — see `streaming-prototype-phase2-prd.md`
-- Phase 3 (Scenario Presets & Device Simulation) — see `streaming-prototype-phase3-prd.md`
+- Phase 2 (Analytics/Insight Engine) — see `PRD/phase2-insight-engine-v1.0.md`
+- Phase 3 (Scenario Presets & Device Simulation) — see `PRD/phase3-scenarios-and-simulation-v1.0.md`
 
 ---
 

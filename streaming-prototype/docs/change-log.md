@@ -51,7 +51,7 @@ Branch: `insights-engine-v1`
 ---
 
 ## Phase 2 — Insight Engine: Analytics, Feedback & Reporting (2026-04-07)
-Source: `docs/streaming-prototype-phase2-prd.md`
+Source: `docs/PRD/phase2-insight-engine-v1.0.md`
 Branch: `prd-v1.5-update`
 
 ### NEW: js/analytics.js

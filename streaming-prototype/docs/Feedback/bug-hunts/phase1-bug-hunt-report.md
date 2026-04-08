@@ -2,7 +2,7 @@
 **Date:** 2026-04-06  
 **Branch:** `initial-debug-panel`  
 **Scope:** Lander, Series PDP, Player, Debug Panel, HLS stream, navigation/focus system  
-**Reference:** `prd/streaming-prototype-phase1-prd.md` + `change-log.md`
+**Reference:** `docs/PRD/phase1-core-app-v1.5.md` + `change-log.md`
 
 ---
 
