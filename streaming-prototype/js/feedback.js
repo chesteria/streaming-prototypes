@@ -701,18 +701,10 @@ const FeedbackSystem = (() => {
      ============================================================ */
 
   function init() {
-    // Show participant ID prompt if first visit
-    // Defer slightly so lander is built first
-    if (typeof Analytics !== 'undefined' && Analytics.isFirstVisit()) {
-      setTimeout(() => {
-        showParticipantPrompt(() => {
-          // session_start is fired by lander.js — do NOT fire it here.
-          // Firing it here caused a duplicate session_start on first visit.
-          // The lander.js instrumentation handles session_start correctly
-          // for both first-visit and returning participants.
-        });
-      }, 800);
-    }
+    // Participant ID prompt is now sequenced through App.init(), which awaits
+    // WelcomeScreen.init() first. This prevents both overlays from appearing
+    // simultaneously. FeedbackSystem.init() is still called by DOMContentLoaded
+    // for any future setup that doesn't depend on screen timing.
   }
 
   return {

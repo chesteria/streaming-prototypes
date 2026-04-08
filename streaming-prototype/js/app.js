@@ -148,6 +148,13 @@ const App = (function() {
     // Show welcome screen if first launch (awaited — lander loads after dismiss)
     await WelcomeScreen.init();
 
+    // Show participant ID prompt on first visit, sequenced AFTER the welcome
+    // screen resolves so both overlays never appear simultaneously.
+    if (typeof Analytics !== 'undefined' && Analytics.isFirstVisit() &&
+        typeof FeedbackSystem !== 'undefined') {
+      await new Promise(resolve => FeedbackSystem.showParticipantPrompt(resolve));
+    }
+
     // Navigate to lander
     navigate('lander', {}, true);
   }
