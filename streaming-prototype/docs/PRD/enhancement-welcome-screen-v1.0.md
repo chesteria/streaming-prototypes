@@ -291,6 +291,7 @@ existing architecture.
 Before building:
 1. Commit a snapshot with message "pre-welcome-screen snapshot"
 2. Create a new git branch called "welcome-screen"
+3. Versioning system has completed and merged into main already. Ensure the hooks are properly set up to wire up the version and build number to this welcome screen.
 
 Build the feature on that branch. Start with desktop profile detection
 and rendering, then add the TV device profiles. Make device profiles
