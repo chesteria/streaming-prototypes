@@ -57,17 +57,7 @@ const SeriesPDPScreen = {
     this._seriesData = await DataStore.getSeriesData(showId);
     this._render();
 
-    // Track navigation to PDP
-    try {
-      if (typeof Analytics !== 'undefined') {
-        Analytics.track('navigation', {
-          from: params._fromScreen || 'lander',
-          to: 'series-pdp',
-          trigger: 'tile-select',
-          itemId: showId,
-        });
-      }
-    } catch (e) { /* fail silently */ }
+    // Navigation is tracked by the source screen before calling App.navigate() — no duplicate here.
 
     // Restore scroll position (no transition to avoid flash)
     if (savedScrollY) {

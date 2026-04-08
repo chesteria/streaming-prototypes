@@ -100,17 +100,7 @@ const PlayerScreen = {
 
     this._render();
 
-    // Track navigation to player
-    try {
-      if (typeof Analytics !== 'undefined') {
-        Analytics.track('navigation', {
-          from: 'series-pdp',
-          to: 'player',
-          trigger: 'episode-select',
-          itemId: params.episodeId || params.showId || '',
-        });
-      }
-    } catch (e) { /* fail silently */ }
+    // Navigation is tracked by the source screen before calling App.navigate() — no duplicate here.
   },
 
   _parseDuration(str) {
