@@ -35,10 +35,17 @@ to do anything — the build number always stays current.
 What it updates on each commit:
 - `buildNumber` — incremented by 1
 - `buildDate` — current UTC timestamp
-- `gitCommit` — short hash of HEAD
+- `gitCommit` — short hash of HEAD at commit time (see note below)
 - `gitBranch` — current branch name
 
 The updated `version.json` is staged and included in the commit.
+
+> **Note — `gitCommit` is always the parent commit's hash, not the
+> current one.** Pre-commit hooks run before the new commit is created,
+> so `git rev-parse HEAD` returns the previous commit. This is an
+> inherent limitation of pre-commit hooks. The `buildNumber` is the
+> reliable identifier for a specific build — use that when tracing
+> issues, not `gitCommit`. The commit hash is supplementary context.
 
 ---
 
@@ -58,21 +65,22 @@ commit (e.g., testing the hook logic):
 Run this when you want to cut a new semantic version release:
 
 ```bash
-./scripts/set-version.sh <version> "<label>"
+./scripts/set-version.sh <version> "<label>" ["<phase>"]
 ```
 
 **Examples:**
 
 ```bash
-# After adding the welcome screen
+# MINOR bump within the same phase — phase arg omitted, stays unchanged
 ./scripts/set-version.sh 1.6.0 "Welcome Screen"
 
-# After completing Phase 3
-./scripts/set-version.sh 2.0.0 "Scenario Presets"
+# MAJOR bump crossing into a new phase — include the phase arg
+./scripts/set-version.sh 2.0.0 "Scenario Presets" "Phase 3"
 ```
 
-This updates `version` and `label` in `version.json`. It does NOT
-reset the build number — that keeps incrementing as normal.
+This updates `version` and `label` in `version.json`. If a third
+argument is provided, `phase` is updated too. It does NOT reset the
+build number — that keeps incrementing as normal.
 
 After running set-version.sh, the script reminds you to:
 1. Update `docs/CHANGELOG.md`

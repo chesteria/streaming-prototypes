@@ -10,6 +10,29 @@ Version numbers follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html
 
 ---
 
+## [1.5.1] — 2026-04-08
+
+Bug hunt fixes for the versioning system.
+
+### Fixed
+- `set-version.sh` now accepts an optional third argument for the `phase`
+  field — previously phase would drift out of sync when crossing phase
+  boundaries (e.g., `./scripts/set-version.sh 2.0.0 "Scenario Presets" "Phase 3"`)
+- Pre-commit hook now aborts the commit with a visible error if
+  `bump-build-number.sh` fails — previously failures were silent and
+  the build number would not increment
+- Debug panel "Built" row now uses `toLocaleString()` instead of
+  `toLocaleDateString()` for the time component — the previous call was
+  non-standard and not guaranteed to include time on all TV WebView engines
+
+### Known limitation (documented, not fixed)
+- `gitCommit` in `version.json` always stores the parent commit's hash,
+  not the hash of the commit being created. This is an inherent constraint
+  of pre-commit hooks. Use `buildNumber` as the reliable build identifier.
+  See `scripts/README.md` for details.
+
+---
+
 ## [1.5.0] — 2026-04-08
 
 Phase 2 — Insight Engine + versioning foundation.

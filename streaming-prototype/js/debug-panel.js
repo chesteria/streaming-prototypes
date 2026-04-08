@@ -360,7 +360,7 @@ const DebugPanel = (() => {
           displayVal = `${v.phase || ''} — ${v.label || ''}`.replace(/^ — | — $/, '') || '—';
         } else if (spec.valueKey === '_builtFormatted') {
           displayVal = v.buildDate
-            ? new Date(v.buildDate).toLocaleDateString('en-US',
+            ? new Date(v.buildDate).toLocaleString('en-US',
                 { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' })
             : '—';
         } else {
