@@ -182,6 +182,7 @@ const PANEL_SPEC = [
 
   { type: 'section', label: 'E \u2014 App State Controls' },
   { type: 'button', label: 'Show Welcome Screen', action: 'showWelcomeScreen' },
+  { type: 'button', label: 'Reload as New User', action: 'reloadAsNewUser' },
   { type: 'button', label: 'Reload Lander Config', action: 'reloadLander' },
   { type: 'button', label: 'Screenshot Mode', action: 'screenshotMode' },
   { type: 'button', label: 'Send Report (QR)', action: 'sendReport' },
@@ -477,6 +478,10 @@ const DebugPanel = (() => {
       } else {
         if (typeof showToast === 'function') showToast('Welcome screen not loaded');
       }
+    } else if (action === 'reloadAsNewUser') {
+      localStorage.removeItem('welcomeScreenSeen');
+      localStorage.removeItem('analytics_participantId');
+      location.reload();
     } else if (action === 'reloadLander') {
       location.reload();
     } else if (action === 'screenshotMode') {

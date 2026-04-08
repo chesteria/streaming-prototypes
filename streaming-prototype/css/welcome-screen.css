@@ -41,6 +41,7 @@
   align-items: baseline;
   gap: 20px;
   padding: 36px 56px 0;
+  position: relative;
 }
 
 .welcome-title {
@@ -54,6 +55,31 @@
   font-size: 16px;
   color: var(--color-text-tertiary, #667788);
   font-weight: 400;
+}
+
+/* ---- Close (×) button ---- */
+.welcome-close {
+  position: absolute;
+  top: -4px;
+  right: 0;
+  appearance: none;
+  background: none;
+  border: none;
+  color: var(--color-text-tertiary, #667788);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: color 150ms, background 150ms;
+  outline: none;
+  font-family: var(--font-family, sans-serif);
+}
+
+.welcome-close:hover,
+.welcome-close:focus {
+  color: var(--color-text-primary, #FFFFFF);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .welcome-subtitle {

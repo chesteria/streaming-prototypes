@@ -211,6 +211,7 @@ const WelcomeScreen = (() => {
         <div class="welcome-header">
           <div class="welcome-title">Streaming Prototype</div>
           <div class="welcome-version">v${_esc(String(v.version))} &nbsp;·&nbsp; Build ${_esc(String(v.buildNumber))}</div>
+          <button class="welcome-close" id="welcome-close-btn" aria-label="Close">&#x2715;</button>
         </div>
         <div class="welcome-subtitle">Welcome! Here's how to get around.</div>
         <div class="welcome-device-pill">
@@ -229,9 +230,11 @@ const WelcomeScreen = (() => {
         </div>
       </div>`;
 
-    // Wire dismiss button
+    // Wire dismiss buttons
     const btn = _overlayEl.querySelector('#welcome-got-it-btn');
     if (btn) btn.addEventListener('click', hide);
+    const closeBtn = _overlayEl.querySelector('#welcome-close-btn');
+    if (closeBtn) closeBtn.addEventListener('click', hide);
   }
 
   // ---- Profile loading ----
@@ -338,6 +341,10 @@ const WelcomeScreen = (() => {
     _overlayEl = document.createElement('div');
     _overlayEl.id = 'welcome-overlay';
     _overlayEl.setAttribute('role', 'dialog');
+    // Click on the backdrop (outside the card) dismisses the overlay
+    _overlayEl.addEventListener('click', e => {
+      if (e.target === _overlayEl) hide();
+    });
     document.body.appendChild(_overlayEl);
   }
 
@@ -359,12 +366,11 @@ const WelcomeScreen = (() => {
     e.stopPropagation();
     e.preventDefault();
 
-    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Accept') {
-      hide();
-    } else if (
+    if (
+      e.key === 'Enter' || e.key === ' ' || e.key === 'Accept' ||
       e.key === 'Escape' || e.key === 'Backspace' ||
       e.key === 'BrowserBack' || e.key === 'GoBack' ||
-      e.key === 'XF86Back'
+      e.key === 'XF86Back' || e.key === 'ArrowLeft'
     ) {
       hide();
     }
