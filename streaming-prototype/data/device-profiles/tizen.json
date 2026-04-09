@@ -1,0 +1,41 @@
+{
+  "id": "tizen",
+  "displayName": "Samsung Tizen TV",
+  "shape": "tv-remote",
+  "detection": {
+    "userAgentSubstrings": ["Tizen", "SMART-TV; Linux/SmartTV"]
+  },
+  "footerHint": "Press Home to exit · Press Tools or More (···) to open the debug panel",
+  "buttons": [
+    {
+      "label": "D-pad",
+      "icon": "dpad",
+      "key": "ArrowUp / ArrowDown / ArrowLeft / ArrowRight",
+      "appAction": "Navigate between tiles, rails, and screens"
+    },
+    {
+      "label": "Enter",
+      "icon": "ok",
+      "key": "Enter",
+      "appAction": "Select / activate focused item"
+    },
+    {
+      "label": "Return",
+      "icon": "back",
+      "key": "XF86Back",
+      "appAction": "Go back to previous screen or close modal"
+    },
+    {
+      "label": "Play / Pause",
+      "icon": "playpause",
+      "key": "MediaPlayPause",
+      "appAction": "Toggle player controls"
+    },
+    {
+      "label": "Tools / More (···)",
+      "icon": "menu",
+      "key": "Tools",
+      "appAction": "Open debug panel"
+    }
+  ]
+}

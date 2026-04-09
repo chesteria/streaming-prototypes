@@ -26,6 +26,8 @@ const DEBUG_DEFAULTS = {
   showFocusOutlines: false,
   showGridOverlay: false,
   authState: 'anonymous',
+  forceWelcomeScreen: false,
+  deviceProfileOverride: 'auto',
 };
 
 const DebugConfig = (() => {
@@ -169,12 +171,18 @@ const PANEL_SPEC = [
   { type: 'toggle', key: 'simulatedPlayback', label: 'Simulated Playback Timer', ref: 'SIMULATE_PLAYBACK' },
   { type: 'toggle', key: 'showFocusOutlines', label: 'Show Focus Outlines', ref: 'body.debug-focus-outlines' },
   { type: 'toggle', key: 'showGridOverlay', label: 'Show Grid Overlay', ref: 'body.debug-grid-overlay' },
+  { type: 'toggle', key: 'forceWelcomeScreen', label: 'Force Welcome Screen On Launch', ref: 'WELCOME_SCREEN_FORCE_ON_LAUNCH' },
+  { type: 'select', key: 'deviceProfileOverride', label: 'Device Profile Override',
+    options: ['auto', 'desktop', 'mobile', 'vizio', 'firetv', 'androidtv', 'tizen', 'webos', 'roku'],
+    unit: '', ref: 'WelcomeScreen' },
 
   { type: 'section', label: 'D \u2014 Auth State' },
   { type: 'radio', key: 'authState', label: 'Auth State',
     options: [{ value: 'anonymous', label: 'Anonymous (geo-detected)' }] },
 
   { type: 'section', label: 'E \u2014 App State Controls' },
+  { type: 'button', label: 'Show Welcome Screen', action: 'showWelcomeScreen' },
+  { type: 'button', label: 'Reload as New User', action: 'reloadAsNewUser' },
   { type: 'button', label: 'Reload Lander Config', action: 'reloadLander' },
   { type: 'button', label: 'Screenshot Mode', action: 'screenshotMode' },
   { type: 'button', label: 'Send Report (QR)', action: 'sendReport' },
@@ -463,7 +471,18 @@ const DebugPanel = (() => {
   }
 
   function _handleButtonAction(action) {
-    if (action === 'reloadLander') {
+    if (action === 'showWelcomeScreen') {
+      close();
+      if (typeof WelcomeScreen !== 'undefined') {
+        WelcomeScreen.show();
+      } else {
+        if (typeof showToast === 'function') showToast('Welcome screen not loaded');
+      }
+    } else if (action === 'reloadAsNewUser') {
+      localStorage.removeItem('welcomeScreenSeen');
+      localStorage.removeItem('analytics_participantId');
+      location.reload();
+    } else if (action === 'reloadLander') {
       location.reload();
     } else if (action === 'screenshotMode') {
       close();

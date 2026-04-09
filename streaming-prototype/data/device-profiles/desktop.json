@@ -1,0 +1,48 @@
+{
+  "id": "desktop",
+  "displayName": "Desktop Browser",
+  "shape": "keyboard",
+  "detection": {
+    "userAgentSubstrings": [],
+    "isDefault": true
+  },
+  "footerHint": "Press H anytime to reopen this screen · Backtick (`) opens the debug panel",
+  "buttons": [
+    {
+      "label": "Arrow Keys",
+      "icon": "arrows",
+      "key": "ArrowUp / ArrowDown / ArrowLeft / ArrowRight",
+      "appAction": "Navigate between tiles, rails, and screens"
+    },
+    {
+      "label": "Enter",
+      "icon": "key",
+      "key": "Enter",
+      "appAction": "Select / activate focused item"
+    },
+    {
+      "label": "Backspace / Esc",
+      "icon": "key",
+      "key": "Backspace / Escape",
+      "appAction": "Go back to previous screen or close modal"
+    },
+    {
+      "label": "Space",
+      "icon": "space",
+      "key": " ",
+      "appAction": "Play / pause (in player)"
+    },
+    {
+      "label": "Backtick `",
+      "icon": "key",
+      "key": "`",
+      "appAction": "Open debug panel"
+    },
+    {
+      "label": "H",
+      "icon": "key",
+      "key": "h",
+      "appAction": "Show this welcome screen"
+    }
+  ]
+}

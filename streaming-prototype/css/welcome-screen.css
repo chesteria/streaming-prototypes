@@ -1,0 +1,307 @@
+/* ============================================================
+   WELCOME SCREEN — First-launch controls reference overlay
+   ============================================================ */
+
+/* ---- Overlay backdrop ---- */
+#welcome-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10002; /* above feedback (9999) and debug panel (10000) */
+  background: rgba(10, 16, 24, 0.96);
+  backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 250ms ease;
+}
+
+#welcome-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ---- Card ---- */
+.welcome-card {
+  width: 1380px;
+  max-width: calc(100vw - 80px);
+  background: var(--color-card-bg, #1A2A3A);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ---- Card header ---- */
+.welcome-header {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  padding: 36px 56px 0;
+  position: relative;
+}
+
+.welcome-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text-primary, #FFFFFF);
+  letter-spacing: -0.02em;
+}
+
+.welcome-version {
+  font-size: 16px;
+  color: var(--color-text-tertiary, #667788);
+  font-weight: 400;
+}
+
+/* ---- Close (×) button ---- */
+.welcome-close {
+  position: absolute;
+  top: -4px;
+  right: 0;
+  appearance: none;
+  background: none;
+  border: none;
+  color: var(--color-text-tertiary, #667788);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: color 150ms, background 150ms;
+  outline: none;
+  font-family: var(--font-family, sans-serif);
+}
+
+.welcome-close:hover,
+.welcome-close:focus {
+  color: var(--color-text-primary, #FFFFFF);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.welcome-subtitle {
+  font-size: 20px;
+  color: var(--color-text-secondary, #8899AA);
+  padding: 8px 56px 0;
+}
+
+/* ---- Device name pill ---- */
+.welcome-device-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 56px 0;
+  padding: 6px 16px;
+  background: var(--color-surface, #2A3A4A);
+  border-radius: 100px;
+  font-size: 14px;
+  color: var(--color-text-secondary, #8899AA);
+  width: fit-content;
+}
+
+.welcome-device-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4CAF50;
+  flex-shrink: 0;
+}
+
+/* ---- Two-column body ---- */
+.welcome-body {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 0;
+  padding: 24px 56px 32px;
+  min-height: 320px;
+}
+
+/* ---- Remote / keyboard visual (left column) ---- */
+.welcome-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: 32px;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* TV remote SVG */
+.welcome-remote-svg {
+  color: rgba(255, 255, 255, 0.25);
+  width: 120px;
+  height: auto;
+}
+
+/* Keyboard visual */
+.welcome-keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.welcome-key-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.welcome-kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 10px;
+  background: var(--color-surface, #2A3A4A);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom-width: 3px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary, #FFFFFF);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', monospace;
+  white-space: nowrap;
+}
+
+.welcome-kbd.wide {
+  min-width: 80px;
+}
+
+.welcome-kbd.xl {
+  min-width: 140px;
+}
+
+/* Arrow cluster */
+.welcome-arrow-cluster {
+  display: grid;
+  grid-template-columns: repeat(3, 40px);
+  grid-template-rows: repeat(2, 40px);
+  gap: 4px;
+}
+
+.welcome-arrow-cluster .welcome-kbd {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  padding: 0;
+  font-size: 18px;
+}
+
+/* Touch visual */
+.welcome-touch {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.welcome-touch-icon {
+  font-size: 48px;
+  opacity: 0.4;
+}
+
+.welcome-touch-label {
+  font-size: 13px;
+  color: var(--color-text-tertiary, #667788);
+  text-align: center;
+}
+
+/* ---- Button mapping list (right column) ---- */
+.welcome-mappings {
+  padding-left: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+}
+
+.welcome-mapping-row {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.welcome-mapping-row:last-child {
+  border-bottom: none;
+}
+
+.welcome-mapping-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.welcome-mapping-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--color-surface, #2A3A4A);
+  border-radius: 8px;
+  font-size: 16px;
+  flex-shrink: 0;
+  color: var(--color-text-primary, #FFFFFF);
+}
+
+.welcome-mapping-label {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-text-primary, #FFFFFF);
+}
+
+.welcome-mapping-action {
+  font-size: 16px;
+  color: var(--color-text-secondary, #8899AA);
+  line-height: 1.4;
+}
+
+/* ---- Got it button ---- */
+.welcome-actions {
+  display: flex;
+  justify-content: center;
+  padding: 0 56px 28px;
+}
+
+.welcome-got-it {
+  appearance: none;
+  background: #FFFFFF;
+  color: #0F1923;
+  border: none;
+  border-radius: 12px;
+  font-size: 20px;
+  font-weight: 700;
+  padding: 18px 80px;
+  cursor: pointer;
+  font-family: var(--font-family, sans-serif);
+  letter-spacing: -0.01em;
+  outline: none;
+  transition: box-shadow var(--t-focus, 200ms), transform 100ms;
+}
+
+.welcome-got-it:focus,
+.welcome-got-it.focused {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.6), 0 0 32px rgba(255, 255, 255, 0.25);
+  transform: scale(1.02);
+}
+
+/* ---- Footer hint ---- */
+.welcome-footer {
+  text-align: center;
+  font-size: 14px;
+  color: var(--color-text-tertiary, #667788);
+  padding: 0 56px 28px;
+  line-height: 1.5;
+}
+
+/* ---- Screenshot mode: hide overlay ---- */
+body.screenshot-mode #welcome-overlay {
+  display: none !important;
+}

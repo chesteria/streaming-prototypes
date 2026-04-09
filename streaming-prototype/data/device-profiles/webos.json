@@ -1,0 +1,41 @@
+{
+  "id": "webos",
+  "displayName": "LG webOS TV",
+  "shape": "tv-remote",
+  "detection": {
+    "userAgentSubstrings": ["Web0S", "webOS", "WebOS", "SMART-TV; Linux/SmartTV; wOS"]
+  },
+  "footerHint": "Press Home to exit · Press Settings to open the debug panel",
+  "buttons": [
+    {
+      "label": "D-pad",
+      "icon": "dpad",
+      "key": "ArrowUp / ArrowDown / ArrowLeft / ArrowRight",
+      "appAction": "Navigate between tiles, rails, and screens"
+    },
+    {
+      "label": "OK (wheel center)",
+      "icon": "ok",
+      "key": "Enter",
+      "appAction": "Select / activate focused item"
+    },
+    {
+      "label": "Back",
+      "icon": "back",
+      "key": "BrowserBack / Backspace",
+      "appAction": "Go back to previous screen or close modal"
+    },
+    {
+      "label": "Play / Pause",
+      "icon": "playpause",
+      "key": "MediaPlayPause",
+      "appAction": "Toggle player controls"
+    },
+    {
+      "label": "Settings (⚙)",
+      "icon": "menu",
+      "key": "ColorF1Red",
+      "appAction": "Open debug panel"
+    }
+  ]
+}

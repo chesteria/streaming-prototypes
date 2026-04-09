@@ -1,0 +1,36 @@
+{
+  "id": "mobile",
+  "displayName": "Mobile Browser",
+  "shape": "touch",
+  "detection": {
+    "userAgentSubstrings": [],
+    "requiresTouch": true
+  },
+  "footerHint": "This prototype is optimised for TV devices and desktop browsers",
+  "buttons": [
+    {
+      "label": "Tap",
+      "icon": "tap",
+      "key": "touch",
+      "appAction": "Select / activate focused item"
+    },
+    {
+      "label": "Swipe Up / Down",
+      "icon": "swipe-v",
+      "key": "touch",
+      "appAction": "Scroll between rails"
+    },
+    {
+      "label": "Swipe Left / Right",
+      "icon": "swipe-h",
+      "key": "touch",
+      "appAction": "Move between tiles within a rail"
+    },
+    {
+      "label": "Browser Back",
+      "icon": "back",
+      "key": "BrowserBack",
+      "appAction": "Go back to previous screen"
+    }
+  ]
+}
