@@ -9,6 +9,12 @@ const DataStore = (function() {
   let versionData = null;
   const seriesCache = {};
 
+  // ID-keyed lookup maps — built once after catalog loads (O(1) lookups)
+  const _showMap       = {};
+  const _channelMap    = {};
+  const _collectionMap = {};
+  const _cityMap       = {};
+
   const VERSION_FALLBACK = {
     version: 'unknown',
     buildNumber: 0,
@@ -45,6 +51,12 @@ const DataStore = (function() {
       landerPromise,
       versionPromise,
     ]);
+
+    // Build ID-keyed maps for O(1) lookups
+    catalog.shows.forEach(s       => { _showMap[s.id]       = s; });
+    catalog.channels.forEach(c    => { _channelMap[c.id]    = c; });
+    catalog.collections.forEach(c => { _collectionMap[c.id] = c; });
+    catalog.cities.forEach(c      => { _cityMap[c.id]       = c; });
   }
 
   function getVersion() {
@@ -52,19 +64,19 @@ const DataStore = (function() {
   }
 
   function getShow(id) {
-    return catalog.shows.find(s => s.id === id) || null;
+    return _showMap[id] || null;
   }
 
   function getChannel(id) {
-    return catalog.channels.find(c => c.id === id) || null;
+    return _channelMap[id] || null;
   }
 
   function getCollection(id) {
-    return catalog.collections.find(c => c.id === id) || null;
+    return _collectionMap[id] || null;
   }
 
   function getCity(id) {
-    return catalog.cities.find(c => c.id === id) || null;
+    return _cityMap[id] || null;
   }
 
   function getGeoState() {
@@ -77,12 +89,9 @@ const DataStore = (function() {
 
   function getFeaturedItems() {
     return catalog.featured.map(id => {
-      const show = catalog.shows.find(s => s.id === id);
-      if (show) return { ...show, _type: 'show' };
-      const city = catalog.cities.find(c => c.id === id);
-      if (city) return { ...city, _type: 'city' };
-      const col = catalog.collections.find(c => c.id === id);
-      if (col) return { ...col, _type: 'collection' };
+      if (_showMap[id])       return { ..._showMap[id],       _type: 'show' };
+      if (_cityMap[id])       return { ..._cityMap[id],       _type: 'city' };
+      if (_collectionMap[id]) return { ..._collectionMap[id], _type: 'collection' };
       return null;
     }).filter(Boolean);
   }

@@ -1,9 +1,9 @@
 {
-  "version": "1.5.0",
-  "buildNumber": 9,
-  "buildDate": "2026-04-08T21:12:44Z",
-  "gitCommit": "453d8d9",
-  "gitBranch": "welcome-screen",
+  "version": "1.5.3",
+  "buildNumber": 14,
+  "buildDate": "2026-04-11T13:48:12Z",
+  "gitCommit": "5f3fa42",
+  "gitBranch": "performance-improvements",
   "phase": "Phase 2",
-  "label": "Insight Engine"
+  "label": "Input Latency Fixes"
 }

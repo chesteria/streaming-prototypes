@@ -10,6 +10,64 @@ Version numbers follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html
 
 ---
 
+## [1.5.3] — 2026-04-11
+
+Remaining input latency fixes from the performance audit.
+
+### Performance
+- Hero carousel auto-advance timer now debounced on keypress — previously
+  `clearInterval` + `setInterval` fired on every LEFT/RIGHT, creating and
+  destroying timer objects at held-key repeat rate (~15/s on TV remotes);
+  timer now only restarts 300ms after the last keypress (audit Finding 3)
+- All lander rail `focusTile()` / `focusPill()` functions now O(1) —
+  each rail tracks its previously focused element by reference and
+  removes `focused` from only that element rather than scanning all tiles
+  on every keypress; affects cities, channels, genre pills, standard rails,
+  and screamer (audit Finding 4)
+- Series-PDP zone transitions now O(1) — `_deactivateAllZones()` reduced
+  from 5 `querySelectorAll` calls + N `forEach` iterations to a single
+  element reference clear; all intra-zone focus methods (`_focusSeason`,
+  `_focusEpisode`, `_focusExtra`, `_focusSimilar`) updated to match
+  (audit Finding 5)
+- CDN scripts (`hls.min.js`, `qrcode.min.js`) now load with `defer` —
+  eliminates render-blocking on first paint; both scripts are only
+  referenced inside screen `init()` functions so deferred loading is safe
+  (audit Finding 8)
+
+---
+
+## [1.5.2] — 2026-04-11
+
+Performance fixes and welcome screen completion.
+
+### Added
+- Welcome screen — shown on first launch before the participant ID prompt;
+  displays device controls reference and version/build stamp in the footer
+- Reload-as-New-User debug action — resets participant state and reloads
+  the app from the debug panel without manual localStorage clearing
+
+### Fixed
+- Living tile timers now stopped in `onBlur()` on forward navigation —
+  previously up to 10 `setInterval` callbacks (hero + city tiles) continued
+  running in the background during series-pdp and player screens, causing
+  image fetches and layout work on constrained TV hardware
+- Welcome screen close mechanisms and sequencing — welcome screen now
+  correctly closes before the participant ID prompt is shown; close
+  handling is robust across all navigation paths
+
+### Performance
+- Analytics writes buffered in memory; flushed to localStorage on a timer
+  rather than synchronously on every keypress — eliminates the per-keypress
+  `localStorage.getItem` + `JSON.parse` + `JSON.stringify` + `localStorage.setItem`
+  cycle that caused input lag on TV hardware (audit Finding 1 + 6)
+- `_getConfig()` result cached at module level and invalidated on
+  `debugconfig:change` — eliminates per-event `Object.keys(localStorage)`
+  scan (audit Finding 7)
+- DataStore catalog lookups indexed on first access — `getShow()` and
+  related calls now O(1) instead of O(n) linear array scans (audit Finding 3)
+
+---
+
 ## [1.5.1] — 2026-04-08
 
 Bug hunt fixes for the versioning system.

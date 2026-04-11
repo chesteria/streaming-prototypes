@@ -20,6 +20,15 @@ const Analytics = (() => {
   let _batchTimer     = null;
   let _pendingBatch   = [];
 
+  // Write buffer — events accumulate here and are flushed to localStorage on a timer
+  let _writeBuffer      = [];
+  let _writeFlushTimer  = null;
+  const WRITE_FLUSH_MS  = 5000; // flush every 5 seconds instead of on every event
+
+  // One-time cached values (don't recompute on every track() call)
+  let _deviceTypeCache = null;
+  let _configCache     = null;
+
   // Per-session counters (for session_end payload)
   let _focusChangeCount    = 0;
   let _selectionCount      = 0;
@@ -53,17 +62,20 @@ const Analytics = (() => {
     return code;
   }
 
-  // ---- Device type detection ----
+  // ---- Device type detection (cached — UA never changes mid-session) ----
   function _detectDeviceType() {
+    if (_deviceTypeCache) return _deviceTypeCache;
     const ua = navigator.userAgent || '';
-    if (/AFTS|AmazonFireTV|FireTV/i.test(ua)) return 'firetv';
-    if (/Tizen/i.test(ua)) return 'tizen';
-    if (/Roku/i.test(ua)) return 'roku';
-    return 'browser';
+    if (/AFTS|AmazonFireTV|FireTV/i.test(ua)) _deviceTypeCache = 'firetv';
+    else if (/Tizen/i.test(ua)) _deviceTypeCache = 'tizen';
+    else if (/Roku/i.test(ua)) _deviceTypeCache = 'roku';
+    else _deviceTypeCache = 'browser';
+    return _deviceTypeCache;
   }
 
-  // ---- Config snapshot ----
+  // ---- Config snapshot (cached — debug overrides don't change mid-session) ----
   function _getConfig() {
+    if (_configCache) return _configCache;
     try {
       const overrides = {};
       Object.keys(localStorage).forEach(k => {
@@ -77,13 +89,14 @@ const Analytics = (() => {
           })()
         : {};
 
-      return {
+      _configCache = {
         landerVersion: localStorage.getItem('debug_landerConfig')
           ? _simpleHash(localStorage.getItem('debug_landerConfig'))
           : 'default',
         debugOverrides: overrides,
         ...versionInfo,
       };
+      return _configCache;
     } catch (e) {
       return { landerVersion: 'default', debugOverrides: {} };
     }
@@ -191,27 +204,37 @@ const Analytics = (() => {
     return 'unknown';
   }
 
-  // ---- localStorage storage ----
+  // ---- Write buffer — push events here, flush to localStorage on a timer ----
   function _store(event) {
+    _writeBuffer.push(event);
+    if (!_writeFlushTimer) {
+      _writeFlushTimer = setTimeout(_flushWriteBuffer, WRITE_FLUSH_MS);
+    }
+  }
+
+  function _flushWriteBuffer() {
+    _writeFlushTimer = null;
+    if (_writeBuffer.length === 0) return;
+
+    const toWrite = _writeBuffer.splice(0); // drain buffer atomically
     try {
       const raw = localStorage.getItem('analytics_events');
-      const events = raw ? JSON.parse(raw) : [];
+      const stored = raw ? JSON.parse(raw) : [];
+      const merged = stored.concat(toWrite);
 
-      // M4: Check size BEFORE pushing — trim if adding this event would exceed the cap
-      const withNew = JSON.stringify([...events, event]);
-      if (withNew.length > ANALYTICS_MAX_STORAGE_BYTES) {
-        // Remove oldest 10% of events to make room
-        const trim = Math.max(1, Math.floor(events.length * 0.1));
-        events.splice(0, trim);
+      // Trim if over size cap (remove oldest 10%)
+      const serialized = JSON.stringify(merged);
+      if (serialized.length > ANALYTICS_MAX_STORAGE_BYTES) {
+        const trim = Math.max(1, Math.floor(merged.length * 0.1));
+        merged.splice(0, trim);
       }
 
-      events.push(event);
-      localStorage.setItem('analytics_events', JSON.stringify(events));
-
-      // M5: Prune old sessions on every store, not just at init
+      localStorage.setItem('analytics_events', JSON.stringify(merged));
       _pruneOldSessions();
     } catch (e) {
-      console.warn('[Analytics] localStorage store failed:', e);
+      console.warn('[Analytics] localStorage flush failed:', e);
+      // Put events back in the buffer so they aren't lost
+      _writeBuffer = toWrite.concat(_writeBuffer);
     }
   }
 
@@ -240,13 +263,14 @@ const Analytics = (() => {
     }
   }
 
-  // ---- Read events from storage ----
+  // ---- Read events from storage (includes buffered events not yet flushed) ----
   function getEvents() {
     try {
       const raw = localStorage.getItem('analytics_events');
-      return raw ? JSON.parse(raw) : [];
+      const stored = raw ? JSON.parse(raw) : [];
+      return stored.concat(_writeBuffer);
     } catch (e) {
-      return [];
+      return _writeBuffer.slice();
     }
   }
 
@@ -272,8 +296,9 @@ const Analytics = (() => {
     _startBatchTimer();
     _resetInactivityTimer();
 
-    // Flush on page unload
+    // Flush write buffer and Firebase transport on page unload
     window.addEventListener('beforeunload', () => {
+      _flushWriteBuffer();
       _flushToFirebase();
     });
   }
