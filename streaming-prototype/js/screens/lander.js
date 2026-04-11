@@ -412,6 +412,7 @@ function buildHeroCarousel(config, container) {
   let focusedIdx = 0;
   let isActive = false;
   let autoTimer = null;
+  let autoAdvanceDebounce = null;
 
   function getTile(i) { return trackEl.children[i]; }
 
@@ -436,7 +437,14 @@ function buildHeroCarousel(config, container) {
     track.style.transform = `translateX(${translateX}px)`;
   }
 
+  function debouncedStartAutoAdvance() {
+    clearTimeout(autoAdvanceDebounce);
+    autoAdvanceDebounce = setTimeout(startAutoAdvance, 300);
+  }
+
   function startAutoAdvance() {
+    clearTimeout(autoAdvanceDebounce);
+    autoAdvanceDebounce = null;
     clearInterval(autoTimer);
     if (!DebugConfig.get('heroAutoAdvance', true)) return;
     autoTimer = setInterval(() => {
@@ -485,6 +493,8 @@ function buildHeroCarousel(config, container) {
     },
     onLeave() {
       isActive = false;
+      clearTimeout(autoAdvanceDebounce);
+      autoAdvanceDebounce = null;
       clearInterval(autoTimer);
       getTile(focusedIdx).classList.remove('focused');
     },
@@ -499,7 +509,7 @@ function buildHeroCarousel(config, container) {
           heroAnalyticsState.currentTileIdx = focusedIdx;
           heroAnalyticsState.focusedItemTitle = items[focusedIdx]?.title || items[focusedIdx]?.name || '';
           focusTile(focusedIdx, prevIdx2);
-          startAutoAdvance();
+          debouncedStartAutoAdvance();
         } else {
           try {
             if (typeof Analytics !== 'undefined') {
@@ -517,7 +527,7 @@ function buildHeroCarousel(config, container) {
           heroAnalyticsState.focusedItemTitle = items[focusedIdx]?.title || items[focusedIdx]?.name || '';
           if (focusedIdx > heroAnalyticsState.maxTileReached) heroAnalyticsState.maxTileReached = focusedIdx;
           focusTile(focusedIdx, prevIdx2);
-          startAutoAdvance();
+          debouncedStartAutoAdvance();
         } else {
           try {
             if (typeof Analytics !== 'undefined') {
@@ -688,6 +698,7 @@ function buildLocalCitiesRail(config, container) {
 
   let focusedIdx = 0;
   const tiles = Array.from(track.children);
+  let prevFocusedEl = null;
 
   const citiesAnalyticsState = {
     railId: 'local-cities',
@@ -699,8 +710,9 @@ function buildLocalCitiesRail(config, container) {
   };
 
   function focusTile(idx) {
-    tiles.forEach(t => t.classList.remove('focused'));
-    if (tiles[idx]) tiles[idx].classList.add('focused');
+    if (prevFocusedEl) prevFocusedEl.classList.remove('focused');
+    const el = tiles[idx];
+    if (el) { el.classList.add('focused'); prevFocusedEl = el; }
     scrollRailToIndex(track, idx, 360, TILE_GAP);
   }
 
@@ -714,7 +726,9 @@ function buildLocalCitiesRail(config, container) {
       citiesAnalyticsState.selectedTile = null;
       focusTile(focusedIdx);
     },
-    onLeave() { tiles.forEach(t => t.classList.remove('focused')); },
+    onLeave() {
+      if (prevFocusedEl) { prevFocusedEl.classList.remove('focused'); prevFocusedEl = null; }
+    },
     handleKey(action) {
       if (action === 'UP') return 'UP';
       if (action === 'DOWN') return 'DOWN';
@@ -796,6 +810,7 @@ function buildLiveChannelsRail(config, container) {
 
   let focusedIdx = 0;
   const tiles = Array.from(track.children);
+  let prevFocusedEl = null;
 
   const liveAnalyticsState = {
     railId: 'live-channels',
@@ -807,8 +822,9 @@ function buildLiveChannelsRail(config, container) {
   };
 
   function focusTile(idx) {
-    tiles.forEach(t => t.classList.remove('focused'));
-    if (tiles[idx]) tiles[idx].classList.add('focused');
+    if (prevFocusedEl) prevFocusedEl.classList.remove('focused');
+    const el = tiles[idx];
+    if (el) { el.classList.add('focused'); prevFocusedEl = el; }
     scrollRailToIndex(track, idx, CHANNEL_TILE_W, TILE_GAP);
     below.style.transform = track.style.transform;
   }
@@ -823,7 +839,9 @@ function buildLiveChannelsRail(config, container) {
       liveAnalyticsState.selectedTile = null;
       focusTile(focusedIdx);
     },
-    onLeave() { tiles.forEach(t => t.classList.remove('focused')); },
+    onLeave() {
+      if (prevFocusedEl) { prevFocusedEl.classList.remove('focused'); prevFocusedEl = null; }
+    },
     handleKey(action) {
       if (action === 'UP') return 'UP';
       if (action === 'DOWN') return 'DOWN';
@@ -883,13 +901,15 @@ function buildGenrePillsRail(config, container) {
 
   let focusedIdx = 0;
   const pills = Array.from(track.children);
+  let prevFocusedEl = null;
 
   function focusPill(idx) {
-    pills.forEach(p => p.classList.remove('focused'));
-    if (pills[idx]) pills[idx].classList.add('focused');
-    const targetPill = pills[idx];
-    if (targetPill) {
-      const offset = -(targetPill.offsetLeft - 60);
+    if (prevFocusedEl) prevFocusedEl.classList.remove('focused');
+    const el = pills[idx];
+    if (el) {
+      el.classList.add('focused');
+      prevFocusedEl = el;
+      const offset = -(el.offsetLeft - 60);
       track.style.transform = `translateX(${Math.min(0, offset)}px)`;
     }
   }
@@ -913,7 +933,9 @@ function buildGenrePillsRail(config, container) {
       genreAnalyticsState.selectedTile = null;
       focusPill(focusedIdx);
     },
-    onLeave() { pills.forEach(p => p.classList.remove('focused')); },
+    onLeave() {
+      if (prevFocusedEl) { prevFocusedEl.classList.remove('focused'); prevFocusedEl = null; }
+    },
     handleKey(action) {
       if (action === 'UP') return 'UP';
       if (action === 'DOWN') return 'DOWN';
@@ -988,20 +1010,22 @@ function buildScreamer(config, container) {
   let subZone = 0; // 0 = CTA, 1 = tiles
   let tileIdx = 0;
   const tiles = Array.from(tileTrack.children);
+  let prevTileEl = null;
 
   function focusCTA() {
     subZone = 0;
+    if (prevTileEl) { prevTileEl.classList.remove('focused'); prevTileEl = null; }
     ctaEl.classList.add('focused');
     bannerEl.classList.add('has-focus');
-    tiles.forEach(t => t.classList.remove('focused'));
   }
 
   function focusTile(idx) {
     subZone = 1;
     ctaEl.classList.remove('focused');
     bannerEl.classList.remove('has-focus');
-    tiles.forEach(t => t.classList.remove('focused'));
-    if (tiles[idx]) tiles[idx].classList.add('focused');
+    if (prevTileEl) prevTileEl.classList.remove('focused');
+    const el = tiles[idx];
+    if (el) { el.classList.add('focused'); prevTileEl = el; }
     scrollRailToIndex(tileTrack, idx, PORTRAIT_TILE_W, TILE_GAP);
   }
 
@@ -1027,7 +1051,7 @@ function buildScreamer(config, container) {
     onLeave() {
       ctaEl.classList.remove('focused');
       bannerEl.classList.remove('has-focus');
-      tiles.forEach(t => t.classList.remove('focused'));
+      if (prevTileEl) { prevTileEl.classList.remove('focused'); prevTileEl = null; }
     },
     handleKey(action) {
       if (subZone === 0) {
@@ -1113,6 +1137,7 @@ function buildStandardRail(config, container) {
 
   let focusedIdx = 0;
   const tiles = Array.from(track.children);
+  let prevFocusedEl = null;
   const railId = config.title ? config.title.replace(/\s+/g, '-').toLowerCase() : 'standard-rail';
 
   const stdAnalyticsState = {
@@ -1126,8 +1151,9 @@ function buildStandardRail(config, container) {
   };
 
   function focusTile(idx) {
-    tiles.forEach(t => t.classList.remove('focused'));
-    if (tiles[idx]) tiles[idx].classList.add('focused');
+    if (prevFocusedEl) prevFocusedEl.classList.remove('focused');
+    const el = tiles[idx];
+    if (el) { el.classList.add('focused'); prevFocusedEl = el; }
     scrollRailToIndex(track, idx, tileW, TILE_GAP);
   }
 
@@ -1142,7 +1168,9 @@ function buildStandardRail(config, container) {
       stdAnalyticsState.focusedItemTitle = shows[focusedIdx]?.title || '';
       focusTile(focusedIdx);
     },
-    onLeave() { tiles.forEach(t => t.classList.remove('focused')); },
+    onLeave() {
+      if (prevFocusedEl) { prevFocusedEl.classList.remove('focused'); prevFocusedEl = null; }
+    },
     handleKey(action) {
       if (action === 'UP') return 'UP';
       if (action === 'DOWN') return 'DOWN';

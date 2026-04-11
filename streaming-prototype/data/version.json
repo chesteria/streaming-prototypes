@@ -1,9 +1,9 @@
 {
-  "version": "1.5.2",
-  "buildNumber": 13,
-  "buildDate": "2026-04-11T13:42:16Z",
-  "gitCommit": "ef7099c",
+  "version": "1.5.3",
+  "buildNumber": 14,
+  "buildDate": "2026-04-11T13:48:12Z",
+  "gitCommit": "5f3fa42",
   "gitBranch": "performance-improvements",
   "phase": "Phase 2",
-  "label": "Performance & Welcome Screen"
+  "label": "Input Latency Fixes"
 }

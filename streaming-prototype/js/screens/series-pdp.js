@@ -20,6 +20,7 @@ const SeriesPDPScreen = {
   _extrasIdx: 0,
   _similarIdx: 0,
   _scrollY: 0,
+  _focusedEl: null,   // currently focused element — used for O(1) deactivation
 
   async init(container, params) {
     this._container = container;
@@ -289,7 +290,7 @@ const SeriesPDPScreen = {
 
     if (zone === 'buttons') {
       const btn = this._container.querySelector('.pdp-btn');
-      if (btn) btn.classList.add('focused');
+      if (btn) { btn.classList.add('focused'); this._focusedEl = btn; }
     } else if (zone === 'seasons') {
       this._focusSeason(this._seasonIdx);
     } else if (zone === 'episodes') {
@@ -300,7 +301,7 @@ const SeriesPDPScreen = {
       this._focusSimilar(this._similarIdx);
     } else if (zone === 'more-info') {
       const card = this._container.querySelector('#more-info-card');
-      if (card) card.classList.add('focused');
+      if (card) { card.classList.add('focused'); this._focusedEl = card; }
     }
   },
 
@@ -313,18 +314,14 @@ const SeriesPDPScreen = {
   },
 
   _deactivateAllZones() {
-    this._container.querySelectorAll('.pdp-btn').forEach(b => b.classList.remove('focused'));
-    this._container.querySelectorAll('.season-pill').forEach(s => s.classList.remove('focused'));
-    this._container.querySelectorAll('.episode-tile').forEach(t => t.classList.remove('focused'));
-    this._container.querySelectorAll('#similar-track .portrait-tile').forEach(t => t.classList.remove('focused'));
-    const card = this._container.querySelector('#more-info-card');
-    if (card) card.classList.remove('focused');
+    if (this._focusedEl) { this._focusedEl.classList.remove('focused'); this._focusedEl = null; }
   },
 
   _focusSeason(idx) {
-    const pills = Array.from(this._container.querySelectorAll('.season-pill'));
-    pills.forEach(p => p.classList.remove('focused'));
-    if (pills[idx]) pills[idx].classList.add('focused');
+    if (this._focusedEl) this._focusedEl.classList.remove('focused');
+    const pills = this._container.querySelectorAll('.season-pill');
+    const el = pills[idx];
+    if (el) { el.classList.add('focused'); this._focusedEl = el; }
     this._seasonIdx = idx;
   },
 
@@ -360,25 +357,28 @@ const SeriesPDPScreen = {
   },
 
   _focusEpisode(idx) {
-    const tiles = Array.from(this._container.querySelectorAll('#episodes-track .episode-tile'));
-    tiles.forEach(t => t.classList.remove('focused'));
-    if (tiles[idx]) tiles[idx].classList.add('focused');
+    if (this._focusedEl) this._focusedEl.classList.remove('focused');
+    const tiles = this._container.querySelectorAll('#episodes-track .episode-tile');
+    const el = tiles[idx];
+    if (el) { el.classList.add('focused'); this._focusedEl = el; }
     this._episodeIdx = idx;
     this._scrollRail('episodes-track', idx, 440, 16);
   },
 
   _focusExtra(idx) {
-    const tiles = Array.from(this._container.querySelectorAll('#extras-track .episode-tile'));
-    tiles.forEach(t => t.classList.remove('focused'));
-    if (tiles[idx]) tiles[idx].classList.add('focused');
+    if (this._focusedEl) this._focusedEl.classList.remove('focused');
+    const tiles = this._container.querySelectorAll('#extras-track .episode-tile');
+    const el = tiles[idx];
+    if (el) { el.classList.add('focused'); this._focusedEl = el; }
     this._extrasIdx = idx;
     this._scrollRail('extras-track', idx, 440, 16);
   },
 
   _focusSimilar(idx) {
-    const tiles = Array.from(this._container.querySelectorAll('#similar-track .portrait-tile'));
-    tiles.forEach(t => t.classList.remove('focused'));
-    if (tiles[idx]) tiles[idx].classList.add('focused');
+    if (this._focusedEl) this._focusedEl.classList.remove('focused');
+    const tiles = this._container.querySelectorAll('#similar-track .portrait-tile');
+    const el = tiles[idx];
+    if (el) { el.classList.add('focused'); this._focusedEl = el; }
     this._similarIdx = idx;
     this._scrollRail('similar-track', idx, 180, 16);
   },
