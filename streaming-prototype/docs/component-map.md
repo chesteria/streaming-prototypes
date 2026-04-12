@@ -195,14 +195,14 @@ Multi-genre channels appear in multiple genre groups with independent tile scrol
 | Element | Value | Notes |
 |---------|-------|-------|
 | Guide left offset | `content-pad-x (60px) + 70px = 130px` from screen left | Grid indented 70px beyond the genre rail |
-| Top gap (rail → first row) | `10px` fixed | Applied as `margin-top` on the grid wrapper — outside the overflow clip boundary, so rows scrolling off the top clip at y=0 immediately with no peeking |
+| Top gap (rail → first row) | `60px` fixed | Applied as `margin-top` on the grid wrapper — outside the overflow clip boundary, so rows scrolling off the top clip at y=0 immediately with no peeking |
 | Channel row height (collapsed) | `168px` | |
 | Channel row height (focused) | `360px` | Smooth CSS height transition |
 | Row gap | `8px` | `margin-bottom` on each row |
 | Logo cell width | `190px` | Standalone card — **not joined to program tiles** |
 | Logo cell gap from tiles | `12px` | `gap` on the row flex container |
 | Program tile width | `725px` | `EPG_TILE_WIDTH` constant in `channel-row.js` |
-| Tile gap (between tiles) | `12px` | `EPG_TILE_GAP` constant; matches row gap |
+| Tile gap (between tiles) | `3px` | `EPG_TILE_GAP` constant in `channel-row.js` — **must match `gap` on `.epg-tile-track` in CSS** or tiles will drift on each RIGHT press |
 | Logo cell border-radius | `var(--tile-radius)` all corners | Full radius — not flush to any adjacent element |
 | Program tile border-radius | `var(--tile-radius)` all corners | Full radius — not flush to logo cell |
 
@@ -218,8 +218,8 @@ Multi-genre channels appear in multiple genre groups with independent tile scrol
 | Genre group header | hidden | `display: none` — genre transitions shown via rail chip only |
 | Program tile title | 34px | `white-space: nowrap` + `text-overflow: ellipsis` |
 | Program tile description | 10px | Visible only when row is focused |
-| Program tile time | 39px | |
-| Program tile rating | 33px | |
+| Program tile time | 29px (−25%) | |
+| Program tile rating | 25px (−25%) | |
 | Logo cell initials (collapsed) | 48px | |
 | Logo cell initials (focused row) | 60px | |
 

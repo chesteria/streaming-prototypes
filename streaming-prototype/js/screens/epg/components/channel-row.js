@@ -4,7 +4,7 @@
    ============================================================ */
 
 const EPG_TILE_WIDTH = 725;
-const EPG_TILE_GAP   = 12;  /* gap between tiles matches channel-row gap */
+const EPG_TILE_GAP   = 3;   /* must match gap: 3px on .epg-tile-track in epg.css */
 const EPG_TILE_STEP  = EPG_TILE_WIDTH + EPG_TILE_GAP;
 
 /**

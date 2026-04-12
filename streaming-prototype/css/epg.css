@@ -87,7 +87,7 @@
   overflow: hidden;
   position: relative;
   padding-left: 70px;    /* guide indented 70px from left edge of screen content */
-  margin-top: 10px;      /* fixed 10px gap between genre rail and guide — outside overflow clip,
+  margin-top: 60px;      /* fixed gap between genre rail and guide — outside overflow clip,
                             so rows scrolling off the top are clipped at y=0 with no peeking */
 }
 
@@ -130,7 +130,7 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 0 8px;
+  padding: 0 13px;
   border-radius: var(--tile-radius);   /* all corners — not joined to anything */
   background: var(--color-card-bg);
   cursor: default;
@@ -278,14 +278,14 @@
 }
 
 .epg-tile-time {
-  font-size: 39px;
+  font-size: 29px;
   color: var(--color-text-secondary);
   font-family: var(--font-family);
   white-space: nowrap;
 }
 
 .epg-tile-rating {
-  font-size: 33px;
+  font-size: 25px;
   color: var(--color-text-tertiary);
   font-family: var(--font-family);
   border: 1px solid var(--color-surface);
@@ -299,7 +299,7 @@
   display: none;
   align-items: center;
   gap: 4px;
-  font-size: 10px;
+  font-size: 20px;
   color: var(--color-progress-watch);
   font-family: var(--font-family);
 }
@@ -309,8 +309,8 @@
 }
 
 .epg-tile-watching-dot {
-  width: 6px;
-  height: 6px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   background: var(--color-progress-watch);
   flex-shrink: 0;

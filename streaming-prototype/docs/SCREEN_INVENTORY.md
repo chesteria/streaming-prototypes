@@ -109,11 +109,11 @@ JS object conforming to the screen contract:
 | Measurement | Value | Rule |
 |-------------|-------|------|
 | Guide left offset | 130px from screen left | `content-pad-x` (60px) + 70px additional indent |
-| Rail → first row gap | 10px fixed | `margin-top` on grid wrapper — outside overflow clip, rows clip at y=0 with no peeking |
+| Rail → first row gap | 60px fixed | `margin-top` on grid wrapper — outside overflow clip, rows clip at y=0 with no peeking |
 | Row height (collapsed) | 168px | |
 | Row height (focused) | 360px | CSS height transition 180ms |
 | Row gap | 8px | `margin-bottom` |
-| Logo cell width | 190px | Standalone rounded card |
+| Logo cell width | 190px | Standalone rounded card; padding 0 13px |
 | Logo-to-tile gap | 12px | `gap` on row flex container |
 | Program tile width | 725px | `EPG_TILE_WIDTH` in `channel-row.js` |
 | Logo cell radius | `--tile-radius` all corners | **Never flush to adjacent elements** |
@@ -140,8 +140,8 @@ Grid → Rail → Nav (BACK progresses through each context in order)
 | Genre group header | hidden | `display: none` — genre changes reflected by rail only |
 | Program tile title | 34px | `nowrap` + `text-overflow: ellipsis` |
 | Program tile description | 10px | Visible only when row is focused |
-| Program tile time | 39px | |
-| Program tile rating | 33px | |
+| Program tile time | 29px | |
+| Program tile rating | 25px | |
 | Logo cell initials (collapsed) | 48px | |
 | Logo cell initials (focused) | 60px | |
 
