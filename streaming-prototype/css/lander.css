@@ -26,7 +26,10 @@
 .hero-carousel {
   position: relative;
   width: 100%;
-  height: 720px;
+  /* calc(660px + nav-height) maintains 525px content area for hero tiles;
+     the 50px reduction from 660→610 closes the distance to the next rail by 50px.
+     padding-top auto-adjusts via --nav-height to preserve the 135px below-nav margin. */
+  height: calc(610px + var(--nav-height));
   overflow: hidden;
   padding-top: calc(var(--nav-height) + 135px);
 }
