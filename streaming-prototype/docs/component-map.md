@@ -1,7 +1,7 @@
 # Component Map
 
 > Living reference document. Update when screens, rails, zones, or globals change.
-> Last updated: 2026-04-08
+> Last updated: 2026-04-12
 
 ---
 
@@ -150,6 +150,43 @@ DOM element, read back in `init()`.
 
 ---
 
+### EPG (`EPGScreen`) — `js/screens/epg/epg-screen.js`
+
+Live TV program guide. Three internal focus contexts (`nav`, `rail`, `grid`)
+managed within a single registered screen.
+
+**Component files (load in this order):**
+
+| File | Factory function | Purpose |
+|------|-----------------|---------|
+| `epg/data-model.js` | `EPGDataModel` (IIFE) | Fetches mock data; generates 24h schedules; applies debug overrides |
+| `epg/components/program-tile.js` | `createProgramTile()` | Program tile DOM; defines `_escEPG()` global |
+| `epg/components/channel-logo.js` | `createChannelLogoCell()` | Logo cell with heart decoration |
+| `epg/components/channel-row.js` | `createChannelRow()` | Horizontal tile track; independent scroll state; return-to-now |
+| `epg/components/genre-group.js` | `createGenreGroup()` | Genre header + channel rows for one genre |
+| `epg/components/channel-grid.js` | `createChannelGrid()` | Full vertical grid; flat row array; genre visibility callbacks |
+| `epg/components/genre-rail.js` | `createGenreRail()` | Horizontal chip strip; wrap navigation; debounced anchor |
+| `epg/components/more-info-overlay.js` | `createMoreInfoOverlay()` | Body-appended overlay; d-pad focus trap |
+
+**Focus contexts:**
+
+| Context | Description | Entry |
+|---------|-------------|-------|
+| `nav` | EPG top nav bar | Initial; rail BACK; grid BACK |
+| `rail` | Genre chip strip | Nav DOWN |
+| `grid` | Channel/program grid | Rail DOWN; chip select |
+| overlay | More Info overlay | Grid OK on logo cell |
+
+**Row state keying:** Each `channel-row.js` instance is keyed by `${channelId}:${genreId}`.
+Multi-genre channels appear in multiple genre groups with independent tile scroll state.
+
+**Key events fired:** 16 EPG-specific events — see `ANALYTICS_REGISTRY.md` for full list.
+
+**Debug overrides:** `debug_epgGenreOrder`, `debug_epgGenreEnabled_*`, `debug_epgGenreLabel_*`,
+`debug_epgGenreMap`, `debug_epgChannels`, `epgShowRatings`, `epgShowGenreHeaders`
+
+---
+
 ### Player (`PlayerScreen`) — `js/screens/player.js`
 
 Video player with HLS.js. Plays `.m3u8` streams via two paths:
@@ -241,10 +278,13 @@ Every event envelope includes: `event`, `timestamp`, `sessionId`, `participantId
 | Screen / Global | Events |
 |----------------|--------|
 | App boot | `session_start`, `session_end` |
-| Lander | `focus_change`, `rail_engagement`, `tile_select`, `scroll_depth`, `dead_end`, `navigation` |
+| Lander | `focus_change`, `rail_engagement`, `tile_select`, `scroll_depth`, `dead_end`, `navigation`, `epg_nav_to_live` |
+| EPG | `epg_screen_entered`, `epg_screen_exited`, `epg_nav_from_live`, `epg_back_to_nav`, `epg_channel_row_focused`, `epg_channel_logo_focused`, `epg_program_tile_focused`, `epg_program_tile_scrubbed`, `epg_row_returned_to_now`, `epg_genre_chip_focused`, `epg_genre_selected`, `epg_genre_anchor_updated`, `epg_more_info_opened`, `epg_more_info_closed`, `epg_more_info_cta_activated` |
 | Series PDP | `navigation`, `focus_change`, `feature_interaction`, `tile_select`, `dead_end` |
 | Player | `navigation`, `playback_start`, `playback_pause`, `playback_complete`, `playback_scrub`, `controls_interaction`, `dead_end` |
 | Feedback overlay | `user_feedback` |
+
+See `docs/ANALYTICS_REGISTRY.md` for full payload documentation per event.
 
 **Transport:** localStorage by default (rolling buffer, 50 sessions / 5 MB cap).
 Firebase optional — set `FIREBASE_URL` constant and switch `ANALYTICS_TRANSPORT`
@@ -276,6 +316,10 @@ Separate page. Not part of the main app shell.
 |--------|------------|--------|
 | Lander Rail Editor | `localStorage.debug_landerConfig` | Overrides rail order/content on next app load |
 | Catalog Editor | `localStorage.debug_catalog` | Overrides show/channel/city data on next app load |
+| EPG Genre Management | `debug_epgGenreOrder`, `debug_epgGenreEnabled_*`, `debug_epgGenreLabel_*` | Overrides genre list order, visibility, and labels |
+| EPG Channel→Genre Association | `debug_epgGenreMap` | Overrides which genres each channel appears under |
+| EPG Channel Metadata | `debug_epgChannels` | Overrides channel name and currently-watching flag |
+| EPG Display Toggles | `epgShowRatings`, `epgShowGenreHeaders` | Toggles ratings and genre header visibility |
 | Export / Import | JSON file download / upload | Snapshot and restore all debug overrides |
 
 ---
@@ -304,13 +348,25 @@ js/
 ├── focus-engine.js      Global d-pad delegation
 ├── data-store.js        All JSON loading + accessors
 ├── debug-panel.js       DebugConfig + DebugPanel
+├── debug-config.js      Companion debug.html editor logic
 ├── analytics.js         Analytics.track() event bus
 ├── feedback.js          Hold-OK overlay + participant ID
 ├── welcome-screen.js    First-launch device-profile overlay
 ├── screens/
 │   ├── lander.js        Home screen + all rail builders
 │   ├── series-pdp.js    Series detail page
-│   └── player.js        Video player
+│   ├── player.js        Video player
+│   └── epg/
+│       ├── data-model.js          EPGDataModel — data fetch + debug overrides
+│       ├── epg-screen.js          EPGScreen — registered screen module
+│       └── components/
+│           ├── program-tile.js    createProgramTile(); defines _escEPG()
+│           ├── channel-logo.js    createChannelLogoCell()
+│           ├── channel-row.js     createChannelRow()
+│           ├── genre-group.js     createGenreGroup()
+│           ├── channel-grid.js    createChannelGrid()
+│           ├── genre-rail.js      createGenreRail()
+│           └── more-info-overlay.js  createMoreInfoOverlay()
 └── utils/
     ├── keycodes.js      Key → action mapping
     └── animations.js    Shared animation helpers

@@ -1,8 +1,8 @@
 {
   "version": "1.5.3",
-  "buildNumber": 22,
-  "buildDate": "2026-04-12T14:30:04Z",
-  "gitCommit": "69b9705",
+  "buildNumber": 23,
+  "buildDate": "2026-04-12T14:35:06Z",
+  "gitCommit": "ffe799a",
   "gitBranch": "epg-initial",
   "phase": "Phase 2",
   "label": "Input Latency Fixes"

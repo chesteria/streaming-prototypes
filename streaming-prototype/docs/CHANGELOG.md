@@ -10,6 +10,70 @@ Version numbers follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html
 
 ---
 
+## [1.6.0] — 2026-04-12
+
+Phase 3 — EPG (Electronic Program Guide) initial delivery.
+
+### Added
+- EPG screen (`js/screens/epg/epg-screen.js`) — registered screen with three
+  focus contexts: nav bar, genre chip rail, and channel/program grid
+- EPG data model (`js/screens/epg/data-model.js`) — fetches `data/epg-mock.json`,
+  applies localStorage debug overrides, generates 24h program schedules by cycling
+  channel-specific slots from current wall-clock time
+- Genre chip rail (`epg/components/genre-rail.js`) — horizontal chip strip with
+  wrap navigation, active anchor tracking (50ms debounced), and independent CSS
+  transform scroll
+- Channel grid (`epg/components/channel-grid.js`) — flat row array spanning all
+  genre groups; vertical scroll via `translateY`; genre group headers; genre
+  visibility callbacks for rail anchor sync
+- Channel row (`epg/components/channel-row.js`) — per-row horizontal tile track
+  with independent scroll state keyed by `${channelId}:${genreId}`; return-to-now
+  with `is-returning` CSS transition animation
+- Program tile (`epg/components/program-tile.js`) — time display: "Xm left" /
+  "Xh Ym left" for current program, "9:00–9:30p" for future; defines `_escEPG()`
+  global used by subsequent EPG component files
+- Channel logo cell (`epg/components/channel-logo.js`) — static logo cell with
+  heart decoration; focusable within grid row
+- Genre group (`epg/components/genre-group.js`) — groups channel rows under a
+  genre header; slices programs from `currentProgramIndex` so index 0 is always
+  currently-playing
+- More Info overlay (`epg/components/more-info-overlay.js`) — two variants
+  (`currently_playing`, `future`); full d-pad focus trap; appended to `document.body`
+  to sit above all screen content
+- EPG mock data (`data/epg-mock.json`) — 32 channels, 8 genres, 5 multi-genre
+  channels (37 rendered rows), ~8 program slots per channel cycling to fill 24h
+- EPG styles (`css/epg.css`) — all EPG-specific CSS; return-to-now animation via
+  `.is-returning { transition: transform 250ms ease-out }`
+- Live tab wired in lander nav (`js/screens/lander.js`) — selects EPG screen,
+  fires `epg_nav_to_live` analytics
+- EPG screen registered in app router (`js/app.js`)
+- EPG assets linked in `index.html` — stylesheet + 9 component script tags in
+  dependency order
+- EPG Config section in `debug.html` — genre management, channel→genre association
+  matrix, channel metadata editor, display toggles
+- EPG config editor in `js/debug-config.js` — `initEPGConfig()` with drag-reorder
+  genre list, channel-genre checkbox matrix, `resetAllEPGConfig()`
+- Platform docs — `docs/ANALYTICS_REGISTRY.md`, `docs/SCREEN_INVENTORY.md`,
+  `docs/NAVIGATION_MAP.md`, `docs/DEPENDENCY_GRAPH.md`, `docs/KNOWN_ISSUES.md`
+- EPG PRD artifacts — `docs/PRD/epg/PRD.md` (v2, 39 ACs), `TEST-PLAN.md` (42 cases),
+  `TEST-RESULTS.md` (42/42 pass)
+
+### Changed
+- `component-map.md` — updated with EPG screen, EPG data layer, EPG analytics
+  events, and EPG debug config section
+
+### Fixed
+- `epg_nav_to_live` analytics event no longer fires twice — removed duplicate
+  `_track()` call from `EPGScreen.init()`; event is owned by `lander.js` nav handler
+- `epg_back_to_nav` no longer fires on directional UP from rail — event correctly
+  fires only on BACK key
+- Rail BACK handler now uses `blurChips()` instead of `setFocusedChip(-1)` —
+  prevents `_focusedIndex` corruption on subsequent rail re-entry
+- More Info overlay no longer leaks into `document.body` on EPG re-mount —
+  stale overlay element is cleaned up at top of `EPGScreen.init()`
+
+---
+
 ## [1.5.3] — 2026-04-11
 
 Remaining input latency fixes from the performance audit.
