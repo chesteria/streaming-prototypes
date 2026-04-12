@@ -10,6 +10,42 @@ Version numbers follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html
 
 ---
 
+## [1.7.0] — 2026-04-12
+
+Phase 2 — Viewport Scaling & Aspect Ratio Normalization.
+
+### Added
+- `js/utils/scale.js` — `ScaleEngine` module: `init()`, `destroy()`, `getScale()`,
+  `setViewport()` stub for Phase 3 device simulation presets
+- `ScaleEngine.init()` called at top of `App.init()` — scales before first screen render
+- `--app-scale` CSS custom property in `variables.css` — updated by ScaleEngine on
+  every scale event; available for any scale-aware component
+- Debug Panel section G "Viewport Diagnostics" — live read-only `Viewport Scale` row
+  showing current scale factor, viewport dimensions, and forced-override state
+- FOUC prevention — `#app` starts `opacity: 0`, revealed via `.scale-ready` class after
+  first scale calculation, with a 100ms ease-in transition
+- `scaleupdate` custom event — dispatched on every scale recalculation; carries
+  `scale`, `viewportWidth`, `viewportHeight`, `canvasWidth`, `canvasHeight`,
+  `scaleMode`, `forced` fields
+- Analytics event `viewport_scale_applied` fired on `ScaleEngine.init()` — page load
+  only; silently skipped if Analytics not yet available
+- Phase 3 forward-compatibility hook: `ScaleEngine.setViewport(w, h)` implemented with
+  `_forcedWidth` / `_forcedHeight` internal state; `forced: true` surfaces in
+  Debug Panel automatically when a Phase 3 preset is active
+
+### Changed
+- `css/global.css`: `html, body` block split — `body` now fills viewport with
+  `width: 100%; height: 100vh; background: #000; position: relative`
+- `css/global.css`: `#app` changed from `position: relative` to `position: absolute;
+  top: 50%; left: 50%` with `transform: translate(-50%, -50%) scale(1)`,
+  `will-change: transform`, and `transform-origin: center center`
+- `index.html`: viewport meta changed from `width=1920` to `width=device-width,
+  initial-scale=1.0` — allows browser to report true CSS pixel dimensions
+- `index.html`: `scale.js` added as first utility script (before keycodes, animations,
+  app logic) per load-order requirement
+
+---
+
 ## [1.6.0] — 2026-04-12
 
 Phase 3 — EPG (Electronic Program Guide) initial delivery.

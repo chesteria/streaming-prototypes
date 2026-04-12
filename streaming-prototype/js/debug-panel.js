@@ -196,6 +196,9 @@ const PANEL_SPEC = [
   { type: 'info', label: 'Built',    valueKey: '_builtFormatted' },
   { type: 'info', label: 'Commit',   valueKey: 'gitCommit' },
   { type: 'info', label: 'Branch',   valueKey: 'gitBranch' },
+
+  { type: 'section', label: 'G \u2014 Viewport Diagnostics' },
+  { type: 'diagnostic', label: 'Viewport Scale', elementId: 'debug-viewport-scale' },
 ];
 
 const DebugPanel = (() => {
@@ -384,6 +387,28 @@ const DebugPanel = (() => {
           </div>
         `;
         // info rows are non-interactive — don't push to _controls
+        _body.appendChild(row);
+        return;
+
+      } else if (spec.type === 'diagnostic') {
+        // Pre-populate from ScaleEngine if available — scaleupdate fires before the
+        // panel is built (lazy build on first open), so we seed the value here.
+        let initialLabel = '—';
+        if (typeof ScaleEngine !== 'undefined') {
+          const scale = ScaleEngine.getScale();
+          const vw = window.innerWidth;
+          const vh = window.innerHeight;
+          initialLabel = `${scale.toFixed(3)}×  (${vw} × ${vh} → 1920 × 1080)`;
+        }
+        row.innerHTML = `
+          <div class="dp-row-left">
+            <div class="dp-label">${spec.label}</div>
+          </div>
+          <div class="dp-row-right">
+            <div class="dp-info-value"><span id="${spec.elementId}">${initialLabel}</span></div>
+          </div>
+        `;
+        // diagnostic rows are non-interactive — don't push to _controls
         _body.appendChild(row);
         return;
       }
@@ -635,3 +660,13 @@ const DebugPanel = (() => {
 
   return { open, close, toggle, isOpen };
 })();
+
+/* ---- Viewport Scale Diagnostic — updated by ScaleEngine via scaleupdate event ---- */
+window.addEventListener('scaleupdate', (e) => {
+  const { scale, viewportWidth, viewportHeight, forced } = e.detail;
+  const label = forced
+    ? `${scale.toFixed(3)}× FORCED (${viewportWidth} × ${viewportHeight})`
+    : `${scale.toFixed(3)}×  (${viewportWidth} × ${viewportHeight} → 1920 × 1080)`;
+  const el = document.getElementById('debug-viewport-scale');
+  if (el) el.textContent = label;
+});

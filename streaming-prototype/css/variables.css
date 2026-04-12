@@ -61,4 +61,7 @@
   /* --- Shadows & Effects --- */
   --focus-box-shadow:      0 0 0 2px var(--color-focus-border), 0 0 24px var(--color-focus-glow);
   --card-shadow:           0 4px 24px rgba(0, 0, 0, 0.4);
+
+  /* --- Viewport Scaling --- */
+  --app-scale: 1; /* Runtime default — overwritten by ScaleEngine on every scale update */
 }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=1920" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="app-version" content="1.5.0" />
   <meta name="app-build" content="1" />
   <title>Streaming Prototype</title>
@@ -35,7 +35,8 @@
   <!-- Version / Build Stamp — content set dynamically by app.js -->
   <div id="build-stamp"></div>
 
-  <!-- Utilities (no dependencies) -->
+  <!-- Utilities — scale.js must load first (before any screen or app logic) -->
+  <script src="js/utils/scale.js"></script>
   <script src="js/utils/keycodes.js"></script>
   <script src="js/utils/animations.js"></script>
 
