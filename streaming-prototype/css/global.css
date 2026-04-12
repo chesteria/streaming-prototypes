@@ -8,11 +8,19 @@
   padding: 0;
 }
 
-html, body {
-  width: 1920px;
-  height: 1080px;
+html {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;          /* avoids 1-frame shift that 100vw causes when scrollbar is removed */
+  height: 100vh;
   overflow: hidden;
-  background: var(--color-bg);
+  background: #000;     /* letterbox / pillarbox fill color */
+  position: relative;   /* establishes positioning context for #app */
   color: var(--color-text-primary);
   font-family: var(--font-family);
   font-size: 16px;
@@ -24,10 +32,23 @@ html, body {
 
 /* ---- Screen Container ---- */
 #app {
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: 50%;
   width: 1920px;
   height: 1080px;
   overflow: hidden;
+  background: var(--color-bg);
+  transform-origin: center center;
+  transform: translate(-50%, -50%) scale(1); /* overridden by ScaleEngine at runtime */
+  will-change: transform;                    /* promotes to GPU compositor layer */
+  opacity: 0;                                /* hidden until ScaleEngine fires first scale */
+}
+
+/* Revealed by ScaleEngine after first scale calculation */
+#app.scale-ready {
+  opacity: 1;
+  transition: opacity 0.1s ease;
 }
 
 .screen {

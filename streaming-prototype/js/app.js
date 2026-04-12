@@ -129,6 +129,9 @@ const App = (function() {
   }
 
   async function init() {
+    // Initialize viewport scaling first — before any screen renders
+    ScaleEngine.init();
+
     appEl = document.getElementById('app');
 
     // Initialize focus engine

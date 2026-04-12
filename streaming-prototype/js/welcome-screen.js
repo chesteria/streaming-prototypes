@@ -362,9 +362,13 @@ const WelcomeScreen = (() => {
       return;
     }
 
-    // Overlay is open — consume all navigation keys
+    // Overlay is open — consume ALL key events (prevents bleed-through to app)
     e.stopPropagation();
     e.preventDefault();
+
+    // Ignore autorepeat events — prevents the key held to trigger the debug panel
+    // button from immediately re-dismissing the overlay on the next repeat cycle.
+    if (e.repeat) return;
 
     if (
       e.key === 'Enter' || e.key === ' ' || e.key === 'Accept' ||
