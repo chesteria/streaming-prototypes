@@ -54,7 +54,7 @@
   border: 1.5px solid rgba(255,255,255,0.18);
   background: transparent;
   color: var(--color-text-secondary);
-  font-size: 42px;
+  font-size: 10px;
   font-family: var(--font-family);
   font-weight: 500;
   cursor: default;
@@ -247,18 +247,20 @@
 }
 
 .epg-tile-title {
-  font-size: 45px;
+  font-size: 34px;
   font-weight: 600;
   color: var(--color-text-primary);
   font-family: var(--font-family);
-  white-space: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   line-height: 1.2;
 }
 
 /* Description — hidden by default, revealed when row is focused */
 .epg-tile-desc {
   display: none;
-  font-size: 39px;
+  font-size: 10px;
   color: var(--color-text-secondary);
   font-family: var(--font-family);
   line-height: 1.5;

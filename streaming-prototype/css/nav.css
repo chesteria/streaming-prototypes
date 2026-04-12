@@ -28,7 +28,7 @@
   gap: 6px;
   padding: 7px 16px;
   border-radius: 30px;
-  font-size: 16px;
+  font-size: 10px;  /* matches EPG genre chip font size */
   font-weight: 600;
   color: var(--color-nav-inactive);
   transition: background var(--t-focus) ease-out,

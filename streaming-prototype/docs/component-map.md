@@ -211,16 +211,17 @@ Multi-genre channels appear in multiple genre groups with independent tile scrol
 
 **Font sizes:**
 
-| Element | Size |
-|---------|------|
-| Genre chip | 42px |
-| Genre group header | 36px |
-| Program tile title | 45px (wraps — `white-space: normal`, no ellipsis) |
-| Program tile description | 39px |
-| Program tile time | 39px |
-| Program tile rating | 33px |
-| Logo cell initials (collapsed) | 48px |
-| Logo cell initials (focused row) | 60px |
+| Element | Size | Notes |
+|---------|------|-------|
+| Main nav tabs | 10px | Matches genre chip |
+| Genre chip | 10px | |
+| Genre group header | 36px | |
+| Program tile title | 34px | `white-space: nowrap` + `text-overflow: ellipsis` |
+| Program tile description | 10px | Visible only when row is focused |
+| Program tile time | 39px | |
+| Program tile rating | 33px | |
+| Logo cell initials (collapsed) | 48px | |
+| Logo cell initials (focused row) | 60px | |
 
 **Key events fired:** 17 EPG-specific events — see `ANALYTICS_REGISTRY.md` for full list.
 
