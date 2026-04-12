@@ -496,7 +496,7 @@ function buildEPGNav() {
       <div class="nav-right">
         <div class="nav-location">
           <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1 1 18 0z" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-          Location
+          ${(DataStore.getDetectedCity() || {}).name || 'Location'}
         </div>
         <div class="nav-avatar">
           <img src="https://picsum.photos/seed/avatar1/72/72" alt="Profile" />
