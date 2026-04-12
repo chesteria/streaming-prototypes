@@ -22,6 +22,10 @@
       <span class="dc-nav-icon">&#x1F4FA;</span>
       Catalog
     </div>
+    <div class="dc-nav-item" data-section="epg">
+      <span class="dc-nav-icon">&#x1F4FA;</span>
+      EPG Config
+    </div>
     <div class="dc-nav-item" data-section="export">
       <span class="dc-nav-icon">&#x1F4E6;</span>
       Export / Import
@@ -91,6 +95,63 @@
             <!-- Rendered by debug-config.js -->
           </tbody>
         </table>
+      </div>
+    </section>
+
+    <!-- ---- Section D: EPG Config ---- -->
+    <section id="section-epg" class="dc-section">
+      <div class="dc-section-header">
+        <div class="dc-section-title">EPG Configuration</div>
+        <div class="dc-section-desc">
+          Configure genres, channel associations, channel metadata, and EPG display toggles.
+          Changes take effect on next EPG screen mount.
+        </div>
+      </div>
+
+      <!-- Genre Management -->
+      <div class="dc-section-title" style="font-size:14px;padding:20px 0 8px;">Genre Management</div>
+      <div class="dc-toolbar">
+        <button class="dc-btn primary" id="btn-save-epg-genres">&#x1F4BE; Save Genre Config</button>
+        <button class="dc-btn danger" id="btn-reset-epg-genres">Reset Genres</button>
+        <span class="dc-status" id="epg-genre-save-status"></span>
+      </div>
+      <ul id="epg-genre-list" style="list-style:none;padding:0;margin:0 0 24px;"></ul>
+
+      <!-- Channel-to-Genre Association -->
+      <div class="dc-section-title" style="font-size:14px;padding:20px 0 8px;">Channel → Genre Association</div>
+      <div class="dc-toolbar">
+        <button class="dc-btn primary" id="btn-save-epg-genre-map">&#x1F4BE; Save Association</button>
+        <span class="dc-status" id="epg-genre-map-status"></span>
+      </div>
+      <div id="epg-channel-genre-list" style="margin-bottom:24px;"></div>
+
+      <!-- Channel Metadata Editor -->
+      <div class="dc-section-title" style="font-size:14px;padding:20px 0 8px;">Channel Metadata</div>
+      <div class="dc-toolbar">
+        <button class="dc-btn primary" id="btn-save-epg-channels">&#x1F4BE; Save Channels</button>
+        <span class="dc-status" id="epg-channel-save-status"></span>
+      </div>
+      <div class="dc-table-wrapper" style="margin-bottom:24px;">
+        <table id="epg-channel-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Currently Watching</th>
+            </tr>
+          </thead>
+          <tbody id="epg-channel-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- EPG Display Toggles -->
+      <div class="dc-section-title" style="font-size:14px;padding:20px 0 8px;">Display Toggles</div>
+      <div class="dc-toolbar" style="flex-wrap:wrap;gap:12px;" id="epg-toggles-area">
+        <!-- Rendered by JS -->
+      </div>
+      <div class="dc-toolbar" style="margin-top:12px;">
+        <button class="dc-btn danger" id="btn-reset-epg-all">Reset All EPG Config</button>
+        <span class="dc-status" id="epg-reset-status"></span>
       </div>
     </section>
 

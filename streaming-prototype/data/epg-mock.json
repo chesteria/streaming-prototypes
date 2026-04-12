@@ -1,0 +1,368 @@
+{
+  "genres": [
+    { "id": "news",          "label": "News",          "order": 1, "enabled": true, "channelIds": ["ch-001","ch-002","ch-003","ch-004","ch-005","ch-006","ch-007","ch-008"] },
+    { "id": "comedy",        "label": "Comedy",        "order": 2, "enabled": true, "channelIds": ["ch-009","ch-010","ch-011","ch-012","ch-013","ch-014"] },
+    { "id": "sports",        "label": "Sports",        "order": 3, "enabled": true, "channelIds": ["ch-015","ch-016","ch-017","ch-018","ch-019"] },
+    { "id": "drama",         "label": "Drama",         "order": 4, "enabled": true, "channelIds": ["ch-020","ch-021","ch-022","ch-023"] },
+    { "id": "reality",       "label": "Reality",       "order": 5, "enabled": true, "channelIds": ["ch-009","ch-024","ch-025","ch-026","ch-027"] },
+    { "id": "documentary",   "label": "Documentary",   "order": 6, "enabled": true, "channelIds": ["ch-001","ch-020","ch-028"] },
+    { "id": "kids",          "label": "Kids",          "order": 7, "enabled": true, "channelIds": ["ch-029","ch-030","ch-031"] },
+    { "id": "lifestyle",     "label": "Lifestyle",     "order": 8, "enabled": true, "channelIds": ["ch-015","ch-027","ch-032"] }
+  ],
+  "channels": [
+    { "id": "ch-001", "name": "The Correspondent", "initials": "TC", "color": "#2A5A8C", "genreIds": ["news","documentary"], "currentlyWatching": false },
+    { "id": "ch-002", "name": "Headline Chaos",    "initials": "HC", "color": "#8C2A2A", "genreIds": ["news"],               "currentlyWatching": true  },
+    { "id": "ch-003", "name": "Weather Or Not",    "initials": "WN", "color": "#2A7A4A", "genreIds": ["news"],               "currentlyWatching": false },
+    { "id": "ch-004", "name": "The Pundit Pit",    "initials": "PP", "color": "#6A2A8C", "genreIds": ["news"],               "currentlyWatching": false },
+    { "id": "ch-005", "name": "Breaking (We Think)", "initials": "BT", "color": "#8C5A2A", "genreIds": ["news"],             "currentlyWatching": false },
+    { "id": "ch-006", "name": "The Numbers Station", "initials": "NS", "color": "#2A6A7A", "genreIds": ["news"],             "currentlyWatching": false },
+    { "id": "ch-007", "name": "Global Shrug",      "initials": "GS", "color": "#5A6A2A", "genreIds": ["news"],               "currentlyWatching": false },
+    { "id": "ch-008", "name": "Technically True News", "initials": "TT", "color": "#7A2A5A", "genreIds": ["news"],           "currentlyWatching": false },
+    { "id": "ch-009", "name": "Laugh Factory 24",  "initials": "LF", "color": "#D4A017", "genreIds": ["comedy","reality"],   "currentlyWatching": false },
+    { "id": "ch-010", "name": "Dad Joke Network",  "initials": "DJ", "color": "#A04020", "genreIds": ["comedy"],             "currentlyWatching": false },
+    { "id": "ch-011", "name": "Awkward Pause TV",  "initials": "AP", "color": "#207060", "genreIds": ["comedy"],             "currentlyWatching": false },
+    { "id": "ch-012", "name": "Improv All Day",    "initials": "IA", "color": "#502080", "genreIds": ["comedy"],             "currentlyWatching": false },
+    { "id": "ch-013", "name": "Sitcom Cemetery",   "initials": "SC", "color": "#804020", "genreIds": ["comedy"],             "currentlyWatching": false },
+    { "id": "ch-014", "name": "Pun Intended TV",   "initials": "PI", "color": "#205080", "genreIds": ["comedy"],             "currentlyWatching": false },
+    { "id": "ch-015", "name": "Field & Court",     "initials": "FC", "color": "#1A6A1A", "genreIds": ["sports","lifestyle"], "currentlyWatching": false },
+    { "id": "ch-016", "name": "Napping League",    "initials": "NL", "color": "#3A3A7A", "genreIds": ["sports"],             "currentlyWatching": false },
+    { "id": "ch-017", "name": "Slow Sports Ch.",   "initials": "SS", "color": "#6A4A1A", "genreIds": ["sports"],             "currentlyWatching": false },
+    { "id": "ch-018", "name": "Armchair Athletics","initials": "AA", "color": "#1A5A5A", "genreIds": ["sports"],             "currentlyWatching": false },
+    { "id": "ch-019", "name": "Definitely Real Sports", "initials": "DR", "color": "#5A1A6A", "genreIds": ["sports"],        "currentlyWatching": false },
+    { "id": "ch-020", "name": "Deep Dive TV",      "initials": "DD", "color": "#1A3A6A", "genreIds": ["documentary","drama"],"currentlyWatching": false },
+    { "id": "ch-021", "name": "Tension Channel",   "initials": "TC", "color": "#6A1A1A", "genreIds": ["drama"],              "currentlyWatching": false },
+    { "id": "ch-022", "name": "The Brooding Hour", "initials": "BH", "color": "#2A2A5A", "genreIds": ["drama"],              "currentlyWatching": false },
+    { "id": "ch-023", "name": "Crisis Mode TV",    "initials": "CM", "color": "#5A3A1A", "genreIds": ["drama"],              "currentlyWatching": false },
+    { "id": "ch-024", "name": "Absolutely Unscripted", "initials": "AU", "color": "#7A5A1A", "genreIds": ["reality"],        "currentlyWatching": false },
+    { "id": "ch-025", "name": "The Chaos Kitchen", "initials": "CK", "color": "#7A1A4A", "genreIds": ["reality"],            "currentlyWatching": false },
+    { "id": "ch-026", "name": "Confessional Corner", "initials": "CC", "color": "#1A7A4A", "genreIds": ["reality"],          "currentlyWatching": false },
+    { "id": "ch-027", "name": "Who Did That?",     "initials": "WD", "color": "#4A1A7A", "genreIds": ["reality","lifestyle"],"currentlyWatching": false },
+    { "id": "ch-028", "name": "The Long Explanation", "initials": "LE", "color": "#1A4A6A", "genreIds": ["documentary"],     "currentlyWatching": false },
+    { "id": "ch-029", "name": "Wiggly Things TV",  "initials": "WT", "color": "#C04080", "genreIds": ["kids"],               "currentlyWatching": false },
+    { "id": "ch-030", "name": "Cartoon Archaeology", "initials": "CA", "color": "#40A060", "genreIds": ["kids"],             "currentlyWatching": false },
+    { "id": "ch-031", "name": "Nap Time Network",  "initials": "NN", "color": "#8040C0", "genreIds": ["kids"],               "currentlyWatching": false },
+    { "id": "ch-032", "name": "The Gentle Hobby Hour", "initials": "GH", "color": "#407080", "genreIds": ["lifestyle"],      "currentlyWatching": false }
+  ],
+  "programSlots": {
+    "ch-001": [
+      { "title": "The Morning Brief", "description": "A calm, measured look at what happened overnight. Presenter maintains eye contact for the entire hour.", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "Deep Read: Infrastructure", "description": "A 45-minute investigation into a pothole on Route 7. Sources say it is 'definitely getting fixed soon.'", "rating": "TV-G", "durationMinutes": 45 },
+      { "title": "Correspondent at Large", "description": "Our roving reporter files from a location she describes as 'somewhere near the thing.'", "rating": "TV-PG", "durationMinutes": 30 },
+      { "title": "The Evening Context", "description": "Everything you needed to know about today, provided three hours after you needed to know it.", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "Off the Record", "description": "Sources familiar with the matter speak extensively about something they'd prefer not to specify.", "rating": "TV-PG", "durationMinutes": 30 },
+      { "title": "Overnight: The Long Version", "description": "Four hours of news. Not more news than usual — just slower.", "rating": "TV-G", "durationMinutes": 90 },
+      { "title": "Weekend Wrap", "description": "A summary of the week, delivered on the wrong day on purpose.", "rating": "TV-G", "durationMinutes": 45 },
+      { "title": "Follow-Up Friday", "description": "Remember that story from three weeks ago? We found out what happened. It is fine.", "rating": "TV-G", "durationMinutes": 30 }
+    ],
+    "ch-002": [
+      { "title": "BREAKING: Something Is Happening", "description": "Details forthcoming. We have a graphic and a countdown clock. That is all for now.", "rating": "TV-PG", "durationMinutes": 30 },
+      { "title": "BREAKING: Still Happening", "description": "Continued coverage of the thing. Panel of six experts agrees it is 'significant.'", "rating": "TV-PG", "durationMinutes": 60 },
+      { "title": "BREAKING: Update", "description": "The situation has developed. One expert has revised their position from 'concerned' to 'very concerned.'", "rating": "TV-PG", "durationMinutes": 30 },
+      { "title": "BREAKING: Press Conference", "description": "Live coverage of a press conference that starts in 40 minutes. We will be here.", "rating": "TV-PG", "durationMinutes": 90 },
+      { "title": "Analysis: Was That Breaking?", "description": "A thoughtful debrief on the events of the morning. Spoiler: yes.", "rating": "TV-G", "durationMinutes": 45 },
+      { "title": "BREAKING: New Development", "description": "A new element has emerged. Analysts are calling it 'a lot.'", "rating": "TV-PG", "durationMinutes": 30 },
+      { "title": "Recap: Today's Breaking Events", "description": "Everything that broke today, presented in reverse order of importance.", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "BREAKING: Overnight Watch", "description": "We're monitoring the situation. Nothing has happened yet. We will tell you if it does.", "rating": "TV-G", "durationMinutes": 90 }
+    ],
+    "ch-003": [
+      { "title": "The Weather, Probably", "description": "A meteorologist makes educated guesses. More accurate than you'd expect, given the circumstances.", "rating": "TV-G", "durationMinutes": 30 },
+      { "title": "Partly Cloudy, Mostly Opinion", "description": "Extended forecast with strong editorial opinions about precipitation.", "rating": "TV-G", "durationMinutes": 30 },
+      { "title": "Storm Watch: Precautionary", "description": "No storm is currently present. We are watching anyway. Just to be safe.", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "Radar Hour", "description": "An hour of radar footage. No commentary. Viewers report finding it 'deeply soothing.'", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "Weather Or Not: The Debate", "description": "Two meteorologists disagree about clouds. Passions run surprisingly high.", "rating": "TV-PG", "durationMinutes": 45 },
+      { "title": "Humidity Report", "description": "A detailed examination of how sticky it is, and why.", "rating": "TV-G", "durationMinutes": 30 },
+      { "title": "Extended Forecast: Week 3", "description": "We make predictions about weather that is 21 days away. Confidence level: medium.", "rating": "TV-G", "durationMinutes": 45 },
+      { "title": "The Gentle Rain", "description": "Live weather camera footage from a porch somewhere. It is raining gently. Nothing else is happening.", "rating": "TV-G", "durationMinutes": 90 }
+    ],
+    "ch-004": [
+      { "title": "The Opinion Zone", "description": "Twelve pundits, one microphone, zero pauses. A viewer favorite.", "rating": "TV-PG", "durationMinutes": 60 },
+      { "title": "Counterpoint!", "description": "You had a point. A guest has arrived to dispute it. The segment is 28 minutes long.", "rating": "TV-PG", "durationMinutes": 30 },
+      { "title": "Actually, Consider This", "description": "A lone pundit reconsiders a position she stated four years ago. It goes well.", "rating": "TV-PG", "durationMinutes": 45 },
+      { "title": "The Pit: Prime Time", "description": "Prime-time debate format. Topics chosen by spinning a wheel live on air.", "rating": "TV-PG", "durationMinutes": 90 },
+      { "title": "We Disagree: A Documentary", "description": "Two people who disagree about something sit down and continue to disagree for an hour.", "rating": "TV-PG", "durationMinutes": 60 },
+      { "title": "Hot Take Cooldown", "description": "Thirty minutes of room-temperature opinions. A palate cleanser.", "rating": "TV-G", "durationMinutes": 30 },
+      { "title": "The Long Counterpoint", "description": "One person rebuts something for 45 minutes without being interrupted. A first.", "rating": "TV-PG", "durationMinutes": 45 },
+      { "title": "Overnight: Pundit Overflow", "description": "We ran out of topics. Pundits are now discussing the pundits.", "rating": "TV-PG", "durationMinutes": 60 }
+    ],
+    "ch-005": [
+      { "title": "We Think This Is True", "description": "A story we are 87% confident about. We will run it anyway and update as needed.", "rating": "TV-PG", "durationMinutes": 30 },
+      { "title": "Probable Update", "description": "Further development on yesterday's story. Still mostly true. One detail has been revised.", "rating": "TV-G", "durationMinutes": 30 },
+      { "title": "Confirmed: Something Happened", "description": "We can now confirm the thing. Three days after it happened, but still.", "rating": "TV-G", "durationMinutes": 45 },
+      { "title": "Sources Say (Probably)", "description": "A source close to the situation has said something. We believe them conditionally.", "rating": "TV-PG", "durationMinutes": 30 },
+      { "title": "Clarification Hour", "description": "We clarify yesterday's clarification. The original story remains unclear.", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "Pending Verification", "description": "We have a story but are still verifying it. Tune in to watch us try.", "rating": "TV-G", "durationMinutes": 45 },
+      { "title": "The Correction", "description": "We got something wrong. Here is a detailed account of how it happened.", "rating": "TV-G", "durationMinutes": 30 },
+      { "title": "Overnight Best Guesses", "description": "What we think happened while you were asleep. Confidence: medium-ish.", "rating": "TV-G", "durationMinutes": 90 }
+    ],
+    "ch-006": [
+      { "title": "Raw Data, No Context", "description": "Numbers, presented without explanation. Viewers are encouraged to form their own conclusions.", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "Statistics Hour", "description": "Forty-five minutes of statistics. One of them is about you specifically.", "rating": "TV-G", "durationMinutes": 45 },
+      { "title": "The Trend Report", "description": "What is going up? What is going down? Why? We answer two of those questions.", "rating": "TV-G", "durationMinutes": 30 },
+      { "title": "Numbers That Are Real", "description": "We verify that the numbers we present are, in fact, real numbers.", "rating": "TV-G", "durationMinutes": 30 },
+      { "title": "The Numbers at Night", "description": "Evening data roundup. Markets, metrics, and one figure that economists call 'interesting.'", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "Correlation Corner", "description": "Things that move together, presented without any implication of causation whatsoever.", "rating": "TV-G", "durationMinutes": 45 },
+      { "title": "Annual Numbers: The Update", "description": "Year-to-date figures, updated daily, which makes the 'annual' part debatable.", "rating": "TV-G", "durationMinutes": 30 },
+      { "title": "Overnight Data Watch", "description": "Markets are closed. We watch the numbers anyway. None of them change. It is peaceful.", "rating": "TV-G", "durationMinutes": 90 }
+    ],
+    "ch-007": [
+      { "title": "International Shrug", "description": "Global news delivered with the quiet resignation of someone who has seen things.", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "Foreign Correspondent Fatigue", "description": "Our correspondent has been on location for 11 days. She is doing fine. Mostly fine.", "rating": "TV-PG", "durationMinutes": 45 },
+      { "title": "Meanwhile, Elsewhere", "description": "What is happening in other countries, while you were busy not thinking about them.", "rating": "TV-G", "durationMinutes": 30 },
+      { "title": "Geopolitics: A Best-Effort Summary", "description": "We try to explain it all in 90 minutes. We do not fully succeed. Nobody does.", "rating": "TV-PG", "durationMinutes": 90 },
+      { "title": "The State of Things", "description": "A general assessment of the state of things, globally. Rating: mixed.", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "From Over There", "description": "Dispatches from places you don't immediately have a strong opinion about.", "rating": "TV-G", "durationMinutes": 30 },
+      { "title": "Something Is Fine Somewhere", "description": "Good news from around the world. The segment is 8 minutes long. We are trying.", "rating": "TV-G", "durationMinutes": 45 },
+      { "title": "Overnight: The World Continues", "description": "International overnight coverage. Events are occurring. We are watching.", "rating": "TV-G", "durationMinutes": 90 }
+    ],
+    "ch-008": [
+      { "title": "Technically, Yes", "description": "News items that are, strictly speaking, accurate. The framing is where it gets interesting.", "rating": "TV-PG", "durationMinutes": 30 },
+      { "title": "The Qualifier Report", "description": "Every statement comes with at least one qualifier. Often two.", "rating": "TV-G", "durationMinutes": 45 },
+      { "title": "Nuance Hour", "description": "A dedicated hour for nuance. Ratings are lower than they should be.", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "It's Complicated", "description": "Situations that cannot be summarized in a chyron. We try anyway.", "rating": "TV-PG", "durationMinutes": 45 },
+      { "title": "Fine Print", "description": "The part of the story nobody reads. We read it for you.", "rating": "TV-G", "durationMinutes": 30 },
+      { "title": "Technically Breaking", "description": "It is technically a development. Whether it matters is a matter of perspective.", "rating": "TV-PG", "durationMinutes": 30 },
+      { "title": "Accurate But Misleading: A Case Study", "description": "We examine statements that are true in the narrowest possible sense.", "rating": "TV-PG", "durationMinutes": 60 },
+      { "title": "Late Edition: Technically", "description": "End-of-day summary. All facts double-checked. Footnotes available on request.", "rating": "TV-G", "durationMinutes": 90 }
+    ],
+    "ch-009": [
+      { "title": "Laugh Shift: Morning", "description": "A comedy block that starts before most comedians are awake. Admirable commitment.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "Stand-Up or Sit Down", "description": "Stand-up comedians perform. One of them remains seated the entire time. No one comments.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "The Bit That Went Long", "description": "A sketch that was supposed to be three minutes and became thirty. Somehow works.", "rating": "TV-14", "durationMinutes": 30 },
+      { "title": "Unscripted Afternoon", "description": "Four comedians, no script, and a time slot that feels very long by minute forty.", "rating": "TV-14", "durationMinutes": 90 },
+      { "title": "Laugh Factory: Greatest Misses", "description": "Jokes that didn't land, presented without context. Educational.", "rating": "TV-14", "durationMinutes": 45 },
+      { "title": "The Setup", "description": "An hour of setups. Punchlines air tomorrow night. Build the anticipation.", "rating": "TV-PG", "durationMinutes": 60 },
+      { "title": "Late Night Adjacent", "description": "It's not quite late enough for late night. We're doing it anyway.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "Overnight Reruns: The Classic Bits", "description": "Comedy classics from the archive. At least three of these hold up.", "rating": "TV-14", "durationMinutes": 90 }
+    ],
+    "ch-010": [
+      { "title": "The Morning Groaner", "description": "Dad jokes delivered at breakfast speed. Listeners report involuntary eye rolls within the first minute.", "rating": "TV-G", "durationMinutes": 30 },
+      { "title": "Why Did the Chicken", "description": "Classic format, new answers. Today's answers are worse than the original.", "rating": "TV-G", "durationMinutes": 30 },
+      { "title": "Pun Run", "description": "Forty-five straight minutes of puns, organized thematically. Today's theme: hardware stores.", "rating": "TV-G", "durationMinutes": 45 },
+      { "title": "Dad Joke Championship", "description": "Semi-finals. The competing jokes are all about lawnmowers. The audience is tense.", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "Knock Knock: Expanded Edition", "description": "The traditional format, extended to ninety minutes through audience participation.", "rating": "TV-G", "durationMinutes": 90 },
+      { "title": "The Groaner of the Week", "description": "One joke, examined in depth. Etymology, delivery analysis, family reactions.", "rating": "TV-G", "durationMinutes": 45 },
+      { "title": "Late Night Dad Jokes", "description": "The format does not change after dark. The delivery does, slightly.", "rating": "TV-PG", "durationMinutes": 60 },
+      { "title": "Dad Joke Overnight", "description": "Jokes run on loop until morning. Viewers asleep by minute three. This is fine.", "rating": "TV-G", "durationMinutes": 90 }
+    ],
+    "ch-011": [
+      { "title": "The Pause", "description": "Comedy built entirely around the pause before the punchline. No punchline ever arrives.", "rating": "TV-PG", "durationMinutes": 30 },
+      { "title": "Crickets: The Show", "description": "Live comedy recordings, silence included. A lot of silence. More than expected.", "rating": "TV-PG", "durationMinutes": 60 },
+      { "title": "The Room Read", "description": "A comedian attempts to read the room. The room is not readable. Ninety minutes.", "rating": "TV-14", "durationMinutes": 90 },
+      { "title": "Too Soon?", "description": "Comedy that questions timing. None of the jokes have landed yet. It is still too soon.", "rating": "TV-14", "durationMinutes": 45 },
+      { "title": "The Long Silence", "description": "A single comedian on stage, waiting. Something is about to happen. We think.", "rating": "TV-PG", "durationMinutes": 30 },
+      { "title": "Awkward Afternoons", "description": "Sketch comedy that leans into social discomfort. Viewers are uncomfortable. As intended.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "Was That A Joke?", "description": "We're not sure. The performer isn't sure. The audience is deciding.", "rating": "TV-14", "durationMinutes": 45 },
+      { "title": "Late Night: The Pause Extended", "description": "The format continues. The silence deepens. Sleep through it. You won't miss anything.", "rating": "TV-PG", "durationMinutes": 90 }
+    ],
+    "ch-012": [
+      { "title": "Yes, And: Morning Edition", "description": "Improv from 8am. The yes-and principle applies to everything, including the coffee.", "rating": "TV-PG", "durationMinutes": 60 },
+      { "title": "Scene Work", "description": "Two improvisers, one vague suggestion from the audience, forty-five minutes.", "rating": "TV-PG", "durationMinutes": 45 },
+      { "title": "Genre Mash", "description": "Improv performed in a genre voted on by text poll. Current leader: Western-noir-romance.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "The Harold", "description": "A long-form improv structure performed in real time. If you know, you know.", "rating": "TV-PG", "durationMinutes": 90 },
+      { "title": "Suggestion Box", "description": "Everything that happens tonight came from the audience. Including the format.", "rating": "TV-PG", "durationMinutes": 45 },
+      { "title": "Drop In", "description": "Random guest performers join the scene with no warning. Nobody minds.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "Late Night Improv: Unconstrained", "description": "Late enough that the rules of polite improv no longer fully apply.", "rating": "TV-14", "durationMinutes": 90 },
+      { "title": "Warmup Block", "description": "Improv warmup games broadcast live. More fun to watch than expected.", "rating": "TV-PG", "durationMinutes": 30 }
+    ],
+    "ch-013": [
+      { "title": "The Cancellation Zone", "description": "Classic sitcoms that were cancelled after one season, presented with love.", "rating": "TV-PG", "durationMinutes": 30 },
+      { "title": "Almost Made It: A Retrospective", "description": "Shows that were one renewal away from a second season. Pour one out.", "rating": "TV-PG", "durationMinutes": 60 },
+      { "title": "Pilot Season: The Survivors", "description": "Pilots that didn't get picked up, shown here because they deserved better.", "rating": "TV-PG", "durationMinutes": 30 },
+      { "title": "The Laugh Track Files", "description": "Forgotten comedies from the laugh-track era. The laughs sound very confident.", "rating": "TV-G", "durationMinutes": 45 },
+      { "title": "Too Weird for Prime Time", "description": "Shows that were, in hindsight, ahead of their time. Or just weird.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "Season 2: The Ghost", "description": "A tribute hour to the season 2 that never was. Writers share their unproduced ideas.", "rating": "TV-PG", "durationMinutes": 45 },
+      { "title": "Cult Following", "description": "A show that failed commercially and succeeded culturally. Fifteen years later.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "Overnight: The Archive", "description": "Eight hours of forgotten comedies from the archive. Find your new favorite show that no longer exists.", "rating": "TV-PG", "durationMinutes": 90 }
+    ],
+    "ch-014": [
+      { "title": "Pun Intended: AM", "description": "The morning block. All the wordplay you need to start your day wrong.", "rating": "TV-PG", "durationMinutes": 30 },
+      { "title": "Double Entendre Hour", "description": "The title is self-explanatory. The content slightly less so.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "The Homophone Report", "description": "Words that sound like other words, and the confusion that results.", "rating": "TV-G", "durationMinutes": 30 },
+      { "title": "Wordplay Championship", "description": "Competitive wordplay. Judges are linguists. Judging criteria are disputed.", "rating": "TV-PG", "durationMinutes": 60 },
+      { "title": "Pun Run: Afternoon", "description": "An afternoon of puns. Different theme from the morning puns. Today: nautical terms.", "rating": "TV-PG", "durationMinutes": 45 },
+      { "title": "The Setup: Revisited", "description": "We revisit yesterday's setups with better punchlines. No promises.", "rating": "TV-PG", "durationMinutes": 45 },
+      { "title": "Intended, With Commentary", "description": "Puns, analyzed by a panel who clearly enjoy this more than they should.", "rating": "TV-PG", "durationMinutes": 60 },
+      { "title": "Overnight Wordplay", "description": "Puns run on loop. You will dream in wordplay. This has been confirmed by viewers.", "rating": "TV-PG", "durationMinutes": 90 }
+    ],
+    "ch-015": [
+      { "title": "Morning Sports Desk", "description": "Last night's results, delivered by someone who watched all of them so you didn't have to.", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "The Weekend Warriors", "description": "Amateur athletes doing things professionally. One of them is very good.", "rating": "TV-G", "durationMinutes": 45 },
+      { "title": "Court Time", "description": "Live coverage of a match that probably matters. Commentary confirms it matters.", "rating": "TV-G", "durationMinutes": 90 },
+      { "title": "Field Report", "description": "From the field. Our reporter is there. The field is large. She will find what she's looking for.", "rating": "TV-G", "durationMinutes": 30 },
+      { "title": "Game Day Analysis", "description": "Four analysts break down a game from multiple angles. One angle is disputed.", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "The Bench Perspective", "description": "Sports coverage from the point of view of people who aren't playing today.", "rating": "TV-G", "durationMinutes": 45 },
+      { "title": "Highlights: The Best Ones", "description": "Only the best highlights. Duration varies depending on how good things were today.", "rating": "TV-G", "durationMinutes": 30 },
+      { "title": "Late Night Sports Desk", "description": "The late edition. Games are done. Analysis continues. It always continues.", "rating": "TV-G", "durationMinutes": 60 }
+    ],
+    "ch-016": [
+      { "title": "Preliminary Napping Heats", "description": "Twelve competitors in the nap-off heats. Doris is looking strong this season.", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "Advanced Napping Technique", "description": "Documentary on professional technique. Position, environment, and duration strategy.", "rating": "TV-G", "durationMinutes": 45 },
+      { "title": "The Competitive Nap: Semifinal", "description": "Twelve become six. The panel assesses depth, consistency, and overall restfulness.", "rating": "TV-G", "durationMinutes": 90 },
+      { "title": "Nap League: Post-Nap Analysis", "description": "What just happened, and what it means for the standings.", "rating": "TV-G", "durationMinutes": 30 },
+      { "title": "Nap or Sleep: The Boundary", "description": "At what point does a nap become sleep? A technical discussion.", "rating": "TV-G", "durationMinutes": 30 },
+      { "title": "Regional Qualifiers: Quiet Division", "description": "The quiet division qualifiers. Coverage is appropriately hushed.", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "The International Nap Federation Report", "description": "Rule updates, rankings, and a profile of a competitor from Bruges who is very good at this.", "rating": "TV-G", "durationMinutes": 45 },
+      { "title": "Overnight Coverage: Live Napping", "description": "Eight hours of live competitive napping. Cameras remain on. Nothing happens. This is the point.", "rating": "TV-G", "durationMinutes": 90 }
+    ],
+    "ch-017": [
+      { "title": "Slow Motion Golf", "description": "Golf, at half speed. New angles. Longer pauses. Somehow more exciting.", "rating": "TV-G", "durationMinutes": 90 },
+      { "title": "Bowls: Extended Coverage", "description": "Lawn bowls, unedited, from start to finish. Very long. Very calming.", "rating": "TV-G", "durationMinutes": 90 },
+      { "title": "The Three-Hour Walk", "description": "A competitive walking event, covered start to finish. Participants are in no hurry.", "rating": "TV-G", "durationMinutes": 90 },
+      { "title": "Chess: Move Three", "description": "We pick up a chess match at move three and cover it until the end. Very little happens until it does.", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "Fishing: The Patient Sport", "description": "Competitive fishing, shown in real time. The fish have not cooperated yet.", "rating": "TV-G", "durationMinutes": 90 },
+      { "title": "Croquet: Semifinals", "description": "Croquet semifinal coverage. Commentary is measured. Mallet usage is decisive.", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "The Long Putt", "description": "A documentary about one putt, from setup to completion. Forty-five minutes.", "rating": "TV-G", "durationMinutes": 45 },
+      { "title": "Slow Sports Night", "description": "An overnight block of the slowest sports available. Sleep encouraged.", "rating": "TV-G", "durationMinutes": 90 }
+    ],
+    "ch-018": [
+      { "title": "The Couch Report", "description": "Sports analysis from a very comfortable couch. Analysts have not moved since Tuesday.", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "Fantasy League Breakdown", "description": "A deep dive into fantasy leagues that have real emotional stakes for everyone involved.", "rating": "TV-G", "durationMinutes": 45 },
+      { "title": "The Watch Party", "description": "We watch a game. So do you. We discuss it while it happens. This is a sports show.", "rating": "TV-PG", "durationMinutes": 90 },
+      { "title": "Remote Control Athletics", "description": "Competitive video game sports. Players are very athletic in their chair.", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "Armchair Punditry: PM", "description": "Evening analysis from the comfort of leather seating. Opinions are confident.", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "The Rewatch", "description": "We watch yesterday's game again. Analysts note what they missed the first time.", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "Prediction Corner", "description": "Predictions about tomorrow's events. Success rate: tracking at 54%.", "rating": "TV-G", "durationMinutes": 30 },
+      { "title": "Overnight: The Replay Lounge", "description": "Classic games on a loop. Commentary optional. Couch required.", "rating": "TV-G", "durationMinutes": 90 }
+    ],
+    "ch-019": [
+      { "title": "The Sport That Definitely Exists", "description": "Live coverage of a sport. It is real. Rules will be explained in minute twelve.", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "Extreme Qualifying Round", "description": "Before the main event, there are qualifiers. Before the qualifiers, there is this show.", "rating": "TV-G", "durationMinutes": 45 },
+      { "title": "Definitely Real Highlights", "description": "Highlights from today's definitely-real sports events. All verified. Mostly.", "rating": "TV-G", "durationMinutes": 30 },
+      { "title": "The Championship: Probably", "description": "This might be the championship. Rules are still being discussed. Bracket pending.", "rating": "TV-G", "durationMinutes": 90 },
+      { "title": "Post-Game with No Agenda", "description": "Post-game analysis with no prior commitments about what we will say.", "rating": "TV-PG", "durationMinutes": 45 },
+      { "title": "Sports, Broadly Defined", "description": "A wide interpretation of what constitutes a sport. Very wide.", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "Results: Best Efforts", "description": "Scores and results. Some of these are confirmed. All are presented confidently.", "rating": "TV-G", "durationMinutes": 30 },
+      { "title": "Overnight: Real Sports Happening", "description": "International coverage. Somewhere, right now, something sporty is occurring.", "rating": "TV-G", "durationMinutes": 90 }
+    ],
+    "ch-020": [
+      { "title": "Deep Dive: Episode 1", "description": "A thorough examination of a single topic. Today: the history of the semicolon.", "rating": "TV-PG", "durationMinutes": 60 },
+      { "title": "The 90-Minute Essay", "description": "One filmmaker. One topic. Ninety minutes of careful, considered argument.", "rating": "TV-PG", "durationMinutes": 90 },
+      { "title": "Field Work", "description": "Documentary footage from the field. The field is a salt flat in Nevada. It is very flat.", "rating": "TV-G", "durationMinutes": 45 },
+      { "title": "Under Examination", "description": "A subject is examined. The examination is thorough. A conclusion is reached in the final minutes.", "rating": "TV-PG", "durationMinutes": 60 },
+      { "title": "The Long Form", "description": "Long-form documentary storytelling. No narrator. The footage speaks.", "rating": "TV-G", "durationMinutes": 90 },
+      { "title": "Follow-Up: Two Years Later", "description": "A documentary revisiting a subject from two years ago. Things are complicated now.", "rating": "TV-PG", "durationMinutes": 60 },
+      { "title": "Archival", "description": "Footage from the archive with modern context applied. Perspective shifts accordingly.", "rating": "TV-PG", "durationMinutes": 45 },
+      { "title": "Overnight: The Long Cuts", "description": "Extended cuts of documentary features, uninterrupted, through the night.", "rating": "TV-PG", "durationMinutes": 90 }
+    ],
+    "ch-021": [
+      { "title": "Someone Is Lying", "description": "We don't know who yet. The first forty minutes are eliminating suspects.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "The Long Pause Before the Reveal", "description": "Everything has been building to this. The pause lasts seventeen minutes. Then the reveal.", "rating": "TV-14", "durationMinutes": 45 },
+      { "title": "Family Dinner: Extended", "description": "A tense family dinner that begins at 6pm and ends somewhere unpleasant.", "rating": "TV-14", "durationMinutes": 90 },
+      { "title": "The Return", "description": "Someone has returned. No one is pleased about it, least of all the person who returned.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "The Email That Started Everything", "description": "A drama in which the inciting incident is an email. The read receipts are crucial.", "rating": "TV-14", "durationMinutes": 45 },
+      { "title": "Two People in a Room", "description": "A room. Two people. Neither of them is entirely honest. Ninety minutes.", "rating": "TV-14", "durationMinutes": 90 },
+      { "title": "Tension: The Late Edition", "description": "Evening drama. Stakes have been raised. Someone is about to do something they cannot undo.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "Overnight Thrills", "description": "Drama continues into the night. Resolution is not guaranteed before dawn.", "rating": "TV-14", "durationMinutes": 90 }
+    ],
+    "ch-022": [
+      { "title": "The Brooding Hour: Morning", "description": "Drama that begins at dawn. The protagonist watches the sunrise and makes a decision.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "Rain Window",    "description": "A character stands at a window in the rain for forty-five minutes. Then acts on it.", "rating": "TV-PG", "durationMinutes": 45 },
+      { "title": "The Weight of Things", "description": "A quiet drama about small decisions and their disproportionate consequences.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "Unspoken", "description": "Ninety minutes of subtext. Text is minimal. The subtext carries everything.", "rating": "TV-14", "durationMinutes": 90 },
+      { "title": "The Letter", "description": "Someone wrote a letter. It has not been sent. The decision about whether to send it takes an hour.", "rating": "TV-PG", "durationMinutes": 60 },
+      { "title": "Aftermath", "description": "A drama set entirely in the aftermath of something we did not witness.", "rating": "TV-14", "durationMinutes": 45 },
+      { "title": "Late Night Brooding", "description": "The protagonist has been thinking all day. They are still thinking. The audience thinks along.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "Overnight: In The Dark", "description": "Drama that takes place, literally and figuratively, in the dark.", "rating": "TV-14", "durationMinutes": 90 }
+    ],
+    "ch-023": [
+      { "title": "Crisis: Hour One", "description": "The situation is developing. No one is calm. The music is helping no one calm down.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "Crisis: Escalation", "description": "It has gotten worse. This was expected. The expectation did not help.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "The Task Force", "description": "A task force is assembled. Six people with different skill sets, questionable availability.", "rating": "TV-14", "durationMinutes": 45 },
+      { "title": "Containment", "description": "The effort to contain the situation. The situation has opinions about this.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "72 Hours", "description": "A drama set across 72 hours. Shown in a compressed 90-minute format. Tension is maintained.", "rating": "TV-14", "durationMinutes": 90 },
+      { "title": "The Room Where It Happened", "description": "We stay in one room for forty-five minutes. Everything comes to that room.", "rating": "TV-14", "durationMinutes": 45 },
+      { "title": "Crisis: Resolution (Provisional)", "description": "The crisis resolves. Provisionally. A sequel is implied.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "Overnight Emergency", "description": "The crisis continues into the night. Emergency programming. Sort of.", "rating": "TV-14", "durationMinutes": 90 }
+    ],
+    "ch-024": [
+      { "title": "Nobody Planned This", "description": "A competition where the format changes every episode based on a vote. Last week's vote was a mistake.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "Confessional: Early Edition", "description": "Contestants explain their choices to a camera. The camera is non-judgmental. The audience is not.", "rating": "TV-14", "durationMinutes": 30 },
+      { "title": "The Alliance: Dissolved", "description": "An alliance from last episode has collapsed. Six people are now pretending nothing happened.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "Vote: The Deliberation", "description": "Ninety minutes of deliberation before the vote. The outcome is already inevitable.", "rating": "TV-14", "durationMinutes": 90 },
+      { "title": "Reunion: Unresolved", "description": "A reunion special where not everything gets resolved. Several things get worse.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "Unscripted Drama", "description": "Something unscripted is happening that none of us planned for. We're rolling with it.", "rating": "TV-14", "durationMinutes": 45 },
+      { "title": "Late Night: Post-Vote", "description": "Analysis of the vote. Two cast members are not speaking to each other for separate reasons.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "Overnight: The Watch Party", "description": "Watch along coverage. Comments stream live. Many of them are about the hair.", "rating": "TV-14", "durationMinutes": 90 }
+    ],
+    "ch-025": [
+      { "title": "Mise en Place: A Disaster", "description": "Organized preparation followed by organized chaos. One contestant has confused salt with sugar. Again.", "rating": "TV-PG", "durationMinutes": 60 },
+      { "title": "The Knife Skills Test", "description": "Contestants are assessed on knife skills. The assessment takes forty-five minutes. The cutting takes five.", "rating": "TV-PG", "durationMinutes": 45 },
+      { "title": "The Mystery Basket: Season 4", "description": "A basket containing blue cheese, kombucha, parsnips, and candy corn. Good luck.", "rating": "TV-PG", "durationMinutes": 60 },
+      { "title": "Plating Under Pressure", "description": "Twelve seconds remaining. Beautiful food. Somehow the plates are wrong.", "rating": "TV-PG", "durationMinutes": 30 },
+      { "title": "The Elimination: Extended", "description": "The elimination has been extended to ninety minutes due to unprecedented flavor disagreements.", "rating": "TV-PG", "durationMinutes": 90 },
+      { "title": "Judge's Table: Uncut", "description": "The full judge's deliberation, unedited. They discuss one dish for twenty-two minutes.", "rating": "TV-PG", "durationMinutes": 60 },
+      { "title": "Chaos Kitchen: Late Night Special", "description": "Post-competition cooking, no rules, no timer. Total freedom. Somehow worse.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "Overnight: The Recipes", "description": "The recipes contestants couldn't cook in time, prepared correctly by someone else.", "rating": "TV-G", "durationMinutes": 90 }
+    ],
+    "ch-026": [
+      { "title": "The Confessional: Morning Block", "description": "Contestants confess things to a camera at 8am. The stakes are unclear. The vulnerability is real.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "I Regret The Following", "description": "A structured format for contestants to address regrettable decisions from last episode.", "rating": "TV-14", "durationMinutes": 45 },
+      { "title": "The Overshare", "description": "Someone says too much. Another person reacts. Sixty minutes of cascading consequences.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "Off Camera: A Special", "description": "What contestants said when they thought cameras were off. They were not off.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "The Apology", "description": "Someone apologizes. The apology takes ninety minutes, including the setup.", "rating": "TV-14", "durationMinutes": 90 },
+      { "title": "Secrets: Part Two", "description": "Part one aired last week. We don't repeat it here. You'll figure it out.", "rating": "TV-14", "durationMinutes": 45 },
+      { "title": "Late Night: Unfiltered", "description": "Late-night edition. The filter is off. Contestants say what they mean. Mostly.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "Overnight Confessionals", "description": "Eight hours of archival confessional footage. Someone is definitely still upset about this.", "rating": "TV-14", "durationMinutes": 90 }
+    ],
+    "ch-027": [
+      { "title": "Who Did That: Morning Edition", "description": "Something happened overnight in the shared house. Nobody is admitting anything. Investigation begins.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "Forensic Roommates", "description": "We apply investigative methodology to a missing snack situation. The methodology is thorough.", "rating": "TV-PG", "durationMinutes": 45 },
+      { "title": "The Lineup", "description": "Four suspects. One incident. Each one has a story. At least one story is implausible.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "It Was Probably Derek", "description": "It might not be Derek. Ninety minutes of evidence before we decide.", "rating": "TV-14", "durationMinutes": 90 },
+      { "title": "The Reveal", "description": "We found out who did that. We're not telling you for twenty minutes. Then we do.", "rating": "TV-14", "durationMinutes": 30 },
+      { "title": "Next Week's Setup", "description": "Something else happened. Who did that? We'll find out next episode.", "rating": "TV-14", "durationMinutes": 45 },
+      { "title": "Late Night: The Debrief", "description": "Post-reveal debrief. Derek has thoughts. Derek always has thoughts.", "rating": "TV-14", "durationMinutes": 60 },
+      { "title": "Overnight: Unsolved", "description": "Three incidents that remain unresolved. The investigation continues.", "rating": "TV-14", "durationMinutes": 90 }
+    ],
+    "ch-028": [
+      { "title": "The Full Picture", "description": "An hour-long documentary that attempts to show the full picture. The picture is very large.", "rating": "TV-PG", "durationMinutes": 60 },
+      { "title": "Why, Though", "description": "A documentary series asking why things are the way they are. Several whys are answered.", "rating": "TV-PG", "durationMinutes": 45 },
+      { "title": "The Explainer: Extended", "description": "We explain a concept in full. The full explanation takes ninety minutes. Bring snacks.", "rating": "TV-G", "durationMinutes": 90 },
+      { "title": "Origin Story", "description": "Where did this come from? A documentary history, starting much earlier than you expected.", "rating": "TV-PG", "durationMinutes": 60 },
+      { "title": "Context", "description": "Thirty minutes of pure context, with no story attached. Just context.", "rating": "TV-G", "durationMinutes": 30 },
+      { "title": "The B-Roll Files", "description": "Documentary footage that didn't make the final cut of other documentaries. Excellent B-roll.", "rating": "TV-G", "durationMinutes": 45 },
+      { "title": "Long Read: Visual", "description": "A long-form essay, told visually. No host. No interviews. Just the thing itself.", "rating": "TV-PG", "durationMinutes": 60 },
+      { "title": "Overnight: The Deep Catalogue", "description": "Full documentary features from the archive, back to back, through the night.", "rating": "TV-PG", "durationMinutes": 90 }
+    ],
+    "ch-029": [
+      { "title": "Wiggly Things: Morning", "description": "Animated creatures wiggle for thirty minutes. What are they? Nobody knows. They are having a great time.", "rating": "TV-Y", "durationMinutes": 30 },
+      { "title": "The Shape Song", "description": "Every shape gets a song. The hexagon's song goes on for eleven minutes. It earned it.", "rating": "TV-Y", "durationMinutes": 30 },
+      { "title": "Numbers Are Fun (Part 7)", "description": "Part seven of the ongoing numbers series. Seven features prominently.", "rating": "TV-Y", "durationMinutes": 30 },
+      { "title": "Let's Find the Thing", "description": "A group of animated friends looks for a thing. They find it in the final two minutes.", "rating": "TV-Y", "durationMinutes": 30 },
+      { "title": "Feelings: A Show", "description": "Characters explore feelings. Every feeling is valid. The show is thirty minutes of validation.", "rating": "TV-Y", "durationMinutes": 30 },
+      { "title": "More Wiggly Things", "description": "Additional wiggly things have arrived. The situation is delightful.", "rating": "TV-Y", "durationMinutes": 30 },
+      { "title": "Colors, Again", "description": "A review of colors for those who may have forgotten. Very thorough. Very colorful.", "rating": "TV-Y", "durationMinutes": 30 },
+      { "title": "Bedtime Block", "description": "Calmer content for the evening. The wiggly things have settled. It is almost bedtime.", "rating": "TV-Y", "durationMinutes": 60 }
+    ],
+    "ch-030": [
+      { "title": "Saturday Morning (Any Day)", "description": "The classic Saturday morning cartoon block, available seven days a week. No notes.", "rating": "TV-Y7", "durationMinutes": 60 },
+      { "title": "Found in the Archive", "description": "Cartoons from the archive that haven't aired in a long time. They hold up. Mostly.", "rating": "TV-Y7", "durationMinutes": 45 },
+      { "title": "The Obscure Ones", "description": "Cartoons that ran for one season between 1991 and 2003. Someone loved them.", "rating": "TV-Y7", "durationMinutes": 60 },
+      { "title": "Cartoon Analysis", "description": "An academic analysis of a cartoon. Aimed at children. Enjoyed more by adults.", "rating": "TV-Y7", "durationMinutes": 30 },
+      { "title": "The Long Episode", "description": "A cartoon episode that is much longer than a normal cartoon episode. Quality maintained throughout.", "rating": "TV-Y7", "durationMinutes": 45 },
+      { "title": "Fan Favorites: Voted On", "description": "Episodes voted in by viewers. Third place is a controversial choice. Fourth place is correct.", "rating": "TV-Y7", "durationMinutes": 60 },
+      { "title": "New Stuff", "description": "Recent cartoons, assessed on whether they capture the spirit of the old stuff. Mixed results.", "rating": "TV-Y7", "durationMinutes": 45 },
+      { "title": "Overnight Archive Block", "description": "Cartoons from the archive, overnight. Nostalgia runs uninterrupted until dawn.", "rating": "TV-Y7", "durationMinutes": 90 }
+    ],
+    "ch-031": [
+      { "title": "Good Morning, Small Humans", "description": "A show that welcomes children to the day gently. The host has had a lot of coffee.", "rating": "TV-Y", "durationMinutes": 30 },
+      { "title": "The Quiet Activity Block", "description": "Low-stimulation content for children who need a break. Very slow. Very soft.", "rating": "TV-Y", "durationMinutes": 60 },
+      { "title": "Story Time: Extended", "description": "A story. Then another story. Then a third story. The third one is the best.", "rating": "TV-Y", "durationMinutes": 45 },
+      { "title": "Nap Preparation Programming", "description": "Content specifically designed to prepare children for napping. Success rate: 73%.", "rating": "TV-Y", "durationMinutes": 30 },
+      { "title": "Afternoon Quiet", "description": "A calm afternoon block. The music is gentle. The pacing is intentional.", "rating": "TV-Y", "durationMinutes": 60 },
+      { "title": "The Sleepy Animal Show", "description": "Animals that are tired. Footage of sleepy animals doing things slowly.", "rating": "TV-Y", "durationMinutes": 30 },
+      { "title": "Evening Wind Down", "description": "Transitional content between afternoon energy and bedtime. The host whispers.", "rating": "TV-Y", "durationMinutes": 45 },
+      { "title": "Overnight Lullabies", "description": "Four hours of lullaby content. For children. Equally effective on adults.", "rating": "TV-Y", "durationMinutes": 90 }
+    ],
+    "ch-032": [
+      { "title": "The Morning Hobby", "description": "Thirty minutes with someone who is very good at a hobby and willing to explain it.", "rating": "TV-G", "durationMinutes": 30 },
+      { "title": "Container Gardening: Advanced", "description": "We've covered the basics. This is the advanced session. Soil composition is discussed at length.", "rating": "TV-G", "durationMinutes": 45 },
+      { "title": "The Slow Craft", "description": "A craft that takes time. Shown in full. No time-lapse. All of the time.", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "Gentle Renovation", "description": "Home improvement without drama. Things go as planned. The hosts are calm throughout.", "rating": "TV-G", "durationMinutes": 60 },
+      { "title": "The Hobby Block", "description": "Three hobbies, thirty minutes each. Today: fermentation, miniature painting, and knots.", "rating": "TV-G", "durationMinutes": 90 },
+      { "title": "Good Enough Is Good", "description": "A show that celebrates competent but imperfect work. The results are charming.", "rating": "TV-G", "durationMinutes": 45 },
+      { "title": "Seasonal Craft", "description": "A craft appropriate to the season. We argue about which season it currently is.", "rating": "TV-G", "durationMinutes": 30 },
+      { "title": "Evening Projects", "description": "Projects to start in the evening, intending to finish over the weekend. Realistic scope.", "rating": "TV-G", "durationMinutes": 60 }
+    ]
+  }
+}

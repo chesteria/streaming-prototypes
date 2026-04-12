@@ -1,0 +1,465 @@
+/* ============================================================
+   EPG SCREEN — Electronic Program Guide
+   ============================================================ */
+
+/* ---- Screen container ---- */
+.screen-epg {
+  position: absolute;
+  inset: 0;
+  background: var(--color-bg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- Top nav (reuses nav.css rules; active pill override) ---- */
+.screen-epg .top-nav {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+}
+
+.screen-epg .nav-tab[data-nav-tab="live"].active {
+  background: var(--color-nav-pill-bg);
+  color: var(--color-nav-pill-text);
+  border-radius: 20px;
+  padding: 6px 18px;
+}
+
+/* ---- Genre Rail ---- */
+.epg-genre-rail {
+  flex-shrink: 0;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--content-pad-x);
+  background: var(--color-bg);
+  position: relative;
+  z-index: 9;
+  overflow: hidden;
+}
+
+.epg-genre-rail-inner {
+  display: flex;
+  gap: 10px;
+  transition: transform 100ms ease;
+  white-space: nowrap;
+}
+
+.epg-genre-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 20px;
+  border-radius: 20px;
+  border: 1.5px solid var(--color-surface);
+  background: var(--color-card-bg);
+  color: var(--color-text-secondary);
+  font-size: 15px;
+  font-family: var(--font-family);
+  font-weight: 500;
+  cursor: default;
+  user-select: none;
+  flex-shrink: 0;
+  transition: border-color var(--t-focus), color var(--t-focus), background var(--t-focus);
+}
+
+.epg-genre-chip.is-focused {
+  border-color: var(--color-focus-border);
+  color: var(--color-text-primary);
+  box-shadow: var(--focus-box-shadow);
+}
+
+.epg-genre-chip.is-active {
+  border-color: rgba(255,255,255,0.5);
+  color: var(--color-text-primary);
+  background: var(--color-surface);
+}
+
+.epg-genre-chip.is-focused.is-active {
+  box-shadow: var(--focus-box-shadow);
+}
+
+/* ---- Grid scroll wrapper ---- */
+.epg-grid-wrapper {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.epg-grid-scroll {
+  will-change: transform;
+  transition: transform var(--t-scroll) ease;
+}
+
+/* ---- Genre group ---- */
+.epg-genre-group {
+  padding: 0;
+}
+
+.epg-genre-group-header {
+  padding: 14px var(--content-pad-x) 8px;
+  font-size: 13px;
+  font-family: var(--font-family);
+  font-weight: 600;
+  color: var(--color-text-tertiary);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+/* ---- Channel row ---- */
+.epg-channel-row {
+  display: flex;
+  height: 88px;
+  margin-bottom: 4px;
+  overflow: hidden;
+}
+
+/* ---- Logo cell (fixed left column) ---- */
+.epg-logo-cell {
+  flex-shrink: 0;
+  width: 120px;
+  height: 88px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 8px;
+  border-radius: var(--tile-radius) 0 0 var(--tile-radius);
+  background: var(--color-card-bg);
+  cursor: default;
+  position: relative;
+  z-index: 1;
+  border: 2px solid transparent;
+  transition: border-color var(--t-focus), box-shadow var(--t-focus);
+}
+
+.epg-logo-cell.is-focused {
+  border-color: var(--color-focus-border);
+  box-shadow: var(--focus-box-shadow);
+}
+
+.epg-logo-placeholder {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.9);
+  letter-spacing: 0.04em;
+  font-family: var(--font-family);
+  flex-shrink: 0;
+}
+
+.epg-logo-name {
+  font-size: 10px;
+  color: var(--color-text-tertiary);
+  font-family: var(--font-family);
+  text-align: center;
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+.epg-logo-heart {
+  position: absolute;
+  bottom: 6px;
+  right: 8px;
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+  opacity: 0.5;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ---- Tile track (horizontally scrollable area) ---- */
+.epg-tile-track-wrapper {
+  flex: 1;
+  overflow: hidden;
+  height: 88px;
+  position: relative;
+}
+
+.epg-tile-track {
+  display: flex;
+  gap: 4px;
+  height: 100%;
+  padding-right: 60px; /* breathing room at right edge */
+  will-change: transform;
+  /* return-to-now transition is added/removed via .is-returning class */
+}
+
+.epg-tile-track.is-returning {
+  transition: transform 250ms ease-out;
+}
+
+/* ---- Program tile ---- */
+.epg-program-tile {
+  flex-shrink: 0;
+  width: 240px;
+  height: 88px;
+  border-radius: 0;
+  background: var(--color-card-bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px 14px;
+  cursor: default;
+  border: 2px solid transparent;
+  transition: border-color var(--t-focus), box-shadow var(--t-focus), transform var(--t-focus);
+  position: relative;
+  overflow: hidden;
+}
+
+/* First tile in a track — connect flush to the logo cell */
+.epg-tile-track .epg-program-tile:first-child {
+  border-radius: 0 var(--tile-radius) var(--tile-radius) 0;
+}
+
+/* Subsequent tiles get full radius on the right side */
+.epg-tile-track .epg-program-tile:not(:first-child) {
+  border-radius: var(--tile-radius);
+}
+
+.epg-program-tile.is-focused {
+  border-color: var(--color-focus-border);
+  box-shadow: var(--focus-box-shadow);
+  transform: scale(1.02);
+  z-index: 2;
+}
+
+.epg-program-tile.is-current {
+  background: var(--color-surface);
+}
+
+.epg-tile-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-family: var(--font-family);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+.epg-tile-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.epg-tile-time {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family);
+  white-space: nowrap;
+}
+
+.epg-tile-rating {
+  font-size: 10px;
+  color: var(--color-text-tertiary);
+  font-family: var(--font-family);
+  border: 1px solid var(--color-surface);
+  border-radius: 3px;
+  padding: 1px 5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.epg-tile-watching {
+  display: none;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--color-progress-watch);
+  font-family: var(--font-family);
+}
+
+.epg-tile-watching.is-visible {
+  display: flex;
+}
+
+.epg-tile-watching-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-progress-watch);
+  flex-shrink: 0;
+}
+
+/* ---- More-info overlay ---- */
+.epg-more-info-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.75);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+
+.epg-more-info-overlay.is-open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.epg-more-info-panel {
+  width: 640px;
+  background: var(--color-card-bg);
+  border-radius: 16px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+  border: 1px solid var(--color-surface);
+}
+
+.epg-more-info-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.epg-more-info-logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.9);
+  letter-spacing: 0.04em;
+  font-family: var(--font-family);
+  flex-shrink: 0;
+}
+
+.epg-more-info-channel-name {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family);
+  margin-bottom: 4px;
+}
+
+.epg-more-info-program-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  font-family: var(--font-family);
+  line-height: 1.2;
+}
+
+.epg-more-info-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.epg-more-info-rating {
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+  font-family: var(--font-family);
+  border: 1px solid var(--color-surface);
+  border-radius: 3px;
+  padding: 2px 7px;
+}
+
+.epg-more-info-time-str {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family);
+}
+
+.epg-more-info-description {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family);
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Progress bar (currently-playing variant only) */
+.epg-more-info-progress-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.epg-more-info-progress-bar {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--color-surface);
+  overflow: hidden;
+}
+
+.epg-more-info-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--color-progress-watch);
+  transition: width 1s linear;
+}
+
+.epg-more-info-remaining {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family);
+}
+
+/* CTA */
+.epg-more-info-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 32px;
+  border-radius: 10px;
+  background: var(--color-btn-default-bg);
+  color: var(--color-btn-default-text);
+  font-size: 16px;
+  font-weight: 600;
+  font-family: var(--font-family);
+  cursor: default;
+  border: 2px solid transparent;
+  align-self: flex-start;
+  transition: border-color var(--t-focus), box-shadow var(--t-focus), background var(--t-focus), color var(--t-focus);
+}
+
+.epg-more-info-cta.is-focused {
+  background: var(--color-focus-btn-bg);
+  color: var(--color-focus-btn-text);
+  border-color: var(--color-focus-border);
+  box-shadow: var(--focus-box-shadow);
+}
+
+/* ---- Dim state when overlay is open ---- */
+.screen-epg.epg-overlay-open .epg-genre-rail,
+.screen-epg.epg-overlay-open .epg-grid-wrapper {
+  opacity: 0.4;
+  transition: opacity 200ms ease;
+}
+
+/* ---- Debug toggle: rating chips off ---- */
+.epg-hide-ratings .epg-tile-rating,
+.epg-hide-ratings .epg-more-info-rating {
+  display: none;
+}
+
+/* ---- Debug toggle: genre headers off ---- */
+.epg-hide-genre-headers .epg-genre-group-header {
+  display: none;
+}

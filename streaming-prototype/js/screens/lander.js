@@ -360,9 +360,23 @@ function buildNavZone(navEl) {
   }
 
   function select() {
-    const tab = tabs[currentIdx];
-    const name = tab.dataset.navTab || tab.textContent.trim();
-    showToast(`Navigating to ${name}…`);
+    const tab    = tabs[currentIdx];
+    const navTab = tab?.dataset.navTab;
+
+    if (navTab === 'live') {
+      try {
+        if (typeof Analytics !== 'undefined') {
+          Analytics.track('epg_nav_to_live', {});
+        }
+      } catch (e) { /* fail silently */ }
+      App.navigate('epg', { entrySource: 'nav' });
+      return;
+    }
+
+    if (navTab === 'for-you') return; // already here
+
+    const name = tab.textContent.trim() || navTab;
+    showToast(`${name} — coming soon`);
   }
 
   return { activate, deactivate, move, select };

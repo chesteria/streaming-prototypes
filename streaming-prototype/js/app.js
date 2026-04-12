@@ -138,6 +138,7 @@ const App = (function() {
     registerScreen(LanderScreen);
     registerScreen(SeriesPDPScreen);
     registerScreen(PlayerScreen);
+    registerScreen(EPGScreen);
 
     // Load all data (includes version.json)
     await DataStore.init();
