@@ -420,3 +420,115 @@ body:has(#debug-panel.open) #build-stamp {
   text-align: right;
   white-space: nowrap;
 }
+
+/* ---- Section H — Research Session panel ---- */
+.dp-session-panel {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.dp-session-form {
+  display: flex;
+  gap: 8px;
+  padding: 0 20px 8px;
+}
+
+.dp-participant-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 5px;
+  color: #fff;
+  font-size: 13px;
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  padding: 6px 10px;
+  outline: none;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.dp-participant-input::placeholder { color: rgba(255, 255, 255, 0.3); }
+.dp-participant-input:focus { border-color: rgba(255, 255, 255, 0.4); }
+
+.dp-device-select {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 5px;
+  color: #fff;
+  font-size: 12px;
+  padding: 6px 8px;
+  outline: none;
+  cursor: pointer;
+}
+
+.dp-session-actions {
+  display: flex;
+  gap: 8px;
+  padding: 0 20px 8px;
+}
+
+.dp-btn-start {
+  background: rgba(59, 130, 246, 0.25);
+  border-color: rgba(59, 130, 246, 0.5);
+  color: #93c5fd;
+  flex: 1;
+}
+
+.dp-btn-start:hover { background: rgba(59, 130, 246, 0.4); }
+
+.dp-session-status {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+  padding: 0 20px 12px;
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+}
+
+.dp-session-status.dp-session-active {
+  color: #86efac;
+}
+
+/* ---- Live event log ---- */
+.dp-event-log-outer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+  max-height: 220px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dp-event-log {
+  overflow-y: auto;
+  max-height: 160px;
+  padding: 4px 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+.dp-event-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 3px 20px;
+  font-size: 11px;
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  border-left: 2px solid transparent;
+}
+
+.dp-event-time { color: rgba(255,255,255,0.3); flex-shrink: 0; }
+.dp-event-name { color: rgba(255,255,255,0.75); }
+
+.dp-event-nav     { border-left-color: #60a5fa; }
+.dp-event-player  { border-left-color: #4ade80; }
+.dp-event-feedback{ border-left-color: #fb923c; }
+.dp-event-session { border-left-color: rgba(255,255,255,0.2); }
+
+.dp-copy-log {
+  font-size: 10px;
+  color: rgba(255,255,255,0.35);
+  cursor: pointer;
+  padding: 2px 6px;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 3px;
+}
+
+.dp-copy-log:hover { color: rgba(255,255,255,0.7); }

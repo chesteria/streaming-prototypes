@@ -50,21 +50,14 @@ const LanderScreen = {
 
     this._activeRailIdx = savedRailIdx !== undefined ? savedRailIdx : 0;
 
-    // Fire session_start on first lander init (not on BACK return)
-    if (!isReturning) {
-      try {
-        if (typeof Analytics !== 'undefined') {
-          const prevCount = parseInt(localStorage.getItem('analytics_sessionCount') || '1');
-          Analytics.track('session_start', {
-            deviceType: Analytics.getDeviceType(),
-            screenResolution: `${window.screen.width}x${window.screen.height}`,
-            configVersion: 'lander-default',
-            returningParticipant: prevCount > 1,
-            previousSessionCount: Math.max(0, prevCount - 1),
-          });
-        }
-      } catch (e) { /* fail silently */ }
-    }
+    // Track screen view on every lander init (including BACK return)
+    try {
+      const prevScreen = sessionStorage.getItem('current_screen') || 'none';
+      sessionStorage.setItem('current_screen', 'lander');
+      if (typeof trackEvent !== 'undefined') {
+        trackEvent('proto_screen_view', { previous_screen: isReturning ? prevScreen : 'none' });
+      }
+    } catch (e) { /* fail silently */ }
 
     // Build DOM
     container.innerHTML = `
@@ -244,30 +237,17 @@ const LanderScreen = {
         }
         // At the bottom — no wrap
       } else if (result && result.action === 'NAVIGATE') {
-        // Track tile_select and navigation before navigating
+        // Track card_select before navigating
         try {
-          if (typeof Analytics !== 'undefined') {
+          if (typeof trackEvent !== 'undefined') {
             const s = rail._analyticsState;
-            if (s) {
-              Analytics.track('tile_select', {
-                screen: 'lander',
-                rail: s.railId,
-                railIndex: railIdx,
-                tileIndex: s.currentTileIdx || 0,
-                itemId: result.params?.showId || result.params?.channelId || '',
-                itemTitle: s.focusedItemTitle || '',
-                timeOnScreenMs: Date.now() - (this._screenEnterTime || Date.now()),
-                tilesViewedInRail: s.maxTileReached + 1,
-              });
-              if (s) s.selectedTile = s.currentTileIdx || 0;
-            }
-            Analytics.track('navigation', {
-              from: 'lander',
-              to: result.screen,
-              trigger: 'tile-select',
-              itemId: result.params?.showId || result.params?.channelId || '',
-              sourceRail: rail._analyticsState?.railId || `rail-${railIdx}`,
-              sourceIndex: rail._analyticsState?.currentTileIdx || 0,
+            if (s) s.selectedTile = s.currentTileIdx || 0;
+            trackEvent('card_select', {
+              card_id:           result.params?.showId || result.params?.channelId || '',
+              card_title:        rail._analyticsState?.focusedItemTitle || '',
+              destination_screen: result.screen,
+              rail_id:           rail._analyticsState?.railId || `rail-${railIdx}`,
+              card_position:     rail._analyticsState?.currentTileIdx || 0,
             });
           }
         } catch (e) { /* fail silently */ }
@@ -282,6 +262,14 @@ const LanderScreen = {
     if (!rail) return;
     rail.onEnter && rail.onEnter();
     this._scrollRailIntoView(railIdx);
+    try {
+      if (typeof trackEvent !== 'undefined') {
+        trackEvent('rail_focus', {
+          rail_id:       rail._analyticsState?.railId || `rail-${railIdx}`,
+          rail_position: railIdx,
+        });
+      }
+    } catch (e) { /* fail silently */ }
   },
 
   _scrollRailIntoView(railIdx) {

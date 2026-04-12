@@ -29,8 +29,12 @@
 
   <!-- Sidebar Nav -->
   <nav class="rpt-sidebar">
-    <div class="rpt-nav-label">Dashboard</div>
-    <a class="rpt-nav-item active" href="#section-overview">
+    <div class="rpt-nav-label">Live</div>
+    <a class="rpt-nav-item active" href="#section-live">
+      <span class="nav-icon">●</span> Research Session
+    </a>
+    <div class="rpt-nav-label" style="margin-top:16px;">Historical</div>
+    <a class="rpt-nav-item" href="#section-overview">
       <span class="nav-icon">📊</span> Session Overview
     </a>
     <a class="rpt-nav-item" href="#section-heatmap">
@@ -49,6 +53,86 @@
 
   <!-- Main Content -->
   <main class="rpt-main" id="rpt-main">
+
+    <!-- Live: Research Session (BroadcastChannel) -->
+    <section class="rpt-section" id="section-live">
+      <div class="rpt-section-header">
+        <span class="rpt-section-label" id="live-indicator" style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.4);">●</span>
+        <h2 class="rpt-section-title">Research Session</h2>
+        <div id="channel-status" style="margin-left:auto;font-size:12px;color:rgba(255,255,255,0.35);">
+          Open the prototype in another tab to receive events
+        </div>
+      </div>
+
+      <!-- Session Summary -->
+      <div class="rpt-grid-4" style="margin-bottom:var(--gap);">
+        <div class="rpt-card">
+          <div class="rpt-card-title">Participant</div>
+          <div class="rpt-stat" id="live-participant" style="font-size:22px;">—</div>
+        </div>
+        <div class="rpt-card">
+          <div class="rpt-card-title">Elapsed</div>
+          <div class="rpt-stat" id="live-elapsed" style="font-size:22px;">—</div>
+        </div>
+        <div class="rpt-card">
+          <div class="rpt-card-title">Events Fired</div>
+          <div class="rpt-stat" id="live-event-count" style="font-size:22px;">0</div>
+        </div>
+        <div class="rpt-card">
+          <div class="rpt-card-title">Screens Visited</div>
+          <div class="rpt-stat" id="live-screens" style="font-size:14px;line-height:1.4;">—</div>
+        </div>
+      </div>
+
+      <!-- Live Event Log -->
+      <div class="rpt-card" style="margin-bottom:var(--gap);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <div class="rpt-card-title" style="margin:0;">Live Event Log</div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <label style="font-size:12px;color:var(--text-dim);display:flex;align-items:center;gap:4px;cursor:pointer;">
+              <input type="checkbox" id="autoscroll-toggle" checked /> Auto-scroll
+            </label>
+            <button class="rpt-btn rpt-btn-ghost" id="btn-copy-log">Copy Log</button>
+            <button class="rpt-btn rpt-btn-ghost" id="btn-export-json">Export JSON</button>
+            <button class="rpt-btn rpt-btn-ghost" id="btn-export-csv">Export CSV</button>
+          </div>
+        </div>
+        <div id="live-event-log" style="
+          height:240px;overflow-y:auto;font-size:12px;
+          font-family:'SF Mono','Menlo','Consolas',monospace;
+          border:1px solid rgba(255,255,255,0.07);border-radius:6px;
+          padding:4px 0;
+        ">
+          <div style="padding:16px;color:var(--text-dim);text-align:center;">
+            Waiting for events…
+          </div>
+        </div>
+      </div>
+
+      <!-- Per-Screen Breakdown -->
+      <div class="rpt-grid-2" style="margin-bottom:var(--gap);">
+        <div class="rpt-card">
+          <div class="rpt-card-title">Events by Screen</div>
+          <div id="screen-breakdown" style="margin-top:12px;"></div>
+        </div>
+        <div class="rpt-card">
+          <div class="rpt-card-title">Event Counts</div>
+          <div id="event-type-breakdown" style="margin-top:12px;"></div>
+        </div>
+      </div>
+
+      <!-- Firebase Console link -->
+      <div class="rpt-card" style="padding:16px 20px;">
+        <a href="https://console.firebase.google.com/project/streaming-prototype-uta/analytics/app/web/overview"
+           target="_blank"
+           style="color:#60a5fa;text-decoration:none;font-size:13px;">
+          Open Firebase Console — streaming-prototype-uta →
+        </a>
+        <div style="font-size:11px;color:var(--text-dim);margin-top:4px;">
+          Use Explorations &rarr; filter on <code>participant_id</code> event parameter for same-day analysis (user property has ~24h delay)
+        </div>
+      </div>
+    </section>
 
     <!-- A: Session Overview -->
     <section class="rpt-section" id="section-overview">
@@ -216,6 +300,184 @@
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 <script src="js/reporting.js"></script>
+
+<style>
+/* Live event log rows */
+.live-row {
+  display: flex;
+  gap: 10px;
+  padding: 4px 12px;
+  border-left: 3px solid transparent;
+  line-height: 1.4;
+}
+.live-row:hover { background: rgba(255,255,255,0.03); }
+.live-row .lr-time  { color: rgba(255,255,255,0.3); flex-shrink:0; min-width:64px; }
+.live-row .lr-name  { color: rgba(255,255,255,0.8); flex-shrink:0; min-width:200px; }
+.live-row .lr-screen{ color: rgba(255,255,255,0.35); flex-shrink:0; min-width:72px; }
+.live-row .lr-params{ color: rgba(255,255,255,0.4); overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+.live-row.cat-nav      { border-left-color: #60a5fa; }
+.live-row.cat-player   { border-left-color: #4ade80; }
+.live-row.cat-feedback { border-left-color: #fb923c; }
+.live-row.cat-session  { border-left-color: rgba(255,255,255,0.2); }
+.breakdown-row { display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px; }
+.breakdown-row:last-child { border-bottom:none; }
+.breakdown-name { color:rgba(255,255,255,0.65); }
+.breakdown-count{ color:rgba(255,255,255,0.9);font-weight:600;min-width:32px;text-align:right; }
+#live-indicator.live-active { color: #4ade80 !important; }
+</style>
+
+<script type="module">
+/* ---- Live Session Dashboard — BroadcastChannel subscriber ---- */
+
+const channel  = new BroadcastChannel('proto_analytics');
+const MAX_ROWS = 50;
+const allEvents = [];
+let sessionStart  = null;
+let elapsedTimer  = null;
+let autoScroll    = true;
+let logInitialized = false;
+
+const NAV_EVENTS      = new Set(['proto_screen_view','rail_focus','card_focus','card_select','nav_back','nav_exit']);
+const PLAYER_EVENTS   = new Set(['proto_video_start','video_pause','video_resume','video_seek','proto_video_complete','video_exit','player_error']);
+const FEEDBACK_EVENTS = new Set(['feedback_triggered','feedback_submitted','feedback_dismissed']);
+
+function eventCategory(name) {
+  if (NAV_EVENTS.has(name))      return 'nav';
+  if (PLAYER_EVENTS.has(name))   return 'player';
+  if (FEEDBACK_EVENTS.has(name)) return 'feedback';
+  return 'session';
+}
+
+channel.onmessage = ({ data }) => {
+  const { eventName, params, ts } = data;
+  allEvents.push({ eventName, params, ts });
+  if (allEvents.length > MAX_ROWS) allEvents.shift();
+
+  // Mark channel as live
+  const indicator = document.getElementById('live-indicator');
+  const status    = document.getElementById('channel-status');
+  if (indicator) indicator.className = 'rpt-section-label live-active';
+  if (status)    status.textContent  = 'Live — receiving events';
+
+  // Session start
+  if (eventName === 'proto_session_start') {
+    sessionStart = ts;
+    startElapsedClock();
+  }
+
+  updateSummary(params);
+  appendRow(eventName, params, ts);
+  updateBreakdowns();
+};
+
+function updateSummary(params) {
+  const p = document.getElementById('live-participant');
+  const s = document.getElementById('live-screens');
+  const c = document.getElementById('live-event-count');
+  if (p && params.participant_id && params.participant_id !== 'UNSET') p.textContent = params.participant_id;
+  if (c) c.textContent = allEvents.length;
+  if (s && params.screens_visited && params.screens_visited !== 'none') s.textContent = params.screens_visited.replace(/,/g, ' → ');
+}
+
+function startElapsedClock() {
+  if (elapsedTimer) clearInterval(elapsedTimer);
+  const el = document.getElementById('live-elapsed');
+  elapsedTimer = setInterval(() => {
+    if (!sessionStart || !el) return;
+    const sec = Math.floor((Date.now() - sessionStart) / 1000);
+    el.textContent = `${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`;
+  }, 1000);
+}
+
+function appendRow(eventName, params, ts) {
+  const log = document.getElementById('live-event-log');
+  if (!log) return;
+
+  // Clear "waiting" placeholder on first real event
+  if (!logInitialized) {
+    log.innerHTML = '';
+    logInitialized = true;
+  }
+
+  const cat  = eventCategory(eventName);
+  const time = new Date(ts).toLocaleTimeString('en-US', { hour12:false });
+  const keyParams = Object.entries(params)
+    .filter(([k]) => !['participant_id','proto_screen','device_profile','scenario_preset','session_timestamp'].includes(k))
+    .slice(0, 4)
+    .map(([k, v]) => `${k}:${v}`)
+    .join('  ');
+
+  const row = document.createElement('div');
+  row.className = `live-row cat-${cat}`;
+  row.innerHTML = `
+    <span class="lr-time">${time}</span>
+    <span class="lr-name">${eventName}</span>
+    <span class="lr-screen">${params.proto_screen || ''}</span>
+    <span class="lr-params">${keyParams}</span>
+  `;
+  log.appendChild(row);
+  while (log.children.length > MAX_ROWS) log.removeChild(log.firstChild);
+  if (autoScroll) log.scrollTop = log.scrollHeight;
+}
+
+function updateBreakdowns() {
+  // By screen
+  const byScreen = {};
+  allEvents.forEach(e => {
+    const scr = e.params.proto_screen || 'unknown';
+    byScreen[scr] = (byScreen[scr] || 0) + 1;
+  });
+  const sbEl = document.getElementById('screen-breakdown');
+  if (sbEl) {
+    sbEl.innerHTML = Object.entries(byScreen).sort((a,b)=>b[1]-a[1])
+      .map(([k,v]) => `<div class="breakdown-row"><span class="breakdown-name">${k}</span><span class="breakdown-count">${v}</span></div>`).join('');
+  }
+
+  // By event type
+  const byEvent = {};
+  allEvents.forEach(e => { byEvent[e.eventName] = (byEvent[e.eventName] || 0) + 1; });
+  const etEl = document.getElementById('event-type-breakdown');
+  if (etEl) {
+    etEl.innerHTML = Object.entries(byEvent).sort((a,b)=>b[1]-a[1]).slice(0,12)
+      .map(([k,v]) => `<div class="breakdown-row"><span class="breakdown-name">${k}</span><span class="breakdown-count">${v}</span></div>`).join('');
+  }
+}
+
+// Auto-scroll toggle
+document.getElementById('autoscroll-toggle')?.addEventListener('change', e => { autoScroll = e.target.checked; });
+
+// Copy log
+document.getElementById('btn-copy-log')?.addEventListener('click', () => {
+  navigator.clipboard.writeText(JSON.stringify(allEvents, null, 2))
+    .then(() => alert('Event log copied to clipboard'));
+});
+
+// Export JSON
+document.getElementById('btn-export-json')?.addEventListener('click', () => {
+  const participant = allEvents[0]?.params?.participant_id || 'UNSET';
+  const blob = new Blob([JSON.stringify(allEvents, null, 2)], { type: 'application/json' });
+  const a = Object.assign(document.createElement('a'), {
+    href: URL.createObjectURL(blob),
+    download: `session_${participant}_${Date.now()}.json`,
+  });
+  a.click();
+});
+
+// Export CSV
+document.getElementById('btn-export-csv')?.addEventListener('click', () => {
+  const header = 'timestamp,event_name,proto_screen,participant_id,device_profile';
+  const rows = allEvents.map(e => [
+    new Date(e.ts).toISOString(), e.eventName,
+    e.params.proto_screen || '', e.params.participant_id || '', e.params.device_profile || '',
+  ].join(','));
+  const blob = new Blob([[header, ...rows].join('\n')], { type: 'text/csv' });
+  const a = Object.assign(document.createElement('a'), {
+    href: URL.createObjectURL(blob),
+    download: `session_events_${Date.now()}.csv`,
+  });
+  a.click();
+});
+</script>
 
 </body>
 </html>

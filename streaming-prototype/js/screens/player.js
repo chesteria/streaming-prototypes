@@ -100,7 +100,14 @@ const PlayerScreen = {
 
     this._render();
 
-    // Navigation is tracked by the source screen before calling App.navigate() — no duplicate here.
+    // Track screen view
+    try {
+      const prevScreen = sessionStorage.getItem('current_screen') || 'pdp';
+      sessionStorage.setItem('current_screen', 'player');
+      if (typeof trackEvent !== 'undefined') {
+        trackEvent('proto_screen_view', { previous_screen: prevScreen });
+      }
+    } catch (e) { /* fail silently */ }
   },
 
   _parseDuration(str) {
@@ -255,14 +262,12 @@ const PlayerScreen = {
         this._duration = video.duration;
         video.playbackRate = DebugConfig.get('playbackSpeed', PLAYBACK_SPEED);
         this._updateProgressUI();
-        // Track playback_start when media loads and plays
         try {
-          if (typeof Analytics !== 'undefined') {
-            Analytics.track('playback_start', {
-              showId: this._show?.id,
-              episodeId: this._episodeData?.id,
-              isLive: this._isLive,
-              startPosition: this._elapsed,
+          if (typeof trackEvent !== 'undefined') {
+            trackEvent('proto_video_start', {
+              content_id:    this._episodeData?.id || this._show?.id,
+              content_type:  this._isLive ? 'clip' : 'episode',
+              content_title: this._episodeData?.title || this._show?.title || '',
             });
           }
         } catch (e) { /* fail silently */ }
@@ -278,13 +283,10 @@ const PlayerScreen = {
       video.addEventListener('ended', () => {
         this._showControls();
         try {
-          if (typeof Analytics !== 'undefined') {
-            Analytics.track('playback_complete', {
-              showId: this._show?.id,
-              episodeId: this._episodeData?.id,
-              durationMs: this._duration * 1000,
-              watchedMs: this._elapsed * 1000,
-              completionPct: 100,
+          if (typeof trackEvent !== 'undefined') {
+            trackEvent('proto_video_complete', {
+              content_id:              this._episodeData?.id || this._show?.id,
+              total_duration_seconds:  Math.round(this._duration),
             });
           }
         } catch (e) { /* fail silently */ }
@@ -469,16 +471,16 @@ const PlayerScreen = {
           this._video.play().catch(() => {});
           showToast('▶ Playing');
           try {
-            if (typeof Analytics !== 'undefined') {
-              Analytics.track('playback_start', { showId: this._show?.id, episodeId: this._episodeData?.id, resumePosition: this._elapsed });
+            if (typeof trackEvent !== 'undefined') {
+              trackEvent('video_resume', { content_id: this._episodeData?.id || this._show?.id, elapsed_seconds: Math.round(this._elapsed) });
             }
           } catch (e) { /* fail silently */ }
         } else {
           this._video.pause();
           showToast('⏸ Paused');
           try {
-            if (typeof Analytics !== 'undefined') {
-              Analytics.track('playback_pause', { showId: this._show?.id, episodeId: this._episodeData?.id, pausePosition: this._elapsed });
+            if (typeof trackEvent !== 'undefined') {
+              trackEvent('video_pause', { content_id: this._episodeData?.id || this._show?.id, elapsed_seconds: Math.round(this._elapsed) });
             }
           } catch (e) { /* fail silently */ }
         }
@@ -487,17 +489,14 @@ const PlayerScreen = {
     }
 
     if (action === 'BACK') {
-      // H4: Fire playback_complete and navigate back immediately.
-      // Previously this only hid controls, requiring a second BACK to actually exit.
       try {
-        if (typeof Analytics !== 'undefined') {
-          Analytics.track('playback_complete', {
-            showId: this._show?.id,
-            episodeId: this._episodeData?.id,
-            durationMs: this._duration * 1000,
-            watchedMs: this._elapsed * 1000,
-            completionPct: this._duration > 0 ? Math.round(this._elapsed / this._duration * 100) : 0,
-            exitedEarly: this._elapsed < this._duration * 0.95,
+        if (typeof trackEvent !== 'undefined') {
+          const pct = this._duration > 0 ? Math.round(this._elapsed / this._duration * 100) : 0;
+          trackEvent('video_exit', {
+            content_id:             this._episodeData?.id || this._show?.id,
+            elapsed_seconds:        Math.round(this._elapsed),
+            total_duration_seconds: Math.round(this._duration),
+            percent_watched:        pct,
           });
         }
       } catch (e) { /* fail silently */ }
@@ -528,8 +527,8 @@ const PlayerScreen = {
         this._updateProgressUI();
         this._updateScrubThumbs();
         try {
-          if (typeof Analytics !== 'undefined') {
-            Analytics.track('playback_scrub', { showId: this._show?.id, from: fromPos, to: this._elapsed, direction: 'back' });
+          if (typeof trackEvent !== 'undefined') {
+            trackEvent('video_seek', { content_id: this._episodeData?.id || this._show?.id, direction: 'back', elapsed_seconds: Math.round(this._elapsed) });
           }
         } catch (e) { /* fail silently */ }
         return;
@@ -546,8 +545,8 @@ const PlayerScreen = {
         this._updateProgressUI();
         this._updateScrubThumbs();
         try {
-          if (typeof Analytics !== 'undefined') {
-            Analytics.track('playback_scrub', { showId: this._show?.id, from: fromPos, to: this._elapsed, direction: 'forward' });
+          if (typeof trackEvent !== 'undefined') {
+            trackEvent('video_seek', { content_id: this._episodeData?.id || this._show?.id, direction: 'forward', elapsed_seconds: Math.round(this._elapsed) });
           }
         } catch (e) { /* fail silently */ }
         return;

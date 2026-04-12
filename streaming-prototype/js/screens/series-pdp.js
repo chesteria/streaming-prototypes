@@ -58,7 +58,18 @@ const SeriesPDPScreen = {
     this._seriesData = await DataStore.getSeriesData(showId);
     this._render();
 
-    // Navigation is tracked by the source screen before calling App.navigate() — no duplicate here.
+    // Track screen view and PDP view
+    try {
+      const prevScreen = sessionStorage.getItem('current_screen') || 'lander';
+      sessionStorage.setItem('current_screen', 'pdp');
+      if (typeof trackEvent !== 'undefined') {
+        trackEvent('proto_screen_view', { previous_screen: prevScreen });
+        trackEvent('pdp_view', {
+          series_id:    this._show.id,
+          series_title: this._show.title,
+        });
+      }
+    } catch (e) { /* fail silently */ }
 
     // Restore scroll position (no transition to avoid flash)
     if (savedScrollY) {
@@ -363,6 +374,16 @@ const SeriesPDPScreen = {
     if (el) { el.classList.add('focused'); this._focusedEl = el; }
     this._episodeIdx = idx;
     this._scrollRail('episodes-track', idx, 440, 16);
+    try {
+      if (typeof trackEvent !== 'undefined') {
+        const ep = this._seriesData?.seasons[this._seasonIdx]?.episodes[idx];
+        trackEvent('pdp_episode_focus', {
+          episode_id:     ep?.id || `ep-${idx}`,
+          episode_number: ep?.episode || idx + 1,
+          season_number:  ep?.season  || this._seasonIdx + 1,
+        });
+      }
+    } catch (e) { /* fail silently */ }
   },
 
   _focusExtra(idx) {
@@ -506,16 +527,11 @@ const SeriesPDPScreen = {
         const ep = this._seriesData?.seasons[this._seasonIdx]?.episodes[this._episodeIdx];
         if (ep) {
           try {
-            if (typeof Analytics !== 'undefined') {
-              Analytics.track('tile_select', {
-                screen: 'series-pdp',
-                rail: 'episodes',
-                tileIndex: this._episodeIdx,
-                itemId: ep.id,
-                itemTitle: ep.title,
-                timeOnScreenMs: Date.now() - (this._screenEnterTime || Date.now()),
+            if (typeof trackEvent !== 'undefined') {
+              trackEvent('pdp_episode_select', {
+                episode_id:     ep.id,
+                episode_number: ep.episode,
               });
-              Analytics.track('navigation', { from: 'series-pdp', to: 'player', trigger: 'tile-select', itemId: ep.id });
             }
           } catch (e) { /* fail silently */ }
           App.navigate('player', { showId: this._show.id, episodeId: ep.id, episodeData: ep });

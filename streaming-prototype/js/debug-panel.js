@@ -208,6 +208,17 @@ const DebugPanel = (() => {
   let _focusIdx = 0;
   let _built = false;
   let _open = false;
+  let _eventLogEl = null;
+  let _eventLogEntries = [];
+  const MAX_LOG_ENTRIES = 20;
+
+  // Category colours for the event log (matches reporting.html scheme)
+  const _eventCategory = (name) => {
+    if (['proto_screen_view','rail_focus','card_focus','card_select','nav_back','nav_exit'].includes(name)) return 'nav';
+    if (['proto_video_start','video_pause','video_resume','video_seek','proto_video_complete','video_exit','player_error'].includes(name)) return 'player';
+    if (['feedback_triggered','feedback_submitted','feedback_dismissed'].includes(name)) return 'feedback';
+    return 'session';
+  };
 
   /* ---- DOM Build ---- */
 
@@ -231,12 +242,118 @@ const DebugPanel = (() => {
           <kbd>↵</kbd> activate
         </div>
       </div>
+      <div class="dp-session-panel" id="dp-session-panel">
+        <div class="dp-section"><div class="dp-section-title">H &mdash; Research Session</div></div>
+        <div class="dp-session-form">
+          <input class="dp-participant-input" id="dp-participant-input"
+                 type="text" placeholder="P-XXXX" maxlength="6"
+                 autocomplete="off" spellcheck="false" />
+          <select class="dp-device-select" id="dp-device-select">
+            <option value="desktop">Desktop</option>
+            <option value="mobile">Mobile</option>
+            <option value="vizio">Vizio</option>
+            <option value="firetv">Fire TV</option>
+            <option value="androidtv">Android TV</option>
+            <option value="tizen">Tizen</option>
+            <option value="webos">webOS</option>
+            <option value="roku">Roku</option>
+          </select>
+        </div>
+        <div class="dp-session-actions">
+          <div class="dp-btn dp-btn-start" id="dp-start-session">Start Session</div>
+          <div class="dp-btn dp-btn-danger" id="dp-end-session">End Session</div>
+        </div>
+        <div class="dp-session-status" id="dp-session-status">No active session</div>
+      </div>
       <div class="dp-body"></div>
+      <div class="dp-event-log-outer">
+        <div class="dp-section">
+          <div class="dp-section-title" style="display:flex;justify-content:space-between;align-items:center;">
+            <span>Live Events</span>
+            <span class="dp-copy-log" id="dp-copy-log" title="Copy last ${MAX_LOG_ENTRIES} events as JSON">Copy</span>
+          </div>
+        </div>
+        <div class="dp-event-log" id="dp-event-log"></div>
+      </div>
     `;
 
     _body = _panel.querySelector('.dp-body');
+    _eventLogEl = _panel.querySelector('#dp-event-log');
     _buildBody();
+    _wireSessionPanel();
+    _wireEventLog();
     document.body.appendChild(_panel);
+  }
+
+  function _wireSessionPanel() {
+    const startBtn  = _panel.querySelector('#dp-start-session');
+    const endBtn    = _panel.querySelector('#dp-end-session');
+    const input     = _panel.querySelector('#dp-participant-input');
+    const select    = _panel.querySelector('#dp-device-select');
+    const status    = _panel.querySelector('#dp-session-status');
+
+    // Pre-fill from sessionStorage if a session is already active
+    const existing = sessionStorage.getItem('participant_id');
+    if (existing) {
+      input.value  = existing;
+      status.textContent = `Active: ${existing}`;
+      status.className   = 'dp-session-status dp-session-active';
+    }
+
+    startBtn.addEventListener('click', () => {
+      const code    = input.value.trim().toUpperCase();
+      const profile = select.value;
+      if (!code) { input.focus(); return; }
+      if (typeof initSession !== 'undefined') {
+        initSession(code, profile);
+        status.textContent = `Active: ${code} · ${profile}`;
+        status.className   = 'dp-session-status dp-session-active';
+      }
+    });
+
+    endBtn.addEventListener('click', () => {
+      if (typeof endSession !== 'undefined') {
+        endSession();
+        status.textContent = 'Session ended';
+        status.className   = 'dp-session-status';
+      }
+    });
+
+    // Allow Enter in the input to start session
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') startBtn.click();
+      e.stopPropagation(); // prevent debug panel key nav
+    });
+  }
+
+  function _wireEventLog() {
+    // Subscribe to same-tab analytics events
+    window.addEventListener('analytics_event', (e) => {
+      const { eventName, params, ts } = e.detail;
+      _eventLogEntries.push({ eventName, params, ts });
+      if (_eventLogEntries.length > MAX_LOG_ENTRIES) _eventLogEntries.shift();
+      _appendEventRow(eventName, params, ts);
+    });
+
+    _panel.querySelector('#dp-copy-log').addEventListener('click', () => {
+      navigator.clipboard.writeText(JSON.stringify(_eventLogEntries, null, 2))
+        .then(() => { if (typeof showToast === 'function') showToast('Event log copied'); });
+    });
+  }
+
+  function _appendEventRow(eventName, params, ts) {
+    if (!_eventLogEl) return;
+    const cat  = _eventCategory(eventName);
+    const time = new Date(ts).toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const row  = document.createElement('div');
+    row.className = `dp-event-row dp-event-${cat}`;
+    row.innerHTML = `<span class="dp-event-time">${time}</span><span class="dp-event-name">${eventName}</span>`;
+    _eventLogEl.appendChild(row);
+    // Trim to max
+    while (_eventLogEl.children.length > MAX_LOG_ENTRIES) {
+      _eventLogEl.removeChild(_eventLogEl.firstChild);
+    }
+    _eventLogEl.scrollTop = _eventLogEl.scrollHeight;
   }
 
   function _buildBody() {
@@ -566,6 +683,7 @@ const DebugPanel = (() => {
     }
     _focusIdx = 0;
     _focusControl(0);
+    try { if (typeof trackEvent !== 'undefined') trackEvent('debug_panel_open', {}); } catch (e) {}
   }
 
   function close() {
@@ -663,6 +781,16 @@ const DebugPanel = (() => {
       return;
     }
   }, { capture: true });
+
+  // Fire config_changed event whenever a debug config value changes
+  document.addEventListener('debugconfig:change', (e) => {
+    try {
+      if (typeof trackEvent !== 'undefined') {
+        const { key, value } = e.detail;
+        trackEvent('config_changed', { config_key: key, config_value: String(value) });
+      }
+    } catch (err) { /* fail silently */ }
+  });
 
   return { open, close, toggle, isOpen };
 })();
