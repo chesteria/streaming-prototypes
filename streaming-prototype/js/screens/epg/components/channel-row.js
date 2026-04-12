@@ -3,8 +3,8 @@
    Per-instance scroll state keyed by channelId:genreId
    ============================================================ */
 
-const EPG_TILE_WIDTH = 240;
-const EPG_TILE_GAP   = 4;
+const EPG_TILE_WIDTH = 300;
+const EPG_TILE_GAP   = 3;
 const EPG_TILE_STEP  = EPG_TILE_WIDTH + EPG_TILE_GAP;
 
 /**
@@ -99,11 +99,17 @@ function createChannelRow(channel, genreId, programs, currentProgramIndex, onAna
   function setLogoFocused(focused) {
     _logoFocused = focused;
     logoCell.setFocused(focused);
+    rowEl.classList.toggle('is-row-focused', focused);
   }
 
   function setTileFocused(tileIndex, focused) {
     if (tileEls[tileIndex]) {
       tileEls[tileIndex].classList.toggle('is-focused', focused);
+    }
+    if (focused) {
+      rowEl.classList.add('is-row-focused');
+    } else if (!_logoFocused) {
+      rowEl.classList.remove('is-row-focused');
     }
   }
 

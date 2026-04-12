@@ -29,7 +29,7 @@
 /* ---- Genre Rail ---- */
 .epg-genre-rail {
   flex-shrink: 0;
-  height: 72px;
+  height: 60px;
   display: flex;
   align-items: center;
   padding: 0 var(--content-pad-x);
@@ -49,34 +49,36 @@
 .epg-genre-chip {
   display: inline-flex;
   align-items: center;
-  padding: 8px 20px;
+  padding: 7px 18px;
   border-radius: 20px;
-  border: 1.5px solid var(--color-surface);
-  background: var(--color-card-bg);
+  border: 1.5px solid rgba(255,255,255,0.18);
+  background: transparent;
   color: var(--color-text-secondary);
-  font-size: 15px;
+  font-size: 14px;
   font-family: var(--font-family);
   font-weight: 500;
   cursor: default;
   user-select: none;
   flex-shrink: 0;
-  transition: border-color var(--t-focus), color var(--t-focus), background var(--t-focus);
+  transition: border-color var(--t-focus), color var(--t-focus), background var(--t-focus), box-shadow var(--t-focus);
 }
 
 .epg-genre-chip.is-focused {
-  border-color: var(--color-focus-border);
+  border-color: rgba(255,255,255,0.8);
   color: var(--color-text-primary);
-  box-shadow: var(--focus-box-shadow);
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.25), 0 0 16px rgba(255,255,255,0.1);
 }
 
+/* Active chip — solid white fill, dark text */
 .epg-genre-chip.is-active {
-  border-color: rgba(255,255,255,0.5);
-  color: var(--color-text-primary);
-  background: var(--color-surface);
+  background: #fff;
+  color: var(--color-bg);
+  border-color: #fff;
+  font-weight: 600;
 }
 
 .epg-genre-chip.is-focused.is-active {
-  box-shadow: var(--focus-box-shadow);
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.4), 0 0 24px rgba(255,255,255,0.2);
 }
 
 /* ---- Grid scroll wrapper ---- */
@@ -97,35 +99,41 @@
 }
 
 .epg-genre-group-header {
-  padding: 14px var(--content-pad-x) 8px;
-  font-size: 13px;
+  padding: 8px var(--content-pad-x) 4px;
+  font-size: 11px;
   font-family: var(--font-family);
   font-weight: 600;
   color: var(--color-text-tertiary);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   user-select: none;
+  opacity: 0.6;
 }
 
 /* ---- Channel row ---- */
 .epg-channel-row {
   display: flex;
-  height: 88px;
-  margin-bottom: 4px;
+  align-items: stretch;
+  height: 76px;
+  margin-bottom: 3px;
   overflow: hidden;
+  transition: height 160ms ease;
+}
+
+.epg-channel-row.is-row-focused {
+  height: 120px;
 }
 
 /* ---- Logo cell (fixed left column) ---- */
 .epg-logo-cell {
   flex-shrink: 0;
-  width: 120px;
-  height: 88px;
+  width: 80px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  padding: 0 8px;
+  gap: 6px;
+  padding: 0 6px;
   border-radius: var(--tile-radius) 0 0 var(--tile-radius);
   background: var(--color-card-bg);
   cursor: default;
@@ -141,13 +149,13 @@
 }
 
 .epg-logo-placeholder {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   color: rgba(255,255,255,0.9);
   letter-spacing: 0.04em;
@@ -155,44 +163,32 @@
   flex-shrink: 0;
 }
 
+/* Channel name hidden — logo + heart only */
 .epg-logo-name {
-  font-size: 10px;
-  color: var(--color-text-tertiary);
-  font-family: var(--font-family);
-  text-align: center;
-  max-width: 100px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.2;
+  display: none;
 }
 
 .epg-logo-heart {
-  position: absolute;
-  bottom: 6px;
-  right: 8px;
-  font-size: 11px;
-  color: var(--color-text-tertiary);
-  opacity: 0.5;
+  font-size: 12px;
+  color: rgba(255,255,255,0.35);
   pointer-events: none;
   user-select: none;
+  line-height: 1;
 }
 
 /* ---- Tile track (horizontally scrollable area) ---- */
 .epg-tile-track-wrapper {
   flex: 1;
   overflow: hidden;
-  height: 88px;
   position: relative;
 }
 
 .epg-tile-track {
   display: flex;
-  gap: 4px;
+  gap: 3px;
   height: 100%;
-  padding-right: 60px; /* breathing room at right edge */
+  padding-right: 60px;
   will-change: transform;
-  /* return-to-now transition is added/removed via .is-returning class */
 }
 
 .epg-tile-track.is-returning {
@@ -202,27 +198,27 @@
 /* ---- Program tile ---- */
 .epg-program-tile {
   flex-shrink: 0;
-  width: 240px;
-  height: 88px;
+  width: 300px;
+  height: 100%;
   border-radius: 0;
   background: var(--color-card-bg);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 12px 14px;
+  padding: 12px 16px;
   cursor: default;
   border: 2px solid transparent;
-  transition: border-color var(--t-focus), box-shadow var(--t-focus), transform var(--t-focus);
+  transition: border-color var(--t-focus), box-shadow var(--t-focus);
   position: relative;
   overflow: hidden;
 }
 
-/* First tile in a track — connect flush to the logo cell */
+/* First tile connects flush to the logo cell */
 .epg-tile-track .epg-program-tile:first-child {
   border-radius: 0 var(--tile-radius) var(--tile-radius) 0;
 }
 
-/* Subsequent tiles get full radius on the right side */
+/* Subsequent tiles get full radius */
 .epg-tile-track .epg-program-tile:not(:first-child) {
   border-radius: var(--tile-radius);
 }
@@ -230,12 +226,18 @@
 .epg-program-tile.is-focused {
   border-color: var(--color-focus-border);
   box-shadow: var(--focus-box-shadow);
-  transform: scale(1.02);
-  z-index: 2;
 }
 
 .epg-program-tile.is-current {
   background: var(--color-surface);
+}
+
+/* ---- Tile top (title + description) ---- */
+.epg-tile-top {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-height: 0;
 }
 
 .epg-tile-title {
@@ -249,11 +251,31 @@
   line-height: 1.3;
 }
 
+/* Description — hidden by default, revealed when row is focused */
+.epg-tile-desc {
+  display: none;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  font-family: var(--font-family);
+  line-height: 1.45;
+  margin-top: 4px;
+  overflow: hidden;
+  white-space: normal;
+}
+
+.epg-channel-row.is-row-focused .epg-tile-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* ---- Tile bottom (time + indicators) ---- */
 .epg-tile-bottom {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 6px;
+  flex-shrink: 0;
 }
 
 .epg-tile-time {
@@ -295,15 +317,16 @@
   flex-shrink: 0;
 }
 
-/* ---- More-info overlay ---- */
+/* ---- More-info overlay — right-side panel ---- */
 .epg-more-info-overlay {
   position: fixed;
   inset: 0;
   z-index: 100;
   display: flex;
   align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.75);
+  justify-content: flex-end;
+  padding-right: 72px;
+  background: rgba(0, 0, 0, 0.65);
   opacity: 0;
   pointer-events: none;
   transition: opacity 200ms ease;
@@ -315,147 +338,139 @@
 }
 
 .epg-more-info-panel {
-  width: 640px;
-  background: var(--color-card-bg);
+  width: 400px;
+  background: #1c2b3a;
   border-radius: 16px;
-  padding: 40px;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.7);
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  box-shadow: 0 24px 80px rgba(0,0,0,0.8);
-  border: 1px solid var(--color-surface);
 }
 
-.epg-more-info-header {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.epg-more-info-logo {
-  width: 64px;
-  height: 64px;
-  border-radius: 10px;
+/* Thumbnail area — channel color fills it, initials centered */
+.epg-more-info-thumbnail {
+  width: 100%;
+  height: 168px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.epg-more-info-thumb-logo {
+  width: 72px;
+  height: 72px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
   font-weight: 700;
   color: rgba(255,255,255,0.9);
   letter-spacing: 0.04em;
   font-family: var(--font-family);
-  flex-shrink: 0;
+  background: rgba(0,0,0,0.25);
 }
 
-.epg-more-info-channel-name {
-  font-size: 13px;
-  color: var(--color-text-secondary);
-  font-family: var(--font-family);
-  margin-bottom: 4px;
+/* Panel body */
+.epg-more-info-body {
+  padding: 22px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .epg-more-info-program-title {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
   color: var(--color-text-primary);
   font-family: var(--font-family);
   line-height: 1.2;
 }
 
-.epg-more-info-meta {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.epg-more-info-rating {
-  font-size: 11px;
-  color: var(--color-text-tertiary);
-  font-family: var(--font-family);
-  border: 1px solid var(--color-surface);
-  border-radius: 3px;
-  padding: 2px 7px;
-}
-
-.epg-more-info-time-str {
+.epg-more-info-description {
   font-size: 13px;
   color: var(--color-text-secondary);
   font-family: var(--font-family);
-}
-
-.epg-more-info-description {
-  font-size: 14px;
-  color: var(--color-text-secondary);
-  font-family: var(--font-family);
-  line-height: 1.6;
+  line-height: 1.55;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-/* Progress bar (currently-playing variant only) */
-.epg-more-info-progress-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.epg-more-info-progress-bar {
-  height: 4px;
-  border-radius: 2px;
-  background: var(--color-surface);
-  overflow: hidden;
-}
-
-.epg-more-info-progress-fill {
-  height: 100%;
-  border-radius: 2px;
-  background: var(--color-progress-watch);
-  transition: width 1s linear;
-}
-
-.epg-more-info-remaining {
+.epg-more-info-meta-line {
   font-size: 12px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-tertiary);
   font-family: var(--font-family);
 }
 
-/* CTA */
+/* Actions section */
+.epg-more-info-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.epg-more-info-favorite {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  font-family: var(--font-family);
+  padding: 4px 0;
+  cursor: default;
+  user-select: none;
+}
+
+.epg-more-info-favorite-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* CTA button */
 .epg-more-info-cta {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 14px 32px;
+  gap: 10px;
+  padding: 14px 28px;
   border-radius: 10px;
   background: var(--color-btn-default-bg);
   color: var(--color-btn-default-text);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   font-family: var(--font-family);
   cursor: default;
   border: 2px solid transparent;
-  align-self: flex-start;
   transition: border-color var(--t-focus), box-shadow var(--t-focus), background var(--t-focus), color var(--t-focus);
 }
 
 .epg-more-info-cta.is-focused {
   background: var(--color-focus-btn-bg);
   color: var(--color-focus-btn-text);
-  border-color: var(--color-focus-border);
-  box-shadow: var(--focus-box-shadow);
+  border-color: transparent;
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.35);
+}
+
+.epg-more-info-cta-icon {
+  font-size: 13px;
+  flex-shrink: 0;
 }
 
 /* ---- Dim state when overlay is open ---- */
 .screen-epg.epg-overlay-open .epg-genre-rail,
 .screen-epg.epg-overlay-open .epg-grid-wrapper {
-  opacity: 0.4;
+  opacity: 0.35;
   transition: opacity 200ms ease;
 }
 
 /* ---- Debug toggle: rating chips off ---- */
 .epg-hide-ratings .epg-tile-rating,
-.epg-hide-ratings .epg-more-info-rating {
+.epg-hide-ratings .epg-more-info-meta-line {
   display: none;
 }
 

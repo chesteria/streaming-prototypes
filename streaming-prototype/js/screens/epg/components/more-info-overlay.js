@@ -63,41 +63,35 @@ function createMoreInfoOverlay(onClose, onAnalytics) {
 
     const isCurrentlyPlaying = variant === 'currently_playing';
 
-    const progressPct = isCurrentlyPlaying
-      ? _progressPercent(program.startTime, program.endTime)
-      : 0;
+    const timeStr = isCurrentlyPlaying
+      ? _formatRemainingTime(program.endTime)
+      : _formatScheduledWindow(program.startTime, program.endTime);
 
-    const timeContent = isCurrentlyPlaying
-      ? `
-          <div class="epg-more-info-progress-wrap">
-            <div class="epg-more-info-progress-bar">
-              <div class="epg-more-info-progress-fill" style="width:${progressPct}%"></div>
-            </div>
-            <div class="epg-more-info-remaining">${_escEPG(_formatRemainingTime(program.endTime))}</div>
-          </div>
-        `
-      : `<div class="epg-more-info-time-str">${_escEPG(_formatScheduledWindow(program.startTime, program.endTime))}</div>`;
+    const metaLine = `${_escEPG(timeStr)} &nbsp;·&nbsp; ${_escEPG(program.rating)}`;
 
-    const ctaLabel = isCurrentlyPlaying ? 'Watch Live' : 'Watch Channel';
-    const ctaType  = isCurrentlyPlaying ? 'watch_live'  : 'watch_channel';
+    const ctaLabel   = isCurrentlyPlaying ? 'Watch Live'    : 'Watch Channel';
+    const ctaIcon    = isCurrentlyPlaying ? '&#9889;'       : '&#9654;';  // ⚡ or ▶
+    const ctaType    = isCurrentlyPlaying ? 'watch_live'    : 'watch_channel';
 
     panelEl.innerHTML = `
-      <div class="epg-more-info-header">
-        <div class="epg-more-info-logo" style="background:${_escEPG(channel.color)};">
-          ${_escEPG(channel.initials)}
-        </div>
-        <div>
-          <div class="epg-more-info-channel-name">${_escEPG(channel.name)}</div>
-          <div class="epg-more-info-program-title">${_escEPG(program.title)}</div>
+      <div class="epg-more-info-thumbnail" style="background:${_escEPG(channel.color)};">
+        <div class="epg-more-info-thumb-logo">${_escEPG(channel.initials)}</div>
+      </div>
+      <div class="epg-more-info-body">
+        <div class="epg-more-info-program-title">${_escEPG(program.title)}</div>
+        <div class="epg-more-info-description">${_escEPG(program.description)}</div>
+        <div class="epg-more-info-meta-line">${metaLine}</div>
+        <div class="epg-more-info-actions">
+          <div class="epg-more-info-favorite">
+            <span class="epg-more-info-favorite-icon">&#9825;</span>
+            Favorite Channel
+          </div>
+          <button class="epg-more-info-cta is-focused" data-cta-type="${_escEPG(ctaType)}">
+            <span class="epg-more-info-cta-icon">${ctaIcon}</span>
+            ${_escEPG(ctaLabel)}
+          </button>
         </div>
       </div>
-      <div class="epg-more-info-meta">
-        <span class="epg-more-info-rating">${_escEPG(program.rating)}</span>
-        ${!isCurrentlyPlaying ? `<span class="epg-more-info-time-str">${_escEPG(_formatScheduledWindow(program.startTime, program.endTime))}</span>` : ''}
-      </div>
-      <div class="epg-more-info-description">${_escEPG(program.description)}</div>
-      ${isCurrentlyPlaying ? timeContent : ''}
-      <button class="epg-more-info-cta is-focused" data-cta-type="${_escEPG(ctaType)}">${_escEPG(ctaLabel)}</button>
     `;
 
     overlayEl.classList.add('is-open');

@@ -42,7 +42,10 @@ function createProgramTile(program, isCurrentlyPlaying, channel) {
   const watchingVisible = isCurrentlyPlaying && channel && channel.currentlyWatching;
 
   el.innerHTML = `
-    <div class="epg-tile-title">${_escEPG(program.title)}</div>
+    <div class="epg-tile-top">
+      <div class="epg-tile-title">${_escEPG(program.title)}</div>
+      <div class="epg-tile-desc">${_escEPG(program.description || '')}</div>
+    </div>
     <div class="epg-tile-bottom">
       <span class="epg-tile-time">${_escEPG(timeStr)}</span>
       <div style="display:flex;align-items:center;gap:6px;">
