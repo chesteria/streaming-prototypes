@@ -195,7 +195,7 @@ Multi-genre channels appear in multiple genre groups with independent tile scrol
 | Element | Value | Notes |
 |---------|-------|-------|
 | Guide left offset | `content-pad-x (60px) + 70px = 130px` from screen left | Grid indented 70px beyond the genre rail |
-| Top gap (rail → first row) | `40px` fixed | Applied as `padding-top` on the grid wrapper — never scrolls away |
+| Top gap (rail → first row) | `10px` fixed | Applied as `margin-top` on the grid wrapper — outside the overflow clip boundary, so rows scrolling off the top clip at y=0 immediately with no peeking |
 | Channel row height (collapsed) | `168px` | |
 | Channel row height (focused) | `360px` | Smooth CSS height transition |
 | Row gap | `8px` | `margin-bottom` on each row |
@@ -215,7 +215,7 @@ Multi-genre channels appear in multiple genre groups with independent tile scrol
 |---------|------|-------|
 | Main nav tabs | 10px | Matches genre chip |
 | Genre chip | 10px | |
-| Genre group header | 36px | |
+| Genre group header | hidden | `display: none` — genre transitions shown via rail chip only |
 | Program tile title | 34px | `white-space: nowrap` + `text-overflow: ellipsis` |
 | Program tile description | 10px | Visible only when row is focused |
 | Program tile time | 39px | |

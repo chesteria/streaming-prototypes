@@ -109,7 +109,7 @@ JS object conforming to the screen contract:
 | Measurement | Value | Rule |
 |-------------|-------|------|
 | Guide left offset | 130px from screen left | `content-pad-x` (60px) + 70px additional indent |
-| Rail → first row gap | 40px fixed | `padding-top` on grid wrapper — never scrolls away |
+| Rail → first row gap | 10px fixed | `margin-top` on grid wrapper — outside overflow clip, rows clip at y=0 with no peeking |
 | Row height (collapsed) | 168px | |
 | Row height (focused) | 360px | CSS height transition 180ms |
 | Row gap | 8px | `margin-bottom` |
@@ -137,7 +137,7 @@ Grid → Rail → Nav (BACK progresses through each context in order)
 |---------|------|-------|
 | Main nav tabs | 10px | Matches genre chip |
 | Genre chip | 10px | |
-| Genre group header | 36px | |
+| Genre group header | hidden | `display: none` — genre changes reflected by rail only |
 | Program tile title | 34px | `nowrap` + `text-overflow: ellipsis` |
 | Program tile description | 10px | Visible only when row is focused |
 | Program tile time | 39px | |

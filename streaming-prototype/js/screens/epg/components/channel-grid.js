@@ -38,7 +38,7 @@ function createChannelGrid(genres, epgData, onAnalytics) {
   // Vertical scroll position
   let _scrollY = 0;
   const ROW_HEIGHT    = 168 + 8;  // row height (168px) + margin-bottom (8px)
-  const HEADER_HEIGHT = 20 + 43 + 10; // padding-top + approx text height (36px font × 1.2) + padding-bottom
+  const HEADER_HEIGHT = 0;        // genre group headers hidden (display: none)
 
   // Compute approximate Y offset for a given flat row index
   function _rowY(flatIndex) {
