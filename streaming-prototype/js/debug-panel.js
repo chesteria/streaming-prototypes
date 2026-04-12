@@ -499,7 +499,13 @@ const DebugPanel = (() => {
     if (action === 'showWelcomeScreen') {
       close();
       if (typeof WelcomeScreen !== 'undefined') {
-        WelcomeScreen.show();
+        // Defer show() past the current keydown event. Without this, the debug panel's
+        // keydown listener (registered first) calls show() — setting _isVisible=true —
+        // and then the welcome screen's listener fires on the SAME event, sees
+        // _isVisible=true, and immediately calls hide(). The rAF in show() then adds
+        // the 'visible' class after hide() already cleared it, leaving the overlay
+        // visually open but with _isVisible=false and no way to dismiss it.
+        setTimeout(() => WelcomeScreen.show(), 0);
       } else {
         if (typeof showToast === 'function') showToast('Welcome screen not loaded');
       }
