@@ -172,10 +172,20 @@ managed within a single registered screen.
 
 | Context | Description | Entry |
 |---------|-------------|-------|
-| `nav` | EPG top nav bar | Initial; rail BACK; grid BACK |
-| `rail` | Genre chip strip | Nav DOWN |
+| `nav` | EPG top nav bar | Initial; rail BACK |
+| `rail` | Genre chip strip | Nav DOWN; grid BACK |
 | `grid` | Channel/program grid | Rail DOWN; chip select |
 | overlay | More Info overlay | Grid OK on logo cell |
+
+**BACK stack (grid → rail → nav):**
+
+- Grid BACK → Rail: blurs row highlight only — does **not** call `returnToNow()`. Tile scroll position is preserved. `_lastRowIndex` is saved.
+- Rail DOWN → Grid: re-enters at `_lastRowIndex` with tile scroll position intact.
+- Rail BACK → Nav: unchanged.
+
+**Grid scroll (pinned focus):**
+
+The focused row is always pinned at the top of the visible grid area (below the 40px `padding-top`). On focus change, `scrollToRow(flatIndex)` applies `translateY(-rowY)` to `.epg-grid-scroll`. Rows above slide up under the genre rail; rows below slide up into view. Animated via `transition: transform 300ms ease`.
 
 **Row state keying:** Each `channel-row.js` instance is keyed by `${channelId}:${genreId}`.
 Multi-genre channels appear in multiple genre groups with independent tile scroll state.
@@ -189,7 +199,7 @@ Multi-genre channels appear in multiple genre groups with independent tile scrol
 | Channel row height (collapsed) | `168px` | |
 | Channel row height (focused) | `360px` | Smooth CSS height transition |
 | Row gap | `8px` | `margin-bottom` on each row |
-| Logo cell width | `100px` | Standalone card — **not joined to program tiles** |
+| Logo cell width | `190px` | Standalone card — **not joined to program tiles** |
 | Logo cell gap from tiles | `12px` | `gap` on the row flex container |
 | Program tile width | `725px` | `EPG_TILE_WIDTH` constant in `channel-row.js` |
 | Tile gap (between tiles) | `12px` | `EPG_TILE_GAP` constant; matches row gap |
@@ -199,7 +209,20 @@ Multi-genre channels appear in multiple genre groups with independent tile scrol
 **Key design rule:** The logo cell and program meta tiles are **completely separate cards** with a
 12px gap between them. They must never be joined, flush, or share edges.
 
-**Key events fired:** 16 EPG-specific events — see `ANALYTICS_REGISTRY.md` for full list.
+**Font sizes:**
+
+| Element | Size |
+|---------|------|
+| Genre chip | 42px |
+| Genre group header | 36px |
+| Program tile title | 45px (wraps — `white-space: normal`, no ellipsis) |
+| Program tile description | 39px |
+| Program tile time | 39px |
+| Program tile rating | 33px |
+| Logo cell initials (collapsed) | 48px |
+| Logo cell initials (focused row) | 60px |
+
+**Key events fired:** 17 EPG-specific events — see `ANALYTICS_REGISTRY.md` for full list.
 
 **Debug overrides:** `debug_epgGenreOrder`, `debug_epgGenreEnabled_*`, `debug_epgGenreLabel_*`,
 `debug_epgGenreMap`, `debug_epgChannels`, `epgShowRatings`, `epgShowGenreHeaders`
@@ -298,7 +321,7 @@ Every event envelope includes: `event`, `timestamp`, `sessionId`, `participantId
 |----------------|--------|
 | App boot | `session_start`, `session_end` |
 | Lander | `focus_change`, `rail_engagement`, `tile_select`, `scroll_depth`, `dead_end`, `navigation`, `epg_nav_to_live` |
-| EPG | `epg_screen_entered`, `epg_screen_exited`, `epg_nav_from_live`, `epg_back_to_nav`, `epg_channel_row_focused`, `epg_channel_logo_focused`, `epg_program_tile_focused`, `epg_program_tile_scrubbed`, `epg_row_returned_to_now`, `epg_genre_chip_focused`, `epg_genre_selected`, `epg_genre_anchor_updated`, `epg_more_info_opened`, `epg_more_info_closed`, `epg_more_info_cta_activated` |
+| EPG | `epg_screen_entered`, `epg_screen_exited`, `epg_nav_from_live`, `epg_back_to_nav`, `epg_back_to_rail`, `epg_channel_row_focused`, `epg_channel_logo_focused`, `epg_program_tile_focused`, `epg_program_tile_scrubbed`, `epg_row_returned_to_now`, `epg_genre_chip_focused`, `epg_genre_selected`, `epg_genre_anchor_updated`, `epg_more_info_opened`, `epg_more_info_closed`, `epg_more_info_cta_activated` |
 | Series PDP | `navigation`, `focus_change`, `feature_interaction`, `tile_select`, `dead_end` |
 | Player | `navigation`, `playback_start`, `playback_pause`, `playback_complete`, `playback_scrub`, `controls_interaction`, `dead_end` |
 | Feedback overlay | `user_feedback` |

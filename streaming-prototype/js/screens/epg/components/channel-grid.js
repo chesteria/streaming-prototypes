@@ -37,8 +37,8 @@ function createChannelGrid(genres, epgData, onAnalytics) {
 
   // Vertical scroll position
   let _scrollY = 0;
-  const ROW_HEIGHT    = 88 + 4; // height + margin-bottom
-  const HEADER_HEIGHT = 14 + 8 + 13; // padding-top + padding-bottom + approx text
+  const ROW_HEIGHT    = 168 + 8;  // row height (168px) + margin-bottom (8px)
+  const HEADER_HEIGHT = 20 + 43 + 10; // padding-top + approx text height (36px font × 1.2) + padding-bottom
 
   // Compute approximate Y offset for a given flat row index
   function _rowY(flatIndex) {

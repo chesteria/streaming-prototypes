@@ -90,7 +90,9 @@ const EPGScreen = (() => {
     return _grid?.allRows[_activeRowIndex]?.row || null;
   }
 
-  function _blurCurrentRow() {
+  // Visual-only blur — removes focus highlight but does NOT reset tile scroll position.
+  // Used when navigating BACK to rail so the user's place is preserved for re-entry.
+  function _blurCurrentRowVisual() {
     const row = _activeRow();
     if (!row) return;
     if (row.isLogoFocused()) {
@@ -98,7 +100,14 @@ const EPGScreen = (() => {
     } else {
       row.setTileFocused(row.getFocusedTileIndex(), false);
     }
-    row.returnToNow();
+  }
+
+  // Full blur — removes focus highlight AND resets tile scroll to currently-playing.
+  // Used when navigating UP/DOWN between rows.
+  function _blurCurrentRow() {
+    _blurCurrentRowVisual();
+    const row = _activeRow();
+    if (row) row.returnToNow();
   }
 
   function _enterRow(rowIndex, startInLogo) {
@@ -198,11 +207,13 @@ const EPGScreen = (() => {
       const totalRows   = _grid.allRows.length;
 
       if (action === 'BACK') {
-        _blurCurrentRow();
-        _focusContext = 'nav';
-        _navZone.resetToLive();
-        _navZone.activate();
-        _track('epg_back_to_nav', { from_surface: 'grid' });
+        // Preserve tile scroll position — do NOT call returnToNow here.
+        // User's position is restored when they press DOWN from the rail.
+        _blurCurrentRowVisual();
+        _lastRowIndex = _activeRowIndex;
+        _focusContext = 'rail';
+        _rail.setFocusedChip(_rail.getFocusedIndex());
+        _track('epg_back_to_rail', { from_surface: 'grid' });
         return;
       }
 

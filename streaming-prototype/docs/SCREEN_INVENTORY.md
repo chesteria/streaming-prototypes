@@ -113,7 +113,7 @@ JS object conforming to the screen contract:
 | Row height (collapsed) | 168px | |
 | Row height (focused) | 360px | CSS height transition 180ms |
 | Row gap | 8px | `margin-bottom` |
-| Logo cell width | 100px | Standalone rounded card |
+| Logo cell width | 190px | Standalone rounded card |
 | Logo-to-tile gap | 12px | `gap` on row flex container |
 | Program tile width | 725px | `EPG_TILE_WIDTH` in `channel-row.js` |
 | Logo cell radius | `--tile-radius` all corners | **Never flush to adjacent elements** |
@@ -121,6 +121,28 @@ JS object conforming to the screen contract:
 
 > **Design rule:** Logo cell and program tiles are completely independent cards separated by 12px.
 > They must never be joined, flush, or share an edge.
+
+**EPG Focus navigation (BACK stack):**
+
+Grid → Rail → Nav (BACK progresses through each context in order)
+
+- Grid BACK: blurs row visually, preserves tile scroll position, focuses rail. Does **not** call `returnToNow()`.
+- Rail BACK: blurs chips, focuses nav bar.
+- Rail DOWN: restores grid at `_lastRowIndex` — the row and tile position from before BACK was pressed.
+- Grid scroll: focused row is always pinned at top of visible grid area; rows above slide under the genre rail; rows below slide up into view. Animated via `transition: transform 300ms ease` on `.epg-grid-scroll`.
+
+**EPG Font sizes:**
+
+| Element | Size |
+|---------|------|
+| Genre chip | 42px |
+| Genre group header | 36px |
+| Program tile title | 45px (wraps — no ellipsis) |
+| Program tile description | 39px |
+| Program tile time | 39px |
+| Program tile rating | 33px |
+| Logo cell initials (collapsed) | 48px |
+| Logo cell initials (focused) | 60px |
 
 ---
 
