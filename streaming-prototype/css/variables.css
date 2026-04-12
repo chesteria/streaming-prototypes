@@ -34,10 +34,10 @@
   --color-btn-default-text: #FFFFFF;
 
   /* --- Typography --- */
-  --font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-family: 'Roboto', -apple-system, "Segoe UI", sans-serif;
 
   /* --- Spacing --- */
-  --nav-height:            60px;
+  --nav-height:            120px;
   --content-pad-x:         60px;
   --rail-gap:              16px;
 

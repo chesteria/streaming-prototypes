@@ -36,7 +36,7 @@ JS object conforming to the screen contract:
 | **Entry points** | App boot (always); `App.navigate('lander')` from EPG nav For You tab |
 | **Exit points** | Nav Live tab → `epg`; tile select → `series-pdp`; tile select (channel) → `player` |
 | **Params accepted** | None (scroll/focus state preserved on container element between visits) |
-| **Focus zones** | `nav` (top nav bar), then one zone per visible rail (index 1…N) |
+| **Focus zones** | `nav` (top nav bar, 120px), then one zone per visible rail (index 1…N) |
 | **Key files loaded** | `lander.js` (monolithic — all rail builders inline) |
 | **Data dependencies** | `DataStore.getLanderConfig()`, `DataStore.getAllShows()`, `DataStore.getAllChannels()`, `DataStore.getAllCities()` |
 | **Debug overrides** | `debug_landerConfig` (rail order/visibility), `debug_catalog` (show/channel data) |

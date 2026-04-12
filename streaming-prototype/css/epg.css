@@ -22,14 +22,14 @@
 .screen-epg .nav-tab[data-nav-tab="live"].active {
   background: var(--color-nav-pill-bg);
   color: var(--color-nav-pill-text);
-  border-radius: 20px;
-  padding: 6px 18px;
+  border-radius: 40px;
+  padding: 12px 36px;
 }
 
 /* ---- Genre Rail ---- */
 .epg-genre-rail {
   flex-shrink: 0;
-  height: 60px;
+  height: 120px;
   display: flex;
   align-items: center;
   padding: 0 var(--content-pad-x) 0 272px;  /* 272px = grid padding-left(70) + logo cell(190) + gap(12) — aligns first chip with program column */

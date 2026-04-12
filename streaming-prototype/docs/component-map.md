@@ -5,6 +5,15 @@
 
 ---
 
+## Design Tokens
+
+| Token | Value | Notes |
+|-------|-------|-------|
+| `--font-family` | `'Roboto', -apple-system, "Segoe UI", sans-serif` | Loaded via Google Fonts (400/500/700). All user-facing text uses this variable. |
+| `--nav-height` | `120px` | Top nav bar height — doubled from original 60px. EPG genre rail matches this height. Lander padding-top auto-adjusts via `calc(var(--nav-height) + 135px)`. |
+
+---
+
 ## Overview
 
 The app has no component framework and no shared `js/components/` folder.
@@ -215,8 +224,8 @@ Multi-genre channels appear in multiple genre groups with independent tile scrol
 
 | Element | Size | Notes |
 |---------|------|-------|
-| Main nav tabs | 10px | Matches genre chip |
-| Genre chip | 10px | |
+| Main nav tabs | 40px | Matches genre chip; nav doubled to 120px total height |
+| Genre chip | 20px | EPG genre rail height matches nav: 120px |
 | Genre group header | hidden | `display: none` — genre transitions shown via rail chip only |
 | Program tile title | 34px | `white-space: nowrap` + `text-overflow: ellipsis` |
 | Program tile description | 10px | Visible only when row is focused |
