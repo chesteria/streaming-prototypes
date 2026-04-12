@@ -3,8 +3,8 @@
    Per-instance scroll state keyed by channelId:genreId
    ============================================================ */
 
-const EPG_TILE_WIDTH = 300;
-const EPG_TILE_GAP   = 3;
+const EPG_TILE_WIDTH = 725;
+const EPG_TILE_GAP   = 12;  /* gap between tiles matches channel-row gap */
 const EPG_TILE_STEP  = EPG_TILE_WIDTH + EPG_TILE_GAP;
 
 /**

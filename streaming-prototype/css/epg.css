@@ -86,6 +86,8 @@
   flex: 1;
   overflow: hidden;
   position: relative;
+  padding-left: 70px;    /* guide indented 70px from left edge of screen content */
+  padding-top: 40px;     /* fixed 40px gap between genre rail and first channel row, always */
 }
 
 .epg-grid-scroll {
@@ -114,6 +116,7 @@
 .epg-channel-row {
   display: flex;
   align-items: stretch;
+  gap: 12px;             /* logo cell and program tiles are separate — never touching */
   height: 168px;
   margin-bottom: 8px;
   overflow: hidden;
@@ -125,6 +128,7 @@
 }
 
 /* ---- Logo cell (fixed left column) ---- */
+/* Logo cell is a standalone card — completely separate from program tiles */
 .epg-logo-cell {
   flex-shrink: 0;
   width: 100px;
@@ -134,7 +138,7 @@
   justify-content: center;
   gap: 10px;
   padding: 0 8px;
-  border-radius: var(--tile-radius) 0 0 var(--tile-radius);
+  border-radius: var(--tile-radius);   /* all corners — not joined to anything */
   background: var(--color-card-bg);
   cursor: default;
   position: relative;
@@ -205,7 +209,7 @@
 /* ---- Program tile ---- */
 .epg-program-tile {
   flex-shrink: 0;
-  width: 300px;
+  width: 725px;
   height: 100%;
   border-radius: 0;
   background: var(--color-card-bg);
@@ -220,13 +224,8 @@
   overflow: hidden;
 }
 
-/* First tile connects flush to the logo cell */
-.epg-tile-track .epg-program-tile:first-child {
-  border-radius: 0 var(--tile-radius) var(--tile-radius) 0;
-}
-
-/* Subsequent tiles get full radius */
-.epg-tile-track .epg-program-tile:not(:first-child) {
+/* All tiles have full radius — logo cell is a separate card, not adjacent */
+.epg-tile-track .epg-program-tile {
   border-radius: var(--tile-radius);
 }
 

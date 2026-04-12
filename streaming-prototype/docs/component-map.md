@@ -180,6 +180,25 @@ managed within a single registered screen.
 **Row state keying:** Each `channel-row.js` instance is keyed by `${channelId}:${genreId}`.
 Multi-genre channels appear in multiple genre groups with independent tile scroll state.
 
+**Layout dimensions (1920×1080):**
+
+| Element | Value | Notes |
+|---------|-------|-------|
+| Guide left offset | `content-pad-x (60px) + 70px = 130px` from screen left | Grid indented 70px beyond the genre rail |
+| Top gap (rail → first row) | `40px` fixed | Applied as `padding-top` on the grid wrapper — never scrolls away |
+| Channel row height (collapsed) | `168px` | |
+| Channel row height (focused) | `360px` | Smooth CSS height transition |
+| Row gap | `8px` | `margin-bottom` on each row |
+| Logo cell width | `100px` | Standalone card — **not joined to program tiles** |
+| Logo cell gap from tiles | `12px` | `gap` on the row flex container |
+| Program tile width | `725px` | `EPG_TILE_WIDTH` constant in `channel-row.js` |
+| Tile gap (between tiles) | `12px` | `EPG_TILE_GAP` constant; matches row gap |
+| Logo cell border-radius | `var(--tile-radius)` all corners | Full radius — not flush to any adjacent element |
+| Program tile border-radius | `var(--tile-radius)` all corners | Full radius — not flush to logo cell |
+
+**Key design rule:** The logo cell and program meta tiles are **completely separate cards** with a
+12px gap between them. They must never be joined, flush, or share edges.
+
 **Key events fired:** 16 EPG-specific events — see `ANALYTICS_REGISTRY.md` for full list.
 
 **Debug overrides:** `debug_epgGenreOrder`, `debug_epgGenreEnabled_*`, `debug_epgGenreLabel_*`,

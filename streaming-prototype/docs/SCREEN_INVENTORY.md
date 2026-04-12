@@ -104,6 +104,24 @@ JS object conforming to the screen contract:
 | **Analytics on enter** | `epg_screen_entered` |
 | **Analytics on exit** | `epg_screen_exited` (dwell_ms, exit_destination) |
 
+**EPG Grid layout dimensions (1920×1080):**
+
+| Measurement | Value | Rule |
+|-------------|-------|------|
+| Guide left offset | 130px from screen left | `content-pad-x` (60px) + 70px additional indent |
+| Rail → first row gap | 40px fixed | `padding-top` on grid wrapper — never scrolls away |
+| Row height (collapsed) | 168px | |
+| Row height (focused) | 360px | CSS height transition 180ms |
+| Row gap | 8px | `margin-bottom` |
+| Logo cell width | 100px | Standalone rounded card |
+| Logo-to-tile gap | 12px | `gap` on row flex container |
+| Program tile width | 725px | `EPG_TILE_WIDTH` in `channel-row.js` |
+| Logo cell radius | `--tile-radius` all corners | **Never flush to adjacent elements** |
+| Program tile radius | `--tile-radius` all corners | **Never flush to logo cell** |
+
+> **Design rule:** Logo cell and program tiles are completely independent cards separated by 12px.
+> They must never be joined, flush, or share an edge.
+
 ---
 
 ## Non-Screen Overlays
