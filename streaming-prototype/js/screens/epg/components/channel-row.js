@@ -4,7 +4,7 @@
    ============================================================ */
 
 const EPG_TILE_WIDTH = 725;
-const EPG_TILE_GAP   = 3;   /* must match gap: 3px on .epg-tile-track in epg.css */
+const EPG_TILE_GAP   = 16;  /* must match gap: 16px on .epg-tile-track in epg.css */
 const EPG_TILE_STEP  = EPG_TILE_WIDTH + EPG_TILE_GAP;
 
 /**
@@ -37,6 +37,11 @@ function createChannelRow(channel, genreId, programs, currentProgramIndex, onAna
   const track = document.createElement('div');
   track.className = 'epg-tile-track';
   trackWrap.appendChild(track);
+
+  // Pinned focus ring — never moves, tiles slide into it
+  const focusRing = document.createElement('div');
+  focusRing.className = 'epg-focus-ring';
+  trackWrap.appendChild(focusRing);
 
   rowEl.appendChild(logoCell.element);
   rowEl.appendChild(trackWrap);
@@ -103,9 +108,8 @@ function createChannelRow(channel, genreId, programs, currentProgramIndex, onAna
   }
 
   function setTileFocused(tileIndex, focused) {
-    if (tileEls[tileIndex]) {
-      tileEls[tileIndex].classList.toggle('is-focused', focused);
-    }
+    // Show/hide the pinned focus ring — individual tiles do not get the border
+    focusRing.classList.toggle('is-visible', focused);
     if (focused) {
       rowEl.classList.add('is-row-focused');
     } else if (!_logoFocused) {

@@ -1,8 +1,8 @@
 {
   "version": "1.7.0",
-  "buildNumber": 43,
-  "buildDate": "2026-04-13T13:26:48Z",
-  "gitCommit": "5c8770f",
+  "buildNumber": 44,
+  "buildDate": "2026-04-13T13:31:55Z",
+  "gitCommit": "b2c606b",
   "gitBranch": "main",
   "phase": "Phase 2",
   "label": "Viewport Scaling"

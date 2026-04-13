@@ -208,10 +208,30 @@
   height: 100%;
   padding-right: 60px;
   will-change: transform;
+  transition: transform 200ms ease;
 }
 
 .epg-tile-track.is-returning {
   transition: transform 250ms ease-out;
+}
+
+/* ---- Pinned focus ring — sits above the tile track, never moves ---- */
+.epg-focus-ring {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 725px;
+  height: 100%;
+  border-radius: var(--tile-radius);
+  border: 2px solid transparent;
+  pointer-events: none;
+  z-index: 2;
+  transition: border-color var(--t-focus), box-shadow var(--t-focus);
+}
+
+.epg-focus-ring.is-visible {
+  border-color: var(--color-focus-border);
+  box-shadow: var(--focus-box-shadow);
 }
 
 /* ---- Program tile ---- */
@@ -237,10 +257,7 @@
   border-radius: var(--tile-radius);
 }
 
-.epg-program-tile.is-focused {
-  border-color: var(--color-focus-border);
-  box-shadow: var(--focus-box-shadow);
-}
+/* focus border is now handled by .epg-focus-ring — individual tiles do not highlight */
 
 .epg-program-tile.is-current {
   background: var(--color-surface);
