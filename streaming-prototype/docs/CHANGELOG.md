@@ -8,6 +8,12 @@ Version numbers follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html
 
 ## [Unreleased]
 
+### Changed
+- **Device support matrix formalized** in new `docs/SUPPORTED_DEVICES.md`. Documents the real targets: Samsung Tizen 5.5+, VIZIO SmartCast 2019+, AndroidTV/Google TV, NVIDIA Shield, Google TV Streamer, FireTV (via Capacitor wrapper). Roku and tvOS are explicitly out of scope for this codebase and will be parallel implementations in separate projects. Mobile remains a deferred future phase.
+
+### Deprecated
+- **Samsung Tizen 4.0 (2018 model year) is no longer a supported development or test target.** The platform's web engine (~Chromium 56) gates too many modern toolchain features (notably reliable dynamic `import()` and `import.meta` support) and its dev tooling is significantly more painful than newer Tizen versions. Phase 3 onward targets Tizen 5.5 (2020+ models) as the floor. Phase 1 may continue to coincidentally run on Tizen 4.0 since nothing has been removed, but no testing or fixes will target that platform going forward.
+
 ---
 
 ## [1.7.0] — 2026-04-12
