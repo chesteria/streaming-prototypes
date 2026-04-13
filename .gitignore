@@ -6,3 +6,9 @@
 # For local dev: copy firebase-config.template.js → js/firebase-config.js
 # and fill in real values. Never commit this file.
 streaming-prototype/js/firebase-config.js
+js/firebase-config.js
+
+# Test artifacts
+node_modules/
+test-output.json
+REPORT.md

@@ -1,0 +1,17 @@
+{
+  "name": "streaming-prototype-analytics-tests",
+  "version": "1.0.0",
+  "description": "Test suite for Firebase Analytics integration per PRD v1.2",
+  "scripts": {
+    "test": "jest --forceExit",
+    "test:ci": "jest --forceExit --json --outputFile=test-output.json && node tests/generate-report.js",
+    "report": "node tests/generate-report.js"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.0",
+    "@babel/preset-env": "^7.23.0",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  }
+}
