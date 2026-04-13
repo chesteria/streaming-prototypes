@@ -6,29 +6,55 @@
 // BroadcastChannel for cross-tab relay to reporting.html
 const _channel = new BroadcastChannel('proto_analytics');
 
-// Firebase transport — set by dynamic import below; noop until initialized
+// Firebase transport — set by _initFirebase() below; noop until initialized
 let _logEvent        = () => {};
 let _setUserProperties = () => {};
 
 // One-time session-end guard (prevents double-fire on button click + beforeunload)
 let _sessionEndFired = false;
 
-// Attempt Firebase initialization — fails gracefully if firebase-config.js is absent
-// (local dev without config, or CDN unreachable)
-(async () => {
-  try {
-    const { firebaseConfig }          = await import('./firebase-config.js');
-    const { initializeApp }           = await import('https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js');
-    const { getAnalytics, logEvent, setUserProperties }
-                                       = await import('https://www.gstatic.com/firebasejs/12.12.0/firebase-analytics.js');
-    const app       = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    _logEvent          = (name, params) => logEvent(analytics, name, params);
-    _setUserProperties = (props)        => setUserProperties(analytics, props);
-    console.log('[Analytics] Firebase initialized');
-  } catch (e) {
-    console.warn('[Analytics] Firebase not available — events will relay locally only:', e.message);
+// ---- Firebase initialization ------------------------------------------------
+// Two init paths:
+//   1. Synchronous via require() — Jest/Node test environment (require is defined)
+//   2. Async CDN dynamic import  — Browser / production
+// The dual approach lets the test suite assert on Firebase calls without async
+// timing issues, while keeping CDN loading for the real browser build.
+
+(function _initFirebase() {
+  // Path 1: synchronous — Jest transforms dynamic import() to require(), and
+  // typeof require is defined. Trying this first keeps tests fully synchronous.
+  if (typeof require !== 'undefined') {
+    try {
+      const { firebaseConfig }     = require('./firebase-config.js');
+      const { initializeApp }      = require('https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js');
+      const { getAnalytics, logEvent, setUserProperties }
+                                   = require('https://www.gstatic.com/firebasejs/12.12.0/firebase-analytics.js');
+      const app       = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      _logEvent          = (name, params) => logEvent(analytics, name, params);
+      _setUserProperties = (props)        => setUserProperties(analytics, props);
+      return; // sync init succeeded — skip async path
+    } catch (e) {
+      // firebase-config.js absent or require unavailable — fall through to async
+    }
   }
+
+  // Path 2: async CDN import — browser / production
+  (async () => {
+    try {
+      const { firebaseConfig }          = await import('./firebase-config.js');
+      const { initializeApp }           = await import('https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js');
+      const { getAnalytics, logEvent, setUserProperties }
+                                         = await import('https://www.gstatic.com/firebasejs/12.12.0/firebase-analytics.js');
+      const app       = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      _logEvent          = (name, params) => logEvent(analytics, name, params);
+      _setUserProperties = (props)        => setUserProperties(analytics, props);
+      console.log('[Analytics] Firebase initialized');
+    } catch (e) {
+      console.warn('[Analytics] Firebase not available — events will relay locally only:', e.message);
+    }
+  })();
 })();
 
 // ---- Core ----------------------------------------------------------------
@@ -96,7 +122,7 @@ export function initSession(participantCode, deviceProfile = 'none') {
   sessionStorage.setItem('event_count',      '0');
   sessionStorage.setItem('screens_visited',  '');
   sessionStorage.setItem('device_profile',   deviceProfile);
-  _sessionEndFired = false;
+  _sessionEndFired = false; // allow a new session after a previous endSession()
   _setUserProperties({ participant_id: participantCode });
   trackEvent('proto_session_start', { participant_id: participantCode, device_profile: deviceProfile });
 }
@@ -105,11 +131,13 @@ export function initSession(participantCode, deviceProfile = 'none') {
  * endSession()
  * Called by the "End Session" button in the Debug Panel.
  * Also fires from beforeunload as a safety net.
+ * Double-fire is prevented by _sessionEndFired guard.
+ * Guard is only reset by initSession() — NOT here — so calling endSession()
+ * twice is always a no-op for the second call.
  */
 export function endSession() {
   _fireSessionEnd();
   sessionStorage.clear();
-  _sessionEndFired = false; // allow a new session to start in the same tab
 }
 
 function _fireSessionEnd() {
