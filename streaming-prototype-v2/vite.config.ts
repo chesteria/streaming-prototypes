@@ -1,9 +1,9 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from "vite";
 
 export default defineConfig({
-  base: '/UTA/v2/',
+  base: "/UTA/v2/",
   build: {
-    target: 'es2017',
+    target: "es2015",
     sourcemap: !!process.env.VITE_SOURCEMAP,
   },
   server: {

@@ -14,6 +14,10 @@ import { renderConfirmation } from "./screens/location/confirmation";
 import { renderPicker } from "./screens/location/picker";
 import { logEvent } from "./core/analytics";
 
+const bootWindow = window as Window & {
+  __V2_BOOT__?: { stage: string };
+};
+
 const appContainer = document.getElementById("app");
 
 let state: LocationFlowState = { kind: "detecting" };
@@ -103,6 +107,9 @@ const render = () => {
 
 // Bootstrap
 const initApp = () => {
+  if (bootWindow.__V2_BOOT__) {
+    bootWindow.__V2_BOOT__.stage = "module-init";
+  }
   FocusController.init();
   const savedLocation = LocationService.getSelectedLocation();
   if (savedLocation) {
@@ -111,4 +118,26 @@ const initApp = () => {
   render();
 };
 
-initApp();
+try {
+  initApp();
+  if (bootWindow.__V2_BOOT__) {
+    bootWindow.__V2_BOOT__.stage = "app-ready";
+  }
+} catch (error) {
+  if (bootWindow.__V2_BOOT__) {
+    bootWindow.__V2_BOOT__.stage = "init-throw";
+  }
+
+  if (appContainer) {
+    const message =
+      error instanceof Error ? error.message : String(error || "Unknown error");
+    appContainer.innerHTML = `
+      <div class="boot-panel">
+        <h1>Phase 3 Preview Failed</h1>
+        <p>${message}</p>
+      </div>
+    `;
+  }
+
+  throw error;
+}

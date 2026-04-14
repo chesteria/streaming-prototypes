@@ -1,12 +1,129 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UTA Phase 3 P0 Spike</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: #0f1923;
+        color: #ffffff;
+        font-family: Arial, sans-serif;
+      }
+
+      #app {
+        min-height: 100vh;
+      }
+
+      .boot-panel {
+        box-sizing: border-box;
+        min-height: 100vh;
+        padding: 48px;
+      }
+
+      .boot-panel h1 {
+        margin: 0 0 16px;
+        font-size: 36px;
+      }
+
+      .boot-panel p,
+      .boot-panel li,
+      .boot-panel pre {
+        font-size: 22px;
+        line-height: 1.4;
+      }
+
+      .boot-panel pre {
+        white-space: pre-wrap;
+        word-break: break-word;
+        background: rgba(255, 255, 255, 0.08);
+        padding: 16px;
+        border-radius: 12px;
+      }
+    </style>
   </head>
   <body class="bg-[#121212] text-white font-roboto">
     <div id="app"></div>
+    <script>
+      (function () {
+        var app = document.getElementById("app");
+        if (!app) return;
+
+        var bootState = {
+          stage: "classic-script-start",
+          checks: {
+            module: "noModule" in document.createElement("script"),
+            promise: typeof Promise !== "undefined",
+            fetch: typeof window.fetch === "function",
+            localStorage:
+              typeof window.localStorage !== "undefined" &&
+              typeof window.localStorage.getItem === "function",
+          },
+          userAgent: navigator.userAgent,
+        };
+
+        window.__V2_BOOT__ = bootState;
+
+        var renderPanel = function (title, message) {
+          app.innerHTML =
+            '<div class="boot-panel">' +
+            "<h1>" +
+            title +
+            "</h1>" +
+            "<p>" +
+            message +
+            "</p>" +
+            "<pre>" +
+            "stage: " +
+            bootState.stage +
+            "\nmodule: " +
+            bootState.checks.module +
+            "\npromise: " +
+            bootState.checks.promise +
+            "\nfetch: " +
+            bootState.checks.fetch +
+            "\nlocalStorage: " +
+            bootState.checks.localStorage +
+            "\nuserAgent: " +
+            bootState.userAgent +
+            "</pre>" +
+            "</div>";
+        };
+
+        renderPanel("Phase 3 Preview Booting", "Waiting for module startup...");
+
+        window.addEventListener("error", function (event) {
+          bootState.stage = "window-error";
+          renderPanel(
+            "Phase 3 Preview Failed",
+            event.message || "Unknown startup error",
+          );
+        });
+
+        window.addEventListener("unhandledrejection", function (event) {
+          bootState.stage = "unhandled-rejection";
+          var reason =
+            event && event.reason && event.reason.message
+              ? event.reason.message
+              : String(event.reason || "Unknown promise rejection");
+          renderPanel("Phase 3 Preview Failed", reason);
+        });
+      })();
+    </script>
+    <script nomodule>
+      (function () {
+        var app = document.getElementById("app");
+        if (!app) return;
+        app.innerHTML =
+          '<div class="boot-panel">' +
+          "<h1>Phase 3 Preview Failed</h1>" +
+          "<p>This device runtime does not support JavaScript modules.</p>" +
+          "</div>";
+      })();
+    </script>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
