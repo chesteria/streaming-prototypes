@@ -51,23 +51,14 @@ const clearFocusedStyles = (element: HTMLElement) => {
 };
 
 const focusDomElement = (element: HTMLElement) => {
-  if (
-    element instanceof HTMLInputElement ||
-    element instanceof HTMLTextAreaElement ||
-    element.isContentEditable
-  ) {
-    element.focus();
+  if (!element.hasAttribute("tabindex")) {
+    element.setAttribute("tabindex", "-1");
   }
+  element.focus();
 };
 
 const blurDomElement = (element: HTMLElement) => {
-  if (
-    element instanceof HTMLInputElement ||
-    element instanceof HTMLTextAreaElement ||
-    element.isContentEditable
-  ) {
-    element.blur();
-  }
+  element.blur();
 };
 
 /**
