@@ -17,9 +17,15 @@ const KEYS: Record<KeyAction, string[]> = {
   DOWN: ["ArrowDown", "Down"],
   LEFT: ["ArrowLeft", "Left"],
   RIGHT: ["ArrowRight", "Right"],
-  OK: ["Enter", "Return", " "],
-  BACK: ["Backspace", "Escape", "XF86Back"],
-  PLAYPAUSE: ["MediaPlayPause", "XF86PlayPause", "MediaPlay", "MediaPause"],
+  OK: ["Enter", "Return", "NumpadEnter", " "],
+  BACK: ["Backspace", "Escape", "Exit", "XF86Back"],
+  PLAYPAUSE: [
+    "MediaPlayPause",
+    "XF86PlayPause",
+    "MediaPlay",
+    "MediaPause",
+    "MediaStop",
+  ],
 };
 
 const KEY_CODES: Record<KeyAction, number[]> = {
@@ -29,18 +35,26 @@ const KEY_CODES: Record<KeyAction, number[]> = {
   RIGHT: [39, 5],
   OK: [13, 29443],
   BACK: [8, 27, 461],
-  PLAYPAUSE: [179, 415, 19],
+  PLAYPAUSE: [179, 415, 413, 19],
 };
 
 const updateKeyDebugOverlay = (
   event: KeyboardEvent,
   action: KeyAction | null,
+  phase: string,
 ) => {
   const overlay = document.getElementById("key-debug-overlay");
   if (!overlay) return;
 
   const keyCode = event.keyCode || event.which || 0;
-  overlay.textContent = `key=${String(event.key)} code=${String(event.code)} keyCode=${keyCode} action=${action ?? "none"}`;
+  overlay.textContent =
+    `phase=${phase} type=${event.type} ` +
+    `key=${String(event.key)} code=${String(event.code)} ` +
+    `keyCode=${keyCode} action=${action ?? "none"}`;
+};
+
+const handleDebugKey = (event: KeyboardEvent) => {
+  updateKeyDebugOverlay(event, getKeyAction(event), "capture");
 };
 
 export const getKeyAction = (event: KeyboardEvent): KeyAction | null => {
@@ -102,7 +116,7 @@ export const clearHandler = () => {
 const handleKey = (event: KeyboardEvent) => {
   if (!isEnabled) return;
   const action = getKeyAction(event);
-  updateKeyDebugOverlay(event, action);
+  updateKeyDebugOverlay(event, action, "handler");
   if (!action) return;
 
   // Prevent default browser scrolling behavior
@@ -125,13 +139,15 @@ const handleKey = (event: KeyboardEvent) => {
 
 export const init = () => {
   if (isInitialized) return;
-  document.addEventListener("keydown", handleKey);
+  document.addEventListener("keydown", handleDebugKey, true);
+  document.addEventListener("keydown", handleKey, true);
   isInitialized = true;
 };
 
 export const teardown = () => {
   if (!isInitialized) return;
-  document.removeEventListener("keydown", handleKey);
+  document.removeEventListener("keydown", handleDebugKey, true);
+  document.removeEventListener("keydown", handleKey, true);
   isInitialized = false;
 };
 
