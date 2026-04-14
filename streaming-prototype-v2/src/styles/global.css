@@ -15,11 +15,16 @@
 @layer components {
   /* Common focus ring pattern used by the FocusController */
   [data-focused="true"] {
-    @apply shadow-v2-focus border-v2-focus-border ring-2 ring-white ring-opacity-40;
+    outline: 6px solid #ffffff;
+    outline-offset: 0;
+    border-color: #ffffff !important;
+    background-color: #ffffff;
+    color: #0f1923;
   }
 
   .v2-button {
     @apply bg-v2-surface text-v2-text-primary px-6 py-3 rounded-tile;
+    border: 3px solid transparent;
   }
 
   .v2-button[data-focused="true"] {
