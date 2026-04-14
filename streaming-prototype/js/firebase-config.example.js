@@ -1,3 +1,4 @@
+// TODO(typecheck): reference/example file only — no real logic to type-check
 // firebase-config.example.js — committed to repo as a reference shape
 // Shows the structure of the generated firebase-config.js.
 // DO NOT put real keys here. Copy this file to firebase-config.js

@@ -1,3 +1,4 @@
+// @ts-check
 /* ============================================================
    LANDER SCREEN — Home screen with configurable rails
    ============================================================ */
@@ -21,7 +22,8 @@ const CHANNEL_TILE_W           = 440;
 const CHANNEL_TILE_H           = 270;
 const TILE_GAP                 = 16;
 
-const LanderScreen = {
+// `var` required for TypeScript global-script compatibility — see data-store.js
+var LanderScreen = {
   id: 'lander',
 
   // ---- internal state ----
@@ -423,7 +425,7 @@ function buildHeroCarousel(config, container) {
       getTile(prevIdx).classList.remove('focused');
     }
     getTile(idx).classList.add('focused');
-    scrollHeroToIndex(trackEl, idx, items.length);
+    scrollHeroToIndex(trackEl, idx);
   }
 
   function scrollHeroToIndex(track, idx) {
@@ -613,11 +615,15 @@ function buildHeroTile(item, isFocused) {
   return tile;
 }
 
+/**
+ * @param {HTMLElement & { _livingTimer?: ReturnType<typeof setInterval> | null, _livingImages?: string[] }} tileEl
+ * @param {string[]} images
+ */
 function startLivingTile(tileEl, images) {
   if (!DebugConfig.get('livingTiles', true)) return;
   if (images.length < 2) return;
-  const primaryImg = tileEl.querySelector('.hero-img');
-  const secondaryImg = tileEl.querySelector('.hero-img-secondary');
+  const primaryImg = /** @type {HTMLImageElement | null} */ (tileEl.querySelector('.hero-img'));
+  const secondaryImg = /** @type {HTMLImageElement | null} */ (tileEl.querySelector('.hero-img-secondary'));
   if (!primaryImg || !secondaryImg) return;
 
   // Clear any existing timer before starting a new one
@@ -643,13 +649,15 @@ function startLivingTile(tileEl, images) {
 
 function _stopAllLivingTiles() {
   document.querySelectorAll('[data-living-tile]').forEach(el => {
-    if (el._livingTimer) { clearInterval(el._livingTimer); el._livingTimer = null; }
+    const tile = /** @type {HTMLElement & { _livingTimer?: ReturnType<typeof setInterval> | null }} */ (el);
+    if (tile._livingTimer) { clearInterval(tile._livingTimer); tile._livingTimer = null; }
   });
 }
 
 function _restartAllLivingTiles() {
   document.querySelectorAll('[data-living-tile]').forEach(el => {
-    if (el._livingImages) startLivingTile(el, el._livingImages);
+    const tile = /** @type {HTMLElement & { _livingTimer?: ReturnType<typeof setInterval> | null, _livingImages?: string[] }} */ (el);
+    if (tile._livingImages) startLivingTile(tile, tile._livingImages);
   });
 }
 
@@ -781,8 +789,8 @@ function buildLiveChannelsRail(config, container) {
     </div>
   `;
 
-  const track = section.querySelector('#channels-scroll');
-  const below = section.querySelector('#channels-below');
+  const track = /** @type {HTMLElement | null} */ (section.querySelector('#channels-scroll'));
+  const below = /** @type {HTMLElement | null} */ (section.querySelector('#channels-below'));
 
   channels.forEach(ch => {
     const tile = document.createElement('div');
@@ -902,7 +910,7 @@ function buildGenrePillsRail(config, container) {
   });
 
   let focusedIdx = 0;
-  const pills = Array.from(track.children);
+  const pills = /** @type {HTMLElement[]} */ (Array.from(track.children));
   let prevFocusedEl = null;
 
   function focusPill(idx) {

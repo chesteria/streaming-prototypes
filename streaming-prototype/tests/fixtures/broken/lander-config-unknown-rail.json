@@ -1,0 +1,8 @@
+{
+  "rails": [
+    {
+      "type": "fake-rail",
+      "dataSource": "something"
+    }
+  ]
+}

@@ -1,8 +1,11 @@
+// @ts-check
 /* ============================================================
    FOCUS ENGINE — D-pad navigation and focus management
    ============================================================ */
 
-const FocusEngine = (function() {
+// `var` required for TypeScript global-script compatibility — see data-store.js
+// for full explanation. Runtime behavior is identical.
+var FocusEngine = (function() {
 
   let currentHandler = null;   // Active screen's key handler
   let isEnabled = true;

@@ -1,0 +1,18 @@
+{
+  "id": "show-bad",
+  "title": "Bad Show",
+  "description": "A show with an invalid rating.",
+  "heroImage": "https://example.com/hero.jpg",
+  "posterImage": "https://example.com/poster.jpg",
+  "landscapeImage": "https://example.com/landscape.jpg",
+  "rating": "TV-X",
+  "year": "2024",
+  "genres": ["Drama"],
+  "seasons": 1,
+  "type": "TV-Series",
+  "badges": [],
+  "duration": "44m",
+  "featured": false,
+  "director": "Someone",
+  "cast": []
+}

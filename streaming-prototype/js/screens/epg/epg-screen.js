@@ -1,9 +1,11 @@
+// @ts-check
 /* ============================================================
    EPG SCREEN — Electronic Program Guide
    Screen module registered with App.registerScreen()
    ============================================================ */
 
-const EPGScreen = (() => {
+// `var` required for TypeScript global-script compatibility — see data-store.js
+var EPGScreen = (() => {
 
   // ---- Screen state ----
   let _container     = null;

@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * ScaleEngine
  * Scales #app to fit any viewport while preserving 1920×1080 aspect ratio.
@@ -13,7 +14,9 @@
  * divide the visual value by ScaleEngine.getScale().
  */
 
-const ScaleEngine = (() => {
+// `var` required for TypeScript global-script compatibility — see data-store.js
+// for full explanation. Runtime behavior is identical.
+var ScaleEngine = (() => {
   const DESIGN_WIDTH  = 1920;
   const DESIGN_HEIGHT = 1080;
 
@@ -38,7 +41,7 @@ const ScaleEngine = (() => {
     _appRoot.style.transform = `translate(-50%, -50%) scale(${scale})`;
 
     // Expose to CSS custom property for any scale-aware components
-    document.documentElement.style.setProperty('--app-scale', scale);
+    document.documentElement.style.setProperty('--app-scale', String(scale));
     _currentScale = scale;
 
     // Notify Debug Panel and any other listeners — decoupled via event

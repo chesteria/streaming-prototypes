@@ -1,0 +1,28 @@
+name: Validate Data
+
+on:
+  push:
+    branches: [main, jsdoc-typecheck-hedge]
+    paths:
+      - 'streaming-prototype/data/**'
+      - 'streaming-prototype/js/schemas/**'
+      - 'tools/validate-data.js'
+      - 'package.json'
+  pull_request:
+    paths:
+      - 'streaming-prototype/data/**'
+      - 'streaming-prototype/js/schemas/**'
+      - 'tools/validate-data.js'
+      - 'package.json'
+
+jobs:
+  validate-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run validate:data

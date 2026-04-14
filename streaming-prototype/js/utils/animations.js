@@ -1,3 +1,4 @@
+// @ts-check
 /* ============================================================
    ANIMATION HELPERS
    ============================================================ */
@@ -15,6 +16,7 @@ function scrollPageToY(scrollEl, targetY) {
  * Show a toast notification
  */
 function showToast(message, duration = 2500) {
+  /** @type {(HTMLElement & { _timer?: ReturnType<typeof setTimeout> }) | null} */
   const toast = document.getElementById('toast');
   if (!toast) return;
   toast.textContent = message;
@@ -27,8 +29,8 @@ function showToast(message, duration = 2500) {
 
 /**
  * Cross-fade two images (for living tiles)
- * @param {HTMLElement} img1 - currently visible image
- * @param {HTMLElement} img2 - next image
+ * @param {HTMLImageElement} img1 - currently visible image
+ * @param {HTMLImageElement} img2 - next image
  */
 function crossFade(img1, img2) {
   img2.classList.add('visible');

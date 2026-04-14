@@ -1,8 +1,11 @@
+// @ts-check
 /* ============================================================
    APP — Router and screen manager
    ============================================================ */
 
-const App = (function() {
+// `var` required for TypeScript global-script compatibility — see data-store.js
+// for full explanation. Runtime behavior is identical.
+var App = (function() {
 
   // Registry of all screens
   const screens = {};

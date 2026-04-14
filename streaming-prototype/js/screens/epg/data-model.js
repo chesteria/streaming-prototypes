@@ -1,8 +1,10 @@
+// @ts-check
 /* ============================================================
    EPG DATA MODEL — Loads mock data and computes program schedules
    ============================================================ */
 
-const EPGDataModel = (() => {
+// `var` required for TypeScript global-script compatibility — see data-store.js
+var EPGDataModel = (() => {
 
   let _genres    = [];
   let _channels  = [];

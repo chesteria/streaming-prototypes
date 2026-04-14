@@ -210,6 +210,34 @@ Push to `main` → GitHub Actions (`.github/workflows/deploy.yml`) → `envsubst
 Phase 3 introduces a separate deploy path for `streaming-prototype-v2/` using Vite's build output and `VITE_FIREBASE_*` env vars passed directly to the build step (no `envsubst`). Planned for Chunk P9 of the Phase 3 PRD. Phase 1's existing deploy is unaffected.
 
 ---
+## Pinned CDN Dependencies (streaming-prototype/)
+
+Phase 1 + Phase 2 load all third-party libraries from CDNs rather than npm. There is no `package.json` and no automated dependency tracking for this codebase — Dependabot does not apply here. This table is the source of truth for what's pinned and where.
+
+| Library | Version | Source | Loaded by | Notes |
+|---|---|---|---|---|
+| Firebase (App + Analytics) | _TBD — check `js/analytics.js`_ | `https://www.gstatic.com/firebasejs/` | `js/analytics.js` (ES module) | Backward-compatible across minor versions; v9+ modular SDK |
+| hls.js | _TBD — check `index.html`_ | `https://cdn.jsdelivr.net/npm/hls.js` | `js/screens/player.js` | Required for HLS playback on non-Safari browsers |
+| qrcodejs | _TBD — check `index.html`_ | `https://cdnjs.cloudflare.com/` | Welcome screen / debug panel | **Being replaced** by `qrcode` npm package in `streaming-prototype-v2/` |
+
+### Update policy
+
+This codebase is in maintenance mode. Active development has moved to `streaming-prototype-v2/` (Dependabot-managed) and the JSDoc hedge. **No recurring update audit.** Update only when:
+
+- A security advisory is published for one of the libraries above
+- A bug is traced to an outdated library version
+- The library is needed for a Phase 1 hotfix that requires a newer API
+
+When updating, pin to a specific version in the URL (never use `@latest`) and note the change in `docs/CHANGELOG.md`.
+
+### Cross-codebase Firebase note
+
+Firebase is loaded in **both** `streaming-prototype/` (CDN) and `streaming-prototype-v2/` (npm) during the Phase 3 buildout. Event namespacing (`v2_` prefix + separate BroadcastChannel) prevents data crosstalk, but if you update Firebase in v2, sanity-check that the v1 CDN pin isn't dramatically behind — large version gaps can cause subtle analytics behavior differences.
+
+---
+
+
+---
 
 ## CSS Architecture
 

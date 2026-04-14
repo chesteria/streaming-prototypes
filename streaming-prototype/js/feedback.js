@@ -1,9 +1,11 @@
+// @ts-check
 /* ============================================================
    FEEDBACK — Hold-OK feedback overlay + Participant ID prompt
    Phase 2 — Insight Engine
    ============================================================ */
 
-const FeedbackSystem = (() => {
+// `var` required for TypeScript global-script compatibility — see data-store.js
+var FeedbackSystem = (() => {
 
   // ---- Config ----
   const HOLD_DURATION_MS = 3000;
@@ -233,7 +235,7 @@ const FeedbackSystem = (() => {
     const offset = RING_CIRCUMFERENCE * (1 - progress);
 
     const fillEl = document.getElementById('hold-ring-fill');
-    if (fillEl) fillEl.setAttribute('stroke-dashoffset', offset);
+    if (fillEl) fillEl.setAttribute('stroke-dashoffset', String(offset));
 
     if (progress < 1) {
       _rafId = requestAnimationFrame(_animateRing);
@@ -255,7 +257,7 @@ const FeedbackSystem = (() => {
      ============================================================ */
 
   function _captureCurrentState() {
-    const screen = document.querySelector('.screen.active');
+    const screen = /** @type {HTMLElement | null} */ (document.querySelector('.screen.active'));
     const focused = document.querySelector('.focused');
 
     return {

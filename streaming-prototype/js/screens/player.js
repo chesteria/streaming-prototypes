@@ -1,3 +1,4 @@
+// @ts-check
 /* ============================================================
    PLAYER SCREEN — Simulated video player with full controls
    ============================================================ */
@@ -10,7 +11,8 @@ const PLAYBACK_SPEED         = 1;         // 1 = realtime, 10 = 10x speed
 // === VIDEO ===
 const VIDEO_STREAM_URL = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
 
-const PlayerScreen = {
+// `var` required for TypeScript global-script compatibility — see data-store.js
+var PlayerScreen = {
   id: 'player',
 
   _container: null,

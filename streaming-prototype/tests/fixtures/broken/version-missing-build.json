@@ -1,0 +1,8 @@
+{
+  "version": "1.0.0",
+  "buildDate": "2026-01-01T00:00:00Z",
+  "gitCommit": "abc1234",
+  "gitBranch": "main",
+  "phase": "Phase 1",
+  "label": "Test"
+}

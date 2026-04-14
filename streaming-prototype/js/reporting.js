@@ -1,3 +1,4 @@
+// @ts-check
 /* ============================================================
    REPORTING DASHBOARD — Analytics visualization logic
    Phase 2 — Insight Engine
@@ -102,10 +103,10 @@
       const start = sessionEvents.find(e => e.event === 'session_start');
       const end   = sessionEvents.find(e => e.event === 'session_end');
       if (start && end) {
-        const ms = new Date(end.timestamp) - new Date(start.timestamp);
+        const ms = new Date(end.timestamp).getTime() - new Date(start.timestamp).getTime();
         if (ms > 0) durations.push(ms);
       } else if (sessionEvents.length >= 2) {
-        const times = sessionEvents.map(e => new Date(e.timestamp)).sort((a,b) => a-b);
+        const times = sessionEvents.map(e => new Date(e.timestamp).getTime()).sort((a,b) => a-b);
         durations.push(times[times.length-1] - times[0]);
       }
     });
@@ -446,7 +447,7 @@
   }
 
   function _createOrUpdateChart(canvasId, chartData, refKey) {
-    const canvas = document.getElementById(canvasId);
+    const canvas = /** @type {HTMLCanvasElement | null} */ (document.getElementById(canvasId));
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
 
@@ -507,7 +508,7 @@
 
     // Sort newest first
     const sorted = filtered.slice().sort((a, b) =>
-      new Date(b.timestamp) - new Date(a.timestamp)
+      new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
 
     el.innerHTML = sorted.map(e => {
@@ -560,7 +561,7 @@
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
-        const data = JSON.parse(e.target.result);
+        const data = JSON.parse(/** @type {string} */ (e.target.result));
         const events = Array.isArray(data) ? data : [];
         _loadEvents(events);
         _closeImportOverlay();
@@ -614,8 +615,8 @@
     const fileInput = document.getElementById('import-file-input');
     if (fileInput) {
       fileInput.addEventListener('change', (e) => {
-        _handleFileImport(e.target.files[0]);
-        fileInput.value = '';
+        _handleFileImport(/** @type {HTMLInputElement} */ (e.target).files[0]);
+        /** @type {HTMLInputElement} */ (fileInput).value = '';
       });
     }
 
@@ -634,7 +635,7 @@
 
     // Feedback filters
     document.getElementById('feedback-filters')?.addEventListener('click', (e) => {
-      const pill = e.target.closest('.rpt-filter-pill');
+      const pill = /** @type {HTMLElement | null} */ (/** @type {HTMLElement} */ (e.target).closest('.rpt-filter-pill'));
       if (!pill) return;
       _filteredReaction = pill.dataset.filter;
       document.querySelectorAll('.rpt-filter-pill').forEach(p => p.classList.remove('active'));

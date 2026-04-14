@@ -1,3 +1,4 @@
+// @ts-check
 /* ============================================================
    ANALYTICS — Firebase transport + BroadcastChannel relay
    Phase 2 — Insight Engine
@@ -7,8 +8,10 @@
 const _channel = new BroadcastChannel('proto_analytics');
 
 // Firebase transport — set by _initFirebase() below; noop until initialized
-let _logEvent        = () => {};
-let _setUserProperties = () => {};
+/** @type {(name: string, params?: Record<string, unknown>) => void} */
+let _logEvent        = /** @type {any} */ (() => {});
+/** @type {(props: Record<string, unknown>) => void} */
+let _setUserProperties = /** @type {any} */ (() => {});
 
 // One-time session-end guard (prevents double-fire on button click + beforeunload)
 let _sessionEndFired = false;
@@ -25,10 +28,12 @@ let _sessionEndFired = false;
   // typeof require is defined. Trying this first keeps tests fully synchronous.
   if (typeof require !== 'undefined') {
     try {
+      // @ts-ignore — git-ignored file; absent locally, injected at deploy time
       const { firebaseConfig }     = require('./firebase-config.js');
+      // @ts-ignore — CDN URL resolved at runtime; not a resolvable TS module path
       const { initializeApp }      = require('https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js');
-      const { getAnalytics, logEvent, setUserProperties }
-                                   = require('https://www.gstatic.com/firebasejs/12.12.0/firebase-analytics.js');
+      // @ts-ignore — CDN URL resolved at runtime; not a resolvable TS module path
+      const { getAnalytics, logEvent, setUserProperties } = require('https://www.gstatic.com/firebasejs/12.12.0/firebase-analytics.js');
       const app       = initializeApp(firebaseConfig);
       const analytics = getAnalytics(app);
       _logEvent          = (name, params) => logEvent(analytics, name, params);
@@ -42,10 +47,12 @@ let _sessionEndFired = false;
   // Path 2: async CDN import — browser / production
   (async () => {
     try {
+      // @ts-ignore — git-ignored file; absent locally, injected at deploy time
       const { firebaseConfig }          = await import('./firebase-config.js');
+      // @ts-ignore — CDN URL resolved at runtime; not a resolvable TS module path
       const { initializeApp }           = await import('https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js');
-      const { getAnalytics, logEvent, setUserProperties }
-                                         = await import('https://www.gstatic.com/firebasejs/12.12.0/firebase-analytics.js');
+      // @ts-ignore — CDN URL resolved at runtime; not a resolvable TS module path
+      const { getAnalytics, logEvent, setUserProperties } = await import('https://www.gstatic.com/firebasejs/12.12.0/firebase-analytics.js');
       const app       = initializeApp(firebaseConfig);
       const analytics = getAnalytics(app);
       _logEvent          = (name, params) => logEvent(analytics, name, params);
@@ -190,4 +197,14 @@ window.Analytics = {
   getEvents:  () => [],
   clearEvents: () => {},
   get sessionId() { return sessionStorage.getItem('session_start_ts') || 'unknown'; },
+
+  // generateNewParticipantId() — used by feedback.js participant-prompt flow.
+  // Generates a random 6-char alphanumeric code (no ambiguous chars).
+  generateNewParticipantId: () => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    return Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+  },
+
+  // getDeviceType() — returns the active device profile for QR export.
+  getDeviceType: () => sessionStorage.getItem('device_profile') || 'unknown',
 };

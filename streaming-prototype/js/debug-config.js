@@ -1,3 +1,4 @@
+// @ts-check
 /* ============================================================
    DEBUG CONFIG PAGE — Standalone editor for debug.html
    ============================================================ */
@@ -16,7 +17,7 @@ function showSection(id) {
   document.querySelectorAll('.dc-section').forEach(el => {
     el.classList.toggle('active', el.id === `section-${id}`);
   });
-  document.querySelectorAll('.dc-nav-item').forEach(el => {
+  /** @type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('.dc-nav-item')).forEach(el => {
     el.classList.toggle('active', el.dataset.section === id);
   });
 }
@@ -75,7 +76,7 @@ function renderRailList() {
     `;
 
     // Inline title editing
-    const titleEl = item.querySelector('.rail-title-edit');
+    const titleEl = /** @type {HTMLElement | null} */ (item.querySelector('.rail-title-edit'));
     titleEl.addEventListener('click', () => {
       titleEl.contentEditable = 'true';
       titleEl.focus();
@@ -91,11 +92,11 @@ function renderRailList() {
       _landerConfig.rails[idx].title = titleEl.textContent.trim();
     });
     titleEl.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') { e.preventDefault(); titleEl.blur(); }
+      if (/** @type {KeyboardEvent} */ (e).key === 'Enter') { e.preventDefault(); titleEl.blur(); }
     });
 
     // Toggle enabled
-    const toggleEl = item.querySelector('.rail-toggle');
+    const toggleEl = /** @type {HTMLElement | null} */ (item.querySelector('.rail-toggle'));
     toggleEl.addEventListener('click', () => {
       const i = parseInt(toggleEl.dataset.idx);
       _landerConfig.rails[i].enabled = !(_landerConfig.rails[i].enabled !== false);
@@ -103,7 +104,7 @@ function renderRailList() {
     });
 
     // Delete
-    const deleteBtn = item.querySelector('.rail-delete-btn');
+    const deleteBtn = /** @type {HTMLElement | null} */ (item.querySelector('.rail-delete-btn'));
     deleteBtn.addEventListener('click', () => {
       const i = parseInt(deleteBtn.dataset.idx);
       _landerConfig.rails.splice(i, 1);
@@ -250,7 +251,7 @@ function renderCatalogTable(shows) {
     });
 
     // Delete row
-    const deleteBtn = tr.querySelector('.catalog-delete-btn');
+    const deleteBtn = /** @type {HTMLElement | null} */ (tr.querySelector('.catalog-delete-btn'));
     deleteBtn.addEventListener('click', () => {
       const i = parseInt(deleteBtn.dataset.idx);
       const showInCatalog = _catalog.shows.indexOf(_filteredShows[i]);
@@ -376,7 +377,7 @@ function renderEPGGenreList() {
     item.className = 'rail-item';
     item.draggable = true;
     item.dataset.genreId = genre.id;
-    item.dataset.idx = idx;
+    item.dataset.idx = String(idx);
 
     item.innerHTML = `
       <div class="rail-drag-handle" title="Drag to reorder">&#x2807;</div>
@@ -388,7 +389,7 @@ function renderEPGGenreList() {
     `;
 
     // Inline label editing
-    const titleEl = item.querySelector('.rail-title-edit');
+    const titleEl = /** @type {HTMLElement | null} */ (item.querySelector('.rail-title-edit'));
     titleEl.addEventListener('click', () => {
       titleEl.contentEditable = 'true';
       titleEl.focus();
@@ -402,7 +403,7 @@ function renderEPGGenreList() {
       titleEl.contentEditable = 'false';
     });
     titleEl.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') { e.preventDefault(); titleEl.blur(); }
+      if (/** @type {KeyboardEvent} */ (e).key === 'Enter') { e.preventDefault(); titleEl.blur(); }
     });
 
     // Toggle enabled
@@ -435,7 +436,7 @@ function renderEPGGenreList() {
       const toId    = genre.id;
       if (fromId === toId) return;
 
-      const items   = Array.from(listEl.querySelectorAll('.rail-item'));
+      const items   = /** @type {HTMLElement[]} */ (Array.from(listEl.querySelectorAll('.rail-item')));
       const fromEl  = items.find(el => el.dataset.genreId === fromId);
       const toEl    = item;
       if (fromEl && toEl) {
@@ -458,7 +459,7 @@ function saveEPGGenreConfig() {
   const listEl = document.getElementById('epg-genre-list');
   if (!listEl) return;
 
-  const items    = Array.from(listEl.querySelectorAll('.rail-item'));
+  const items    = /** @type {HTMLElement[]} */ (Array.from(listEl.querySelectorAll('.rail-item')));
   const orderIds = items.map(el => el.dataset.genreId);
 
   localStorage.setItem('debug_epgGenreOrder', JSON.stringify(orderIds));
@@ -548,7 +549,7 @@ function saveEPGGenreMap() {
   const newMap = {};
   _epgMockData.genres.forEach(g => { newMap[g.id] = []; });
 
-  containerEl.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+  /** @type {NodeListOf<HTMLInputElement>} */ (containerEl.querySelectorAll('input[type="checkbox"]')).forEach(cb => {
     if (cb.checked) {
       const genreId   = cb.dataset.genreId;
       const channelId = cb.dataset.channelId;
@@ -598,13 +599,13 @@ function saveEPGChannels() {
 
   const result = {};
 
-  tbody.querySelectorAll('.epg-ch-name-cell').forEach(cell => {
+  /** @type {NodeListOf<HTMLElement>} */ (tbody.querySelectorAll('.epg-ch-name-cell')).forEach(cell => {
     const channelId = cell.dataset.channelId;
     if (!result[channelId]) result[channelId] = {};
     result[channelId].name = cell.textContent.trim();
   });
 
-  tbody.querySelectorAll('.epg-ch-cw').forEach(cb => {
+  /** @type {NodeListOf<HTMLInputElement>} */ (tbody.querySelectorAll('.epg-ch-cw')).forEach(cb => {
     const channelId = cb.dataset.channelId;
     if (!result[channelId]) result[channelId] = {};
     result[channelId].currentlyWatching = cb.checked;
@@ -704,7 +705,7 @@ function handleImportFile(e) {
   const reader = new FileReader();
   reader.onload = (ev) => {
     try {
-      const data = JSON.parse(ev.target.result);
+      const data = JSON.parse(/** @type {string} */ (ev.target.result));
       let count = 0;
       Object.keys(data).forEach(k => {
         if (k === '_exportedAt') return;
@@ -748,7 +749,7 @@ function showStatus(id, msg) {
 
 document.addEventListener('DOMContentLoaded', async () => {
   // Sidebar navigation
-  document.querySelectorAll('.dc-nav-item').forEach(item => {
+  /** @type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('.dc-nav-item')).forEach(item => {
     item.addEventListener('click', () => showSection(item.dataset.section));
   });
 
@@ -763,7 +764,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('btn-save-catalog')?.addEventListener('click', saveCatalog);
   document.getElementById('btn-add-show')?.addEventListener('click', addShow);
   document.getElementById('catalog-search')?.addEventListener('input', (e) => {
-    filterCatalog(e.target.value);
+    filterCatalog(/** @type {HTMLInputElement} */ (e.target).value);
   });
 
   // Export / Import

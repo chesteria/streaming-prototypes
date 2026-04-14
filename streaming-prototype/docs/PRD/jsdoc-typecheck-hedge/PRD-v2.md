@@ -549,15 +549,15 @@ Create `docs/JSDOC_GUIDE.md` covering:
 
 ## Session Budget
 
-| Session | Work |
-|---|---|
-| 1 | `tsconfig.json` (with `checkJs: false`), `package.json` script entries, `js/types/globals.d.ts` (full ambient declarations), enable `// @ts-check` on 6 core files (data-store, focus-engine, app, scale, keycodes, animations), fix surfaced errors |
-| 2 | Enable `@ts-check` on the three main screens (lander, pdp, player) and the EPG sub-files; grandfather painful files with `TODO(typecheck): <reason>` |
-| 3 | Install zod, write all schemas (CommonJS), build `tools/validate-data.js`, write 5 broken fixtures + negative tests + positive smoke tests, run validator against current data and fix any drift discovered |
-| 4 | **Make the runtime-validation decision (A vs B).** Default: Approach A — skip runtime validation, document where it would go if needed. If A is chosen, this session is short and used to update `globals.d.ts` types if any drift was found in Session 3. |
-| 5 | Enable `@ts-check` on the remaining files (analytics, debug-panel, feedback, welcome-screen, reporting, debug-config), wire both CI workflows, validate them on a throwaway branch, write `docs/JSDOC_GUIDE.md` |
-| 6 (buffer) | Catchup for any session that overran. Specifically reserved for ambient global iteration if Sessions 1–2 surface real issues with the global declarations. |
-| 7 (buffer) | Final polish, second-pass `@ts-check` cleanup, any documentation gaps |
+| Session    | Work                                                                                                                                                                                                                                                       |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1          | `tsconfig.json` (with `checkJs: false`), `package.json` script entries, `js/types/globals.d.ts` (full ambient declarations), enable `// @ts-check` on 6 core files (data-store, focus-engine, app, scale, keycodes, animations), fix surfaced errors       |
+| 2          | Enable `@ts-check` on the three main screens (lander, pdp, player) and the EPG sub-files; grandfather painful files with `TODO(typecheck): <reason>`                                                                                                       |
+| 3          | Install zod, write all schemas (CommonJS), build `tools/validate-data.js`, write 5 broken fixtures + negative tests + positive smoke tests, run validator against current data and fix any drift discovered                                                |
+| 4          | **Make the runtime-validation decision (A vs B).** Default: Approach A — skip runtime validation, document where it would go if needed. If A is chosen, this session is short and used to update `globals.d.ts` types if any drift was found in Session 3. |
+| 5          | Enable `@ts-check` on the remaining files (analytics, debug-panel, feedback, welcome-screen, reporting, debug-config), wire both CI workflows, validate them on a throwaway branch, write `docs/JSDOC_GUIDE.md`                                            |
+| 6 (buffer) | Catchup for any session that overran. Specifically reserved for ambient global iteration if Sessions 1–2 surface real issues with the global declarations.                                                                                                 |
+| 7 (buffer) | Final polish, second-pass `@ts-check` cleanup, any documentation gaps                                                                                                                                                                                      |
 
 5 is the target; 7 is the ceiling. **If the work is exceeding 7 sessions, stop and reassess** rather than pushing through — that's a signal something in the plan is wrong, not a signal to grind harder.
 

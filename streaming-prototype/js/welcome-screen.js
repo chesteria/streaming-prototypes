@@ -1,3 +1,4 @@
+// @ts-check
 /* ============================================================
    WELCOME SCREEN — Device-aware controls reference overlay
    Shows on first launch; re-openable via H key or debug panel.
@@ -9,7 +10,8 @@ const WELCOME_SCREEN_AUTO_SHOW_ON_FIRST_LAUNCH = true;
 const WELCOME_SCREEN_DEFAULT_PROFILE          = 'desktop';
 const WELCOME_SCREEN_STORAGE_KEY              = 'welcomeScreenSeen';
 
-const WelcomeScreen = (() => {
+// `var` required for TypeScript global-script compatibility — see data-store.js
+var WelcomeScreen = (() => {
 
   // All known profile IDs — filenames in data/device-profiles/
   const PROFILE_IDS = ['desktop', 'mobile', 'vizio', 'firetv', 'androidtv', 'tizen', 'webos', 'roku'];

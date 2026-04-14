@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "module": "ES2020",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "checkJs": false,
+    "noEmit": true,
+    "strict": false,
+    "noImplicitAny": false,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "types": ["node"]
+  },
+  "include": [
+    "streaming-prototype/js/**/*.js",
+    "streaming-prototype/js/**/*.d.ts",
+    "tools/**/*.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "streaming-prototype/js/firebase-config.js"
+  ]
+}

@@ -1,3 +1,4 @@
+// @ts-check
 /* ============================================================
    EPG CHANNEL ROW — Logo cell + scrollable tile track
    Per-instance scroll state keyed by channelId:genreId

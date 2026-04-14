@@ -1,3 +1,4 @@
+// @ts-check
 /* ============================================================
    DEBUG PANEL — Developer overlay for TV prototype
    ============================================================ */
@@ -329,7 +330,7 @@ const DebugPanel = (() => {
   function _wireEventLog() {
     // Subscribe to same-tab analytics events
     window.addEventListener('analytics_event', (e) => {
-      const { eventName, params, ts } = e.detail;
+      const { eventName, params, ts } = /** @type {CustomEvent} */ (e).detail;
       _eventLogEntries.push({ eventName, params, ts });
       if (_eventLogEntries.length > MAX_LOG_ENTRIES) _eventLogEntries.shift();
       _appendEventRow(eventName, params, ts);
@@ -388,7 +389,7 @@ const DebugPanel = (() => {
             <div class="dp-value">${displayVal}</div>
           </div>
         `;
-        const slider = row.querySelector('.dp-slider');
+        const slider = /** @type {HTMLInputElement | null} */ (row.querySelector('.dp-slider'));
         const valueEl = row.querySelector('.dp-value');
         slider.addEventListener('input', () => {
           const newVal = parseFloat(slider.value);
@@ -443,8 +444,8 @@ const DebugPanel = (() => {
             <div class="dp-color-value">${val}</div>
           </div>
         `;
-        const swatch = row.querySelector('.dp-color-swatch');
-        const colorInput = row.querySelector('.dp-color-input');
+        const swatch = /** @type {HTMLElement | null} */ (row.querySelector('.dp-color-swatch'));
+        const colorInput = /** @type {HTMLInputElement | null} */ (row.querySelector('.dp-color-input'));
         const colorValue = row.querySelector('.dp-color-value');
         swatch.addEventListener('click', () => colorInput.click());
         colorInput.addEventListener('input', () => {
@@ -786,7 +787,7 @@ const DebugPanel = (() => {
   document.addEventListener('debugconfig:change', (e) => {
     try {
       if (typeof trackEvent !== 'undefined') {
-        const { key, value } = e.detail;
+        const { key, value } = /** @type {CustomEvent} */ (e).detail;
         trackEvent('config_changed', { config_key: key, config_value: String(value) });
       }
     } catch (err) { /* fail silently */ }
@@ -797,7 +798,7 @@ const DebugPanel = (() => {
 
 /* ---- Viewport Scale Diagnostic — updated by ScaleEngine via scaleupdate event ---- */
 window.addEventListener('scaleupdate', (e) => {
-  const { scale, viewportWidth, viewportHeight, forced } = e.detail;
+  const { scale, viewportWidth, viewportHeight, forced } = /** @type {CustomEvent} */ (e).detail;
   const label = forced
     ? `${scale.toFixed(3)}× FORCED (${viewportWidth} × ${viewportHeight})`
     : `${scale.toFixed(3)}×  (${viewportWidth} × ${viewportHeight} → 1920 × 1080)`;

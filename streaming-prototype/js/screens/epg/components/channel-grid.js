@@ -1,3 +1,4 @@
+// @ts-check
 /* ============================================================
    EPG CHANNEL GRID — Vertical stack of genre groups
    Scroll managed via translateY (mirrors lander pattern)

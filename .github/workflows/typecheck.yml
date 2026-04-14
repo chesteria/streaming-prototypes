@@ -1,0 +1,26 @@
+name: Typecheck
+
+on:
+  push:
+    branches: [main, jsdoc-typecheck-hedge]
+    paths:
+      - 'streaming-prototype/js/**'
+      - 'tsconfig.json'
+      - 'package.json'
+  pull_request:
+    paths:
+      - 'streaming-prototype/js/**'
+      - 'tsconfig.json'
+      - 'package.json'
+
+jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run typecheck

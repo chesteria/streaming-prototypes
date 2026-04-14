@@ -1,11 +1,21 @@
+// @ts-check
 /* ============================================================
    DATA STORE — Loads JSON files and manages mock state
    ============================================================ */
 
-const DataStore = (function() {
+// `var` (not `const`) required for TypeScript global-script compatibility:
+// globals.d.ts declares an ambient `var DataStore` for consumer files, and
+// TypeScript does not allow re-declaring a `const` alongside a `var` in the
+// same global scope. Runtime behavior is identical — the IIFE is still
+// assigned once and the reference is never re-bound.
+var DataStore = (function() {
+  /** @type {Catalog | null} */
   let catalog = null;
+  /** @type {GeoState | null} */
   let geoState = null;
+  /** @type {LanderConfig | null} */
   let landerConfig = null;
+  /** @type {VersionInfo | null} */
   let versionData = null;
   const seriesCache = {};
 

@@ -1,3 +1,4 @@
+// @ts-check
 /* ============================================================
    SERIES PDP SCREEN — Series detail page
    Phase 1: Anonymous / first-visit state only.
@@ -5,7 +6,8 @@
    are deferred to the Authentication phase.
    ============================================================ */
 
-const SeriesPDPScreen = {
+// `var` required for TypeScript global-script compatibility — see data-store.js
+var SeriesPDPScreen = {
   id: 'series-pdp',
 
   _container: null,
