@@ -134,8 +134,24 @@ The Node CI validator (`npm run validate:data`) is the primary safety net. Runti
 
 ---
 
-## Session 7 — Buffer (remaining)
+## Session 7 — Complete
 
-- Validate CI workflows on the `jsdoc-typecheck-hedge` branch push (workflows already trigger on this branch)
-- Enable required status checks on `main` once both workflows pass green in CI
-- Any second-pass cleanup or documentation gaps
+**Deliverables:**
+- Committed all work from Sessions 1–6 in a single clean commit (`917b7b2`) to `jsdoc-typecheck-hedge`
+- Fixed pre-commit hook rule 2 (scoped no-build check to `streaming-prototype/` only) and rule 3 (awk-based per-file correlation to fix false positive when `analytics.js` and other files committed together)
+- Pushed branch → both CI workflows passed green on first run:
+  - `Typecheck` ✅ https://github.com/chesteria/UTA/actions/runs/24399198726
+  - `Validate Data` ✅ https://github.com/chesteria/UTA/actions/runs/24399198772
+
+**Remaining manual step:** create a PR and merge to `main`, then enable both workflows as required status checks on `main` in GitHub → Settings → Branches → Branch protection rules.
+
+---
+
+## Feature complete
+
+All 7 sessions done (5 target + 2 buffer). Every deliverable from PRD-v2 shipped:
+- `npm run typecheck` — clean, 31/32 files opted in
+- `npm run validate:data` — all 34 JSON files pass
+- 57/57 tests pass
+- Both CI workflows green on `jsdoc-typecheck-hedge` branch
+- `JSDOC_GUIDE.md` written
