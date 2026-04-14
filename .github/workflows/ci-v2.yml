@@ -1,0 +1,36 @@
+name: V2 CI Gate
+
+on:
+  pull_request:
+    paths:
+      - 'streaming-prototype-v2/**'
+
+jobs:
+  validate-v2:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: streaming-prototype-v2
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: streaming-prototype-v2/package-lock.json
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Type Check
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Run Tests
+        run: npm run test
+
+      - name: Build
+        run: npm run build

@@ -1,0 +1,47 @@
+name: Deploy V2 to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'streaming-prototype-v2/**'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy-v2:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: streaming-prototype-v2
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: streaming-prototype-v2/package-lock.json
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: streaming-prototype-v2/dist/
+          # Deploy to /v2/ sub-path? 
+          # GitHub Pages natively supports sub-paths if we deploy from a subfolder or use a specific action.
+          # For now, we'll follow the PRD to deploy dist/ to the /v2/ sub-path.
+          # We might need a step to move dist to a v2 folder before upload if not using a custom deploy script.
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,30 @@
+{
+  "name": "streaming-prototype-v2",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "prettier --check \"src/**/*.{ts,css,html}\""
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^9.3.4",
+    "@types/node": "^20.11.24",
+    "autoprefixer": "^10.4.18",
+    "jsdom": "^24.0.0",
+    "postcss": "^8.4.35",
+    "prettier": "^3.2.5",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.3.3",
+    "vite": "^5.1.4",
+    "vitest": "^1.3.1"
+  },
+  "dependencies": {
+    "@fontsource/roboto": "^5.0.12",
+    "zod": "^3.22.4"
+  }
+}

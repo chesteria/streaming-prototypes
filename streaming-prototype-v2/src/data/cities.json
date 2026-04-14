@@ -1,0 +1,37 @@
+[
+  {
+    "id": "ny-nyc",
+    "displayName": "New York City",
+    "region": "Northeast",
+    "state": "NY",
+    "coordinates": { "lat": 40.7128, "lng": -74.006 }
+  },
+  {
+    "id": "ca-la",
+    "displayName": "Los Angeles",
+    "region": "West",
+    "state": "CA",
+    "coordinates": { "lat": 34.0522, "lng": -118.2437 }
+  },
+  {
+    "id": "tx-aus",
+    "displayName": "Austin",
+    "region": "South",
+    "state": "TX",
+    "coordinates": { "lat": 30.2672, "lng": -97.7431 }
+  },
+  {
+    "id": "il-chi",
+    "displayName": "Chicago",
+    "region": "Midwest",
+    "state": "IL",
+    "coordinates": { "lat": 41.8781, "lng": -87.6298 }
+  },
+  {
+    "id": "wa-sea",
+    "displayName": "Seattle",
+    "region": "West",
+    "state": "WA",
+    "coordinates": { "lat": 47.6062, "lng": -122.3321 }
+  }
+]
