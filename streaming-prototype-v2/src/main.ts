@@ -64,12 +64,28 @@ const render = () => {
         <div class="flex flex-col items-center justify-center h-full space-y-4 animate-in fade-in">
           <h1 class="text-5xl font-bold">Welcome!</h1>
           <p class="text-2xl text-v2-text-secondary">Your location: <span class="text-v2-accent">${selectedCity.displayName}</span></p>
-          <div class="flex space-x-4">
-            <button id="change-location" class="v2-button mt-8 border border-v2-surface">Change Location</button>
-            <button id="reset-flow" class="v2-button mt-8 opacity-50 text-sm">Debug: Full Reset</button>
+          <div class="flex space-x-4" data-focus-zone="complete-actions">
+            <button
+              id="change-location"
+              class="v2-button mt-8 border border-v2-surface"
+              data-focusable="true"
+              data-focus-id="complete-change-location"
+            >
+              Change Location
+            </button>
+            <button
+              id="reset-flow"
+              class="v2-button mt-8 opacity-50 text-sm"
+              data-focusable="true"
+              data-focus-id="complete-reset-flow"
+            >
+              Debug: Full Reset
+            </button>
           </div>
         </div>
       `;
+      FocusController.registerZone("complete-actions");
+      FocusController.focusZone("complete-actions");
       document
         .getElementById("change-location")
         ?.addEventListener("click", () => {
