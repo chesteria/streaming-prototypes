@@ -56,11 +56,11 @@ jobs:
           <html lang="en">
             <head>
               <meta charset="UTF-8" />
-              <meta http-equiv="refresh" content="0; url=/v2/" />
+              <meta http-equiv="refresh" content="0; url=/UTA/v2/" />
               <title>UTA Phase 3 Preview</title>
             </head>
             <body>
-              <p>Redirecting to <a href="/v2/">/v2/</a>...</p>
+              <p>Redirecting to <a href="/UTA/v2/">/UTA/v2/</a>...</p>
             </body>
           </html>
           EOF
