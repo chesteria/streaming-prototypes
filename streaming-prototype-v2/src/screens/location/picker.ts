@@ -1,18 +1,19 @@
-import { City } from '../../types/location';
-import citiesData from '../../data/cities.json';
-import * as FocusController from '../../core/focus-controller';
-import { logEvent } from '../../core/analytics';
+import { City } from "../../types/location";
+import citiesData from "../../data/cities.json";
+import * as FocusController from "../../core/focus-controller";
+import { logEvent } from "../../core/analytics";
 
 export const renderPicker = (
   container: HTMLElement,
   query: string,
   onQueryChange: (q: string) => void,
   onSelect: (city: City) => void,
-  onBack: () => void
+  onBack: () => void,
 ) => {
-  const filteredCities = (citiesData as City[]).filter(city => 
-    city.displayName.toLowerCase().includes(query.toLowerCase()) ||
-    city.state.toLowerCase().includes(query.toLowerCase())
+  const filteredCities = (citiesData as City[]).filter(
+    (city) =>
+      city.displayName.toLowerCase().includes(query.toLowerCase()) ||
+      city.state.toLowerCase().includes(query.toLowerCase()),
   );
 
   container.innerHTML = `
@@ -38,7 +39,9 @@ export const renderPicker = (
           class="grid grid-cols-3 gap-rail-gap pb-12 overflow-y-auto h-full pr-4"
           data-focus-zone="picker-grid"
         >
-          ${filteredCities.map(city => `
+          ${filteredCities
+            .map(
+              (city) => `
             <button 
               class="v2-card bg-v2-card-bg p-6 rounded-tile border-2 border-transparent text-left space-y-1 transition-all"
               data-focusable="true"
@@ -47,62 +50,66 @@ export const renderPicker = (
               <div class="text-xl font-bold">${city.displayName}</div>
               <div class="text-sm text-v2-text-secondary">${city.state}</div>
             </button>
-          `).join('')}
-          ${filteredCities.length === 0 ? '<div class="col-span-3 text-center py-12 text-v2-text-tertiary">No cities found matching "' + query + '"</div>' : ''}
+          `,
+            )
+            .join("")}
+          ${filteredCities.length === 0 ? '<div class="col-span-3 text-center py-12 text-v2-text-tertiary">No cities found matching "' + query + '"</div>' : ""}
         </div>
       </div>
     </div>
   `;
 
-  const input = document.getElementById('picker-search') as HTMLInputElement;
+  const input = document.getElementById("picker-search") as HTMLInputElement;
 
   // Handle Query Changes
-  input.addEventListener('input', (e) => {
+  input.addEventListener("input", (e) => {
     onQueryChange((e.target as HTMLInputElement).value);
   });
 
   // 1. Register Input Zone
-  FocusController.registerZone('picker-input', {
+  FocusController.registerZone("picker-input", {
     onEdge: (dir) => {
-      if (dir === 'DOWN' && filteredCities.length > 0) {
-        FocusController.focusZone('picker-grid');
+      if (dir === "DOWN" && filteredCities.length > 0) {
+        FocusController.focusZone("picker-grid");
       }
-      if (dir === 'BACK') onBack();
+      if (dir === "BACK") onBack();
     },
     onSelect: () => {
       if (filteredCities.length === 1) {
         const city = filteredCities[0];
-        logEvent({ type: 'v2_location_manually_selected', city, query });
+        logEvent({ type: "v2_location_manually_selected", city, query });
         onSelect(city);
       }
-    }
+    },
   });
 
   // 2. Register Grid Zone
-  FocusController.registerZone('picker-grid', {
+  FocusController.registerZone("picker-grid", {
     onEdge: (dir) => {
       const idx = FocusController.getActiveZoneIndex();
-      if (dir === 'UP' && idx < 3) {
-        FocusController.focusZone('picker-input');
-      } else if (dir === 'UP') {
+      if (dir === "UP" && idx < 3) {
+        FocusController.focusZone("picker-input");
+      } else if (dir === "UP") {
         // Vertical grid navigation (3 columns)
         FocusController.focusElementById(`city-${filteredCities[idx - 3].id}`);
-      } else if (dir === 'DOWN' && idx + 3 < filteredCities.length) {
+      } else if (dir === "DOWN" && idx + 3 < filteredCities.length) {
         // Vertical grid navigation
         FocusController.focusElementById(`city-${filteredCities[idx + 3].id}`);
-      } else if (dir === 'BACK') {
+      } else if (dir === "BACK") {
         onBack();
       }
     },
     onSelect: (index) => {
       const city = filteredCities[index];
-      logEvent({ type: 'v2_location_manually_selected', city, query });
+      logEvent({ type: "v2_location_manually_selected", city, query });
       onSelect(city);
-    }
+    },
   });
 
+  FocusController.focusZone("picker-input");
+
   // Keep input cursor at end when focus returns
-  input.addEventListener('focus', () => {
+  input.addEventListener("focus", () => {
     input.setSelectionRange(input.value.length, input.value.length);
   });
 };

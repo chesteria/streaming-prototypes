@@ -3,25 +3,37 @@ name: Deploy V2 to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - feature/phase3-pilot
     paths:
       - 'streaming-prototype-v2/**'
+      - '.github/workflows/deploy-v2.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read
   pages: write
   id-token: write
 
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
   deploy-v2:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     defaults:
       run:
         working-directory: streaming-prototype-v2
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
@@ -33,14 +45,33 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Stage Pages Artifact
+        working-directory: .
+        run: |
+          rm -rf preview-site
+          mkdir -p preview-site/v2
+          cp -R streaming-prototype-v2/dist/. preview-site/v2/
+          cat > preview-site/index.html <<'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+            <head>
+              <meta charset="UTF-8" />
+              <meta http-equiv="refresh" content="0; url=/v2/" />
+              <title>UTA Phase 3 Preview</title>
+            </head>
+            <body>
+              <p>Redirecting to <a href="/v2/">/v2/</a>...</p>
+            </body>
+          </html>
+          EOF
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: streaming-prototype-v2/dist/
-          # Deploy to /v2/ sub-path? 
-          # GitHub Pages natively supports sub-paths if we deploy from a subfolder or use a specific action.
-          # For now, we'll follow the PRD to deploy dist/ to the /v2/ sub-path.
-          # We might need a step to move dist to a v2 folder before upload if not using a custom deploy script.
+          path: preview-site
 
       - name: Deploy to GitHub Pages
         id: deployment

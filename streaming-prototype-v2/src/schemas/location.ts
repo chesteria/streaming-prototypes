@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const CitySchema = z.object({
   id: z.string(),
@@ -14,7 +14,6 @@ export const CitySchema = z.object({
 export const CitiesArraySchema = z.array(CitySchema);
 
 export const LocationStateSchema = z.object({
-  detectedCityId: z.string().optional(),
-  selectedCityId: z.string().optional(),
+  city: CitySchema.nullable().optional(),
   lastUpdated: z.string().datetime(),
 });

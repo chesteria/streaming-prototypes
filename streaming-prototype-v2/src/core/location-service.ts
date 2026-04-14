@@ -1,7 +1,7 @@
-import { City, LocationState } from '../types/location';
-import { LocationStateSchema } from '../schemas/location';
+import { City, LocationState } from "../types/location";
+import { LocationStateSchema } from "../schemas/location";
 
-const STORAGE_KEY = 'uta_v2_location_state';
+const STORAGE_KEY = "uta_v2_location_state";
 
 type LocationHandler = (city: City | null) => void;
 
@@ -13,17 +13,22 @@ const subscribers: Set<LocationHandler> = new Set();
  */
 const loadFromStorage = (): void => {
   try {
+    if (
+      typeof localStorage === "undefined" ||
+      typeof localStorage.getItem !== "function"
+    ) {
+      return;
+    }
+
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return;
 
-    const parsed = JSON.parse(raw);
-    // For the pilot, we store the full City object in state to ensure 
-    // screens have a stable contract immediately.
-    if (parsed.city) {
-      selectedCity = parsed.city;
-    }
+    const parsed = LocationStateSchema.safeParse(JSON.parse(raw));
+    if (!parsed.success) return;
+
+    selectedCity = parsed.data.city ?? null;
   } catch (e) {
-    console.error('[LocationService] Failed to load from storage', e);
+    console.error("[LocationService] Failed to load from storage", e);
   }
 };
 
@@ -31,14 +36,14 @@ const loadFromStorage = (): void => {
  * Notifies all subscribers of a location change.
  */
 const notifySubscribers = (): void => {
-  subscribers.forEach(handler => handler(selectedCity));
+  subscribers.forEach((handler) => handler(selectedCity));
 };
 
 /**
  * Persists the current state to localStorage.
  */
 const persist = (): void => {
-  const state = {
+  const state: LocationState = {
     city: selectedCity,
     lastUpdated: new Date().toISOString(),
   };
@@ -61,11 +66,13 @@ export const clearSelectedLocation = (): void => {
   notifySubscribers();
 };
 
-export const subscribeToLocationChanges = (handler: LocationHandler): () => void => {
+export const subscribeToLocationChanges = (
+  handler: LocationHandler,
+): (() => void) => {
   subscribers.add(handler);
   // Immediate fire with current state per PRD requirement
   handler(selectedCity);
-  
+
   return () => {
     subscribers.delete(handler);
   };

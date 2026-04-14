@@ -1,11 +1,11 @@
-import { City } from '../../types/location';
-import * as FocusController from '../../core/focus-controller';
+import { City } from "../../types/location";
+import * as FocusController from "../../core/focus-controller";
 
 export const renderConfirmation = (
   container: HTMLElement,
   city: City,
   onConfirm: () => void,
-  onReject: () => void
+  onReject: () => void,
 ) => {
   container.innerHTML = `
     <div class="flex flex-col items-center justify-center h-full bg-v2-bg animate-in zoom-in duration-300">
@@ -36,13 +36,13 @@ export const renderConfirmation = (
     </div>
   `;
 
-  FocusController.registerZone('confirmation-buttons', {
+  FocusController.registerZone("confirmation-buttons", {
     onSelect: (_, el) => {
-      const id = el.getAttribute('data-focus-id');
-      if (id === 'confirm-yes') onConfirm();
-      if (id === 'confirm-no') onReject();
-    }
+      const id = el.getAttribute("data-focus-id");
+      if (id === "confirm-yes") onConfirm();
+      if (id === "confirm-no") onReject();
+    },
   });
 
-  FocusController.focusZone('confirmation-buttons');
+  FocusController.focusZone("confirmation-buttons");
 };

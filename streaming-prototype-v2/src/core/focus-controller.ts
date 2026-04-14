@@ -1,5 +1,5 @@
-import * as FocusEngine from './focus-engine';
-import { KeyAction } from './focus-engine';
+import * as FocusEngine from "./focus-engine";
+import { KeyAction } from "./focus-engine";
 
 export interface ControllerZoneOptions {
   onFocus?: (index: number, element: HTMLElement) => void;
@@ -17,7 +17,29 @@ interface InternalZone {
 
 let zones: Map<string, InternalZone> = new Map();
 let activeZone: InternalZone | null = null;
-let globalActionHandler: ((action: KeyAction, event: KeyboardEvent) => void) | null = null;
+let globalActionHandler:
+  | ((action: KeyAction, event: KeyboardEvent) => void)
+  | null = null;
+
+const focusDomElement = (element: HTMLElement) => {
+  if (
+    element instanceof HTMLInputElement ||
+    element instanceof HTMLTextAreaElement ||
+    element.isContentEditable
+  ) {
+    element.focus();
+  }
+};
+
+const blurDomElement = (element: HTMLElement) => {
+  if (
+    element instanceof HTMLInputElement ||
+    element instanceof HTMLTextAreaElement ||
+    element.isContentEditable
+  ) {
+    element.blur();
+  }
+};
 
 /**
  * Discovers focusable elements in the DOM for a specific zone name.
@@ -27,22 +49,27 @@ const discoverElements = (zoneName: string): HTMLElement[] => {
   if (!container) return [];
 
   const elements = Array.from(
-    container.querySelectorAll('[data-focusable="true"]')
+    container.querySelectorAll('[data-focusable="true"]'),
   ) as HTMLElement[];
 
   return elements;
 };
 
-export const registerZone = (name: string, options: ControllerZoneOptions = {}) => {
+export const registerZone = (
+  name: string,
+  options: ControllerZoneOptions = {},
+) => {
   const elements = discoverElements(name);
-  
+
   const engineZone = FocusEngine.createZone(elements, {
     onFocus: (idx, el) => {
-      el.setAttribute('data-focused', 'true');
+      el.setAttribute("data-focused", "true");
+      focusDomElement(el);
       options.onFocus?.(idx, el);
     },
     onBlur: (idx, el) => {
-      el.removeAttribute('data-focused');
+      el.removeAttribute("data-focused");
+      blurDomElement(el);
       options.onBlur?.(idx, el);
     },
     onSelect: options.onSelect,
@@ -67,7 +94,9 @@ export const focusZone = (name: string, startIndex: number = 0) => {
 export const focusElementById = (id: string) => {
   for (const zone of zones.values()) {
     const elements = zone.engineZone.getItems();
-    const index = elements.findIndex(el => el.getAttribute('data-focus-id') === id);
+    const index = elements.findIndex(
+      (el) => el.getAttribute("data-focus-id") === id,
+    );
     if (index !== -1) {
       activeZone?.engineZone.blur();
       activeZone = zone;
@@ -78,7 +107,9 @@ export const focusElementById = (id: string) => {
   return false;
 };
 
-export const onAction = (handler: (action: KeyAction, event: KeyboardEvent) => void) => {
+export const onAction = (
+  handler: (action: KeyAction, event: KeyboardEvent) => void,
+) => {
   globalActionHandler = handler;
 };
 
@@ -92,11 +123,13 @@ const handleKey = (action: KeyAction, event: KeyboardEvent) => {
     return;
   }
 
-  if (action === 'OK') {
+  if (action === "OK") {
     activeZone.engineZone.select();
-  } else if (action === 'LEFT' || action === 'RIGHT') {
+  } else if (action === "LEFT" || action === "RIGHT") {
     // If we're in a text input, skip FocusEngine movement (already handled by browser)
-    const isTextInput = event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement;
+    const isTextInput =
+      event.target instanceof HTMLInputElement ||
+      event.target instanceof HTMLTextAreaElement;
     if (isTextInput) {
       // Input cursor movement
     } else {
@@ -119,10 +152,19 @@ export const init = () => {
 };
 
 export const destroy = () => {
+  FocusEngine.teardown();
   FocusEngine.clearHandler();
   zones.clear();
   activeZone = null;
   globalActionHandler = null;
+};
+
+export const clearZones = () => {
+  FocusEngine.clearHandler();
+  zones.clear();
+  activeZone = null;
+  globalActionHandler = null;
+  FocusEngine.setHandler(handleKey);
 };
 
 /**
@@ -131,7 +173,7 @@ export const destroy = () => {
 export const refreshZone = (name: string) => {
   const zone = zones.get(name);
   if (!zone) return;
-  
+
   const elements = discoverElements(name);
   zone.engineZone.setItems(elements);
 };
